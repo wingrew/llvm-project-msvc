@@ -1,7 +1,9 @@
 # See docs/CMake.html for instructions about how to build LLVM with CMake.
 
 cmake_minimum_required(VERSION 3.13.4)
-
+if(MSVC)
+  add_compile_options(/utf-8)  # 强制MSVC用UTF-8解析源文件  oyzl加
+endif()
 # CMP0114: ExternalProject step targets fully adopt their steps.
 # New in CMake 3.19: https://cmake.org/cmake/help/latest/policy/CMP0114.html
 if(POLICY CMP0114)
