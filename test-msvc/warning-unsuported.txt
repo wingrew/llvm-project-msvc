@@ -1,0 +1,5 @@
+// __declspec 修饰符中的 Microsoft 关键字
+// 这些标识符是 __declspec 修饰符的扩展属性。 它们被视为该上下文中的关键字。
+safebuffers
+no_sanitize_address
+spectre
