@@ -1,0 +1,1 @@
+#import "..\drawctl\drawctl.tlb" no_namespace, raw_interfaces_only
