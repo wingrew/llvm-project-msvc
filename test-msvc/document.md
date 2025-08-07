@@ -24,7 +24,7 @@ ide:vscode(clang)vs(msvc)
 ## 三、方言梳理
 |序号| MSVC编译方言\特定情况\宏| clang15.0.7通过情况（支持/部分支持/不支持） | 原因 | 依据来源 |样例|解决方案|
 |--------|--------|------|-------|-------|-------|-------|
-|1| Microsoft 专用 C++ 关键字（__wchar_t） |部分支持|如果以 L 为前缀的宽字符文本包含多字符序列，则值取自第一个字符|https://learn.microsoft.com/zh-cn/cpp/cpp/sizeof-operator?view=msvc-140|wchar_t.cpp|修改源码|
+|1| Microsoft 专用 C++ 关键字（__wchar_t） |部分支持|如果以 L 为前缀的宽字符文本包含多字符序列，则值取自第一个字符|https://learn.microsoft.com/zh-cn/cpp/cpp/string-and-character-literals-cpp?view=msvc-140|wchar_t.cpp|修改源码|
 |2| Microsoft 专用 C++ 关键字（__event） |不支持|不含此关键字|https://learn.microsoft.com/zh-cn/cpp/cpp/event?view=msvc-140|event.cpp|修改源码|
 |3| Microsoft 专用 C++ 关键字（__raise） |不支持|不含此关键字|https://learn.microsoft.com/zh-cn/cpp/cpp/raise?view=msvc-140|raise.cpp|修改源码|
 |4| Microsoft 专用 C++ 关键字（__hook） |不支持|不含此关键字|https://learn.microsoft.com/zh-cn/cpp/cpp/hook?view=msvc-140|hook.cpp|修改源码|

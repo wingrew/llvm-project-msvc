@@ -1,7 +1,23 @@
-template <typename T>
-[[msvc::intrinsic]] T&& my_move(T&& t) { return static_cast<T&&>(t); }
+// goto.c
+#include <stdio.h>
 
-void f() {
-    int i = 0;
-    i = my_move(i);
+int main()
+{
+    int i, j;
+
+    for ( i = 0; i < 10; i++ )
+    {
+        printf_s( "Outer loop executing. i = %d\n", i );
+        for ( j = 0; j < 3; j++ )
+        {
+            printf_s( " Inner loop executing. j = %d\n", j );
+            if ( i == 5 )
+                goto stop;
+        }
+    }
+
+    /* This message does not print: */
+    printf_s( "Loop exited. i = %d\n", i );
+
+    stop: printf_s( "Jumped to stop. i = %d\n", i );
 }
