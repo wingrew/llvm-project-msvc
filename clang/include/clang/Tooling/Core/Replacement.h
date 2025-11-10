@@ -44,11 +44,11 @@ namespace tooling {
 class Range {
 public:
   Range() = default;
-  Range(unsigned Offset, unsigned Length) : Offset(Offset), Length(Length) {}
+  Range(uint64_t Offset, unsigned Length) : Offset(Offset), Length(Length) {}
 
   /// Accessors.
   /// @{
-  unsigned getOffset() const { return Offset; }
+  uint64_t getOffset() const { return Offset; }
   unsigned getLength() const { return Length; }
   /// @}
 
@@ -72,7 +72,7 @@ public:
   /// @}
 
 private:
-  unsigned Offset = 0;
+  uint64_t Offset = 0;
   unsigned Length = 0;
 };
 
@@ -91,7 +91,7 @@ public:
   /// \param FilePath A source file accessible via a SourceManager.
   /// \param Offset The byte offset of the start of the range in the file.
   /// \param Length The length of the range in bytes.
-  Replacement(StringRef FilePath, unsigned Offset, unsigned Length,
+  Replacement(StringRef FilePath, uint64_t Offset, unsigned Length,
               StringRef ReplacementText);
 
   /// Creates a Replacement of the range [Start, Start+Length) with
@@ -118,7 +118,7 @@ public:
   /// Accessors.
   /// @{
   StringRef getFilePath() const { return FilePath; }
-  unsigned getOffset() const { return ReplacementRange.getOffset(); }
+  uint64_t getOffset() const { return ReplacementRange.getOffset(); }
   unsigned getLength() const { return ReplacementRange.getLength(); }
   StringRef getReplacementText() const { return ReplacementText; }
   /// @}
@@ -267,7 +267,7 @@ public:
   // Returns the new offset in the code after replacements being applied.
   // Note that if there is an insertion at Offset in the current replacements,
   // \p Offset will be shifted to Offset + Length in inserted text.
-  unsigned getShiftedCodePosition(unsigned Position) const;
+  uint64_t getShiftedCodePosition(uint64_t Position) const;
 
   unsigned size() const { return Replaces.size(); }
 

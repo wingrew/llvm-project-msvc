@@ -90,8 +90,8 @@ class SourceLocation {
   friend struct llvm::FoldingSetTrait<SourceLocation, void>;
 
 public:
-  using UIntTy = uint32_t;
-  using IntTy = int32_t;
+  using UIntTy = uint64_t;
+  using IntTy = int64_t;
 
 private:
   UIntTy ID = 0;
@@ -302,12 +302,12 @@ public:
 class PresumedLoc {
   const char *Filename = nullptr;
   FileID ID;
-  unsigned Line, Col;
+  uint64_t Line, Col;
   SourceLocation IncludeLoc;
 
 public:
   PresumedLoc() = default;
-  PresumedLoc(const char *FN, FileID FID, unsigned Ln, unsigned Co,
+  PresumedLoc(const char *FN, FileID FID, uint64_t Ln, uint64_t Co,
               SourceLocation IL)
       : Filename(FN), ID(FID), Line(Ln), Col(Co), IncludeLoc(IL) {}
 
@@ -334,7 +334,7 @@ public:
   /// Return the presumed line number of this location.
   ///
   /// This can be affected by \#line etc.
-  unsigned getLine() const {
+  uint64_t getLine() const {
     assert(isValid());
     return Line;
   }
@@ -342,7 +342,7 @@ public:
   /// Return the presumed column number of this location.
   ///
   /// This cannot be affected by \#line, but is packaged here for convenience.
-  unsigned getColumn() const {
+  uint64_t getColumn() const {
     assert(isValid());
     return Col;
   }
@@ -393,18 +393,18 @@ public:
   bool isMacroArgExpansion(FullSourceLoc *StartLoc = nullptr) const;
   FullSourceLoc getImmediateMacroCallerLoc() const;
   std::pair<FullSourceLoc, StringRef> getModuleImportLoc() const;
-  unsigned getFileOffset() const;
+  uint64_t getFileOffset() const;
 
-  unsigned getExpansionLineNumber(bool *Invalid = nullptr) const;
-  unsigned getExpansionColumnNumber(bool *Invalid = nullptr) const;
+  uint64_t getExpansionLineNumber(bool *Invalid = nullptr) const;
+  uint64_t getExpansionColumnNumber(bool *Invalid = nullptr) const;
 
-  unsigned getSpellingLineNumber(bool *Invalid = nullptr) const;
-  unsigned getSpellingColumnNumber(bool *Invalid = nullptr) const;
+  uint64_t getSpellingLineNumber(bool *Invalid = nullptr) const;
+  uint64_t getSpellingColumnNumber(bool *Invalid = nullptr) const;
 
   const char *getCharacterData(bool *Invalid = nullptr) const;
 
-  unsigned getLineNumber(bool *Invalid = nullptr) const;
-  unsigned getColumnNumber(bool *Invalid = nullptr) const;
+  uint64_t getLineNumber(bool *Invalid = nullptr) const;
+  uint64_t getColumnNumber(bool *Invalid = nullptr) const;
 
   const FileEntry *getFileEntry() const;
 
@@ -416,7 +416,7 @@ public:
   ///
   /// The first element is the FileID, the second is the offset from the
   /// start of the buffer of the location.
-  std::pair<FileID, unsigned> getDecomposedLoc() const;
+  std::pair<FileID, uint64_t> getDecomposedLoc() const;
 
   bool isInSystemHeader() const;
 

@@ -1954,7 +1954,7 @@ public:
   /// Get the decls that are contained in a file in the Offset/Length
   /// range. \p Length can be 0 to indicate a point at \p Offset instead of
   /// a range.
-  void FindFileRegionDecls(FileID File, unsigned Offset, unsigned Length,
+  void FindFileRegionDecls(FileID File, uint64_t Offset, unsigned Length,
                            SmallVectorImpl<Decl *> &Decls) override;
 
   /// Notify ASTReader that we started deserialization of

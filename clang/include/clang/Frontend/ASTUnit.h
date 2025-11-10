@@ -89,8 +89,8 @@ enum class CaptureDiagsKind { None, All, AllWithoutNonErrorsFromIncludes };
 class ASTUnit {
 public:
   struct StandaloneFixIt {
-    std::pair<unsigned, unsigned> RemoveRange;
-    std::pair<unsigned, unsigned> InsertFromRange;
+    std::pair<uint64_t, uint64_t> RemoveRange;
+    std::pair<uint64_t, uint64_t> InsertFromRange;
     std::string CodeToInsert;
     bool BeforePreviousInsertions;
   };
@@ -100,8 +100,8 @@ public:
     DiagnosticsEngine::Level Level;
     std::string Message;
     std::string Filename;
-    unsigned LocOffset;
-    std::vector<std::pair<unsigned, unsigned>> Ranges;
+    uint64_t LocOffset;
+    std::vector<std::pair<uint64_t, uint64_t>> Ranges;
     std::vector<StandaloneFixIt> FixIts;
   };
 
@@ -171,7 +171,7 @@ private:
   std::vector<Decl*> TopLevelDecls;
 
   /// Sorted (by file offset) vector of pairs of file offset/Decl.
-  using LocDeclsTy = SmallVector<std::pair<unsigned, Decl *>, 64>;
+  using LocDeclsTy = SmallVector<std::pair<uint64_t, Decl *>, 64>;
   using FileDeclsTy = llvm::DenseMap<FileID, std::unique_ptr<LocDeclsTy>>;
 
   /// Map from FileID to the file-level declarations that it contains.
@@ -534,7 +534,7 @@ public:
   /// Get the decls that are contained in a file in the Offset/Length
   /// range. \p Length can be 0 to indicate a point at \p Offset instead of
   /// a range.
-  void findFileRegionDecls(FileID File, unsigned Offset, unsigned Length,
+  void findFileRegionDecls(FileID File, uint64_t Offset, unsigned Length,
                            SmallVectorImpl<Decl *> &Decls);
 
   /// Retrieve a reference to the current top-level name hash value.
@@ -548,10 +548,10 @@ public:
   /// whether the requested location points inside the precompiled preamble
   /// in which case the returned source location will be a "loaded" one.
   SourceLocation getLocation(const FileEntry *File,
-                             unsigned Line, unsigned Col) const;
+                             uint64_t Line, uint64_t Col) const;
 
   /// Get the source location for the given file:offset pair.
-  SourceLocation getLocation(const FileEntry *File, unsigned Offset) const;
+  SourceLocation getLocation(const FileEntry *File, uint64_t Offset) const;
 
   /// If \p Loc is a loaded location from the preamble, returns
   /// the corresponding local location of the main file, otherwise it returns
@@ -879,7 +879,7 @@ public:
   ///
   /// FIXME: The Diag, LangOpts, SourceMgr, FileMgr, StoredDiagnostics, and
   /// OwnedBuffers parameters are all disgusting hacks. They will go away.
-  void CodeComplete(StringRef File, unsigned Line, unsigned Column,
+  void CodeComplete(StringRef File, uint64_t Line, uint64_t Column,
                     ArrayRef<RemappedFile> RemappedFiles, bool IncludeMacros,
                     bool IncludeCodePatterns, bool IncludeBriefComments,
                     CodeCompleteConsumer &Consumer,

@@ -2007,7 +2007,7 @@ public:
   /// location should refer to. The default offset (0) produces a source
   /// location pointing just past the end of the token; an offset of 1 produces
   /// a source location pointing to the last character in the token, etc.
-  SourceLocation getLocForEndOfToken(SourceLocation Loc, unsigned Offset = 0) {
+  SourceLocation getLocForEndOfToken(SourceLocation Loc, uint64_t Offset = 0) {
     return Lexer::getLocForEndOfToken(Loc, Offset, SourceMgr, LangOpts);
   }
 

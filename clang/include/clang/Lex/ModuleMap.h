@@ -704,7 +704,7 @@ public:
   /// \returns true if an error occurred, false otherwise.
   bool parseModuleMapFile(const FileEntry *File, bool IsSystem,
                           const DirectoryEntry *HomeDir,
-                          FileID ID = FileID(), unsigned *Offset = nullptr,
+                          FileID ID = FileID(), uint64_t *Offset = nullptr,
                           SourceLocation ExternModuleLoc = SourceLocation());
 
   /// Dump the contents of the module map, for debugging purposes.

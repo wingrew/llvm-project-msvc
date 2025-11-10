@@ -311,7 +311,7 @@ public:
 
   /// Offsets of identifiers that we're going to preload within
   /// IdentifierTableData.
-  std::vector<unsigned> PreloadIdentifierOffsets;
+  std::vector<uint64_t> PreloadIdentifierOffsets;
 
   // === Macros ===
 

@@ -50,7 +50,7 @@ namespace syntax {
 /// included and the end offset is excluded from the range.
 struct FileRange {
   /// EXPECTS: File.isValid() && Begin <= End.
-  FileRange(FileID File, unsigned BeginOffset, unsigned EndOffset);
+  FileRange(FileID File, uint64_t BeginOffset, uint64_t EndOffset);
   /// EXPECTS: BeginLoc.isValid() && BeginLoc.isFileID().
   FileRange(const SourceManager &SM, SourceLocation BeginLoc, unsigned Length);
   /// EXPECTS: BeginLoc.isValid() && BeginLoc.isFileID(), Begin <= End and files
@@ -60,18 +60,18 @@ struct FileRange {
 
   FileID file() const { return File; }
   /// Start is a start offset (inclusive) in the corresponding file.
-  unsigned beginOffset() const { return Begin; }
+  uint64_t beginOffset() const { return Begin; }
   /// End offset (exclusive) in the corresponding file.
-  unsigned endOffset() const { return End; }
+  uint64_tndOffset() const { return End; }
 
   unsigned length() const { return End - Begin; }
 
   /// Check if \p Offset is inside the range.
-  bool contains(unsigned Offset) const {
+  bool contains(uint64_t Offset) const {
     return Begin <= Offset && Offset < End;
   }
   /// Check \p Offset is inside the range or equal to its endpoint.
-  bool touches(unsigned Offset) const {
+  bool touches(uint64_tOffset) const {
     return Begin <= Offset && Offset <= End;
   }
 
@@ -91,8 +91,8 @@ struct FileRange {
 
 private:
   FileID File;
-  unsigned Begin;
-  unsigned End;
+  uint64_t Begin;
+  uint64_t End;
 };
 
 /// For debugging purposes.

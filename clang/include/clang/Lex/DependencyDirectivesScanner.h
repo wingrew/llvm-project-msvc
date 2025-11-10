@@ -33,12 +33,12 @@ namespace dependency_directives_scan {
 /// Token lexed as part of dependency directive scanning.
 struct Token {
   /// Offset into the original source input.
-  unsigned Offset;
+  uint64_t Offset;
   unsigned Length;
   tok::TokenKind Kind;
   unsigned short Flags;
 
-  Token(unsigned Offset, unsigned Length, tok::TokenKind Kind,
+  Token(uint64_t Offset, unsigned Length, tok::TokenKind Kind,
         unsigned short Flags)
       : Offset(Offset), Length(Length), Kind(Kind), Flags(Flags) {}
 

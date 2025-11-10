@@ -755,7 +755,7 @@ public:
 };
 
 /// File IDs mapped to sets of line numbers.
-using FilesToLineNumsMap = std::map<FileID, std::set<unsigned>>;
+using FilesToLineNumsMap = std::map<FileID, std::set<uint64_t>>;
 
 /// PathDiagnostic - PathDiagnostic objects represent a single path-sensitive
 ///  diagnostic.  It represents an ordered-collection of PathDiagnosticPieces,

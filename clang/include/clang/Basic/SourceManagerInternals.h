@@ -31,10 +31,10 @@ namespace clang {
 
 struct LineEntry {
   /// The offset in this file that the line entry occurs at.
-  unsigned FileOffset;
+  uint64_t FileOffset;
 
   /// The presumed line number of this line entry: \#line 4.
-  unsigned LineNo;
+  uint64_t LineNo;
 
   /// The ID of the filename identified by this line entry:
   /// \#line 4 "foo.c".  This is -1 if not specified.
@@ -47,11 +47,11 @@ struct LineEntry {
   /// which is manipulated by GNU linemarker directives.
   ///
   /// If this is 0 then there is no virtual \#includer.
-  unsigned IncludeOffset;
+  uint64_t IncludeOffset;
 
-  static LineEntry get(unsigned Offs, unsigned Line, int Filename,
+  static LineEntry get(uint64_t Offs, uint64_t Line, int Filename,
                        SrcMgr::CharacteristicKind FileKind,
-                       unsigned IncludeOffset) {
+                       uint64_t IncludeOffset) {
     LineEntry E;
     E.FileOffset = Offs;
     E.LineNo = Line;
@@ -68,11 +68,11 @@ inline bool operator<(const LineEntry &lhs, const LineEntry &rhs) {
   return lhs.FileOffset < rhs.FileOffset;
 }
 
-inline bool operator<(const LineEntry &E, unsigned Offset) {
+inline bool operator<(const LineEntry &E, uint64_t Offset) {
   return E.FileOffset < Offset;
 }
 
-inline bool operator<(unsigned Offset, const LineEntry &E) {
+inline bool operator<(uint64_t Offset, const LineEntry &E) {
   return Offset < E.FileOffset;
 }
 
@@ -107,15 +107,15 @@ public:
 
   unsigned getNumFilenames() const { return FilenamesByID.size(); }
 
-  void AddLineNote(FileID FID, unsigned Offset,
-                   unsigned LineNo, int FilenameID,
+  void AddLineNote(FileID FID, uint64_t Offset,
+                   uint64_t LineNo, int FilenameID,
                    unsigned EntryExit, SrcMgr::CharacteristicKind FileKind);
 
 
   /// Find the line entry nearest to FID that is before it.
   ///
   /// If there is no line entry before \p Offset in \p FID, returns null.
-  const LineEntry *FindNearestLineEntry(FileID FID, unsigned Offset);
+  const LineEntry *FindNearestLineEntry(FileID FID, uint64_t Offset);
 
   // Low-level access
   using iterator = std::map<FileID, std::vector<LineEntry>>::iterator;

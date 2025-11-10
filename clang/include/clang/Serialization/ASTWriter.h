@@ -209,7 +209,7 @@ private:
 
   /// Sorted (by file offset) vector of pairs of file offset/DeclID.
   using LocDeclIDsTy =
-      SmallVector<std::pair<unsigned, serialization::DeclID>, 64>;
+      SmallVector<std::pair<uint64_t, serialization::DeclID>, 64>;
   struct DeclIDInFileInfo {
     LocDeclIDsTy DeclIDs;
 

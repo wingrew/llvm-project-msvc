@@ -17,18 +17,18 @@ namespace edit {
 
 class FileOffset {
   FileID FID;
-  unsigned Offs = 0;
+  uint64_t Offs = 0;
 
 public:
   FileOffset() = default;
-  FileOffset(FileID fid, unsigned offs) : FID(fid), Offs(offs) {}
+  FileOffset(FileID fid, uint64_t offs) : FID(fid), Offs(offs) {}
 
   bool isInvalid() const { return FID.isInvalid(); }
 
   FileID getFID() const { return FID; }
-  unsigned getOffset() const { return Offs; }
+  uint64_t getOffset() const { return Offs; }
 
-  FileOffset getWithOffset(unsigned offset) const {
+  FileOffset getWithOffset(uint64_t offset) const {
     FileOffset NewOffs = *this;
     NewOffs.Offs += offset;
     return NewOffs;

@@ -201,20 +201,20 @@ public:
 
   /// \returns A mapping from an offset of the start of the comment to the
   /// comment itself, or nullptr in case there are no comments in \p File.
-  const std::map<unsigned, RawComment *> *getCommentsInFile(FileID File) const;
+  const std::map<uint64_t, RawComment *> *getCommentsInFile(FileID File) const;
 
   bool empty() const;
 
-  unsigned getCommentBeginLine(RawComment *C, FileID File,
-                               unsigned Offset) const;
-  unsigned getCommentEndOffset(RawComment *C) const;
+  uint64_t getCommentBeginLine(RawComment *C, FileID File,
+                               uint64_t Offset) const;
+  uint64_t getCommentEndOffset(RawComment *C) const;
 
 private:
   SourceManager &SourceMgr;
   // mapping: FileId -> comment begin offset -> comment
-  llvm::DenseMap<FileID, std::map<unsigned, RawComment *>> OrderedComments;
-  mutable llvm::DenseMap<RawComment *, unsigned> CommentBeginLine;
-  mutable llvm::DenseMap<RawComment *, unsigned> CommentEndOffset;
+  llvm::DenseMap<FileID, std::map<uint64_t, RawComment *>> OrderedComments;
+  mutable llvm::DenseMap<RawComment *, uint64_t> CommentBeginLine;
+  mutable llvm::DenseMap<RawComment *, uint64_t> CommentEndOffset;
 
   friend class ASTReader;
   friend class ASTWriter;

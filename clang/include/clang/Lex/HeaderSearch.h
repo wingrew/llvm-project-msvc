@@ -669,7 +669,7 @@ public:
   ///        building the module from preprocessed source).
   /// \returns true if an error occurred, false otherwise.
   bool loadModuleMapFile(const FileEntry *File, bool IsSystem,
-                         FileID ID = FileID(), unsigned *Offset = nullptr,
+                         FileID ID = FileID(), uint64_t *Offset = nullptr,
                          StringRef OriginalModuleMapFile = StringRef());
 
   /// Collect the set of all known, top-level modules.
@@ -885,7 +885,7 @@ private:
                                             bool IsSystem,
                                             DirectoryEntryRef Dir,
                                             FileID ID = FileID(),
-                                            unsigned *Offset = nullptr);
+                                            uint64_t *Offset = nullptr);
 
   /// Try to load the module map file in the given directory.
   ///

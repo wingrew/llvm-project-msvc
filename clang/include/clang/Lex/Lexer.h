@@ -308,13 +308,13 @@ public:
   const char *getBufferLocation() const { return BufferPtr; }
 
   /// Returns the current lexing offset.
-  unsigned getCurrentBufferOffset() {
+  uint64_t getCurrentBufferOffset() {
     assert(BufferPtr >= BufferStart && "Invalid buffer state");
     return BufferPtr - BufferStart;
   }
 
   /// Set the lexer's buffer pointer to \p Offset.
-  void seek(unsigned Offset, bool IsAtStartOfLine);
+  void seek(uint64_t Offset, bool IsAtStartOfLine);
 
   /// Stringify - Convert the specified string into a C string by i) escaping
   /// '\\' and " characters and ii) replacing newline character(s) with "\\n".
@@ -419,7 +419,7 @@ public:
   /// location should refer to. The default offset (0) produces a source
   /// location pointing just past the end of the token; an offset of 1 produces
   /// a source location pointing to the last character in the token, etc.
-  static SourceLocation getLocForEndOfToken(SourceLocation Loc, unsigned Offset,
+  static SourceLocation getLocForEndOfToken(SourceLocation Loc, uint64_t Offset,
                                             const SourceManager &SM,
                                             const LangOptions &LangOpts);
 
@@ -726,7 +726,7 @@ private:
   //===--------------------------------------------------------------------===//
   // Other lexer functions.
 
-  void SetByteOffset(unsigned Offset, bool StartOfLine);
+  void SetByteOffset(uint64_t Offset, bool StartOfLine);
 
   void PropagateLineStartLeadingSpaceInfo(Token &Result);
 

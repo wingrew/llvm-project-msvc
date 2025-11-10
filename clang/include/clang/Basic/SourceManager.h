@@ -99,28 +99,28 @@ inline bool isModuleMap(CharacteristicKind CK) {
 class LineOffsetMapping {
 public:
   explicit operator bool() const { return Storage; }
-  unsigned size() const {
+  uint64_t size() const {
     assert(Storage);
     return Storage[0];
   }
-  ArrayRef<unsigned> getLines() const {
+  ArrayRef<uint64_t> getLines() const {
     assert(Storage);
-    return ArrayRef<unsigned>(Storage + 1, Storage + 1 + size());
+    return ArrayRef<uint64_t>(Storage + 1, Storage + 1 + size());
   }
-  const unsigned *begin() const { return getLines().begin(); }
-  const unsigned *end() const { return getLines().end(); }
-  const unsigned &operator[](int I) const { return getLines()[I]; }
+  const uint64_t *begin() const { return getLines().begin(); }
+  const uint64_t *end() const { return getLines().end(); }
+  const uint64_t &operator[](uint64_t I) const { return getLines()[I]; }
 
   static LineOffsetMapping get(llvm::MemoryBufferRef Buffer,
                                llvm::BumpPtrAllocator &Alloc);
 
   LineOffsetMapping() = default;
-  LineOffsetMapping(ArrayRef<unsigned> LineOffsets,
+  LineOffsetMapping(ArrayRef<uint64_t> LineOffsets,
                     llvm::BumpPtrAllocator &Alloc);
 
 private:
   /// First element is the size, followed by elements at off-by-one indexes.
-  unsigned *Storage = nullptr;
+  uint64_t *Storage = nullptr;
 };
 
 /// One instance of this struct is kept for every file loaded or used.
@@ -215,13 +215,13 @@ public:
   /// This can be the size of the source file or the size of an
   /// arbitrary scratch buffer.  If the ContentCache encapsulates a source
   /// file this size is retrieved from the file's FileEntry.
-  unsigned getSize() const;
+  uint64_t getSize() const;
 
   /// Returns the number of bytes actually mapped for this
   /// ContentCache.
   ///
   /// This can be 0 if the MemBuffer was not actually expanded.
-  unsigned getSizeBytesMapped() const;
+  uint64_t getSizeBytesMapped() const;
 
   /// Returns the kind of memory used to back the memory buffer for
   /// this content cache.  This is used for performance analysis.
@@ -556,7 +556,7 @@ class InBeforeInTUCacheEntry {
   /// Usually, this represents the location of the \#include for QueryFID, but
   /// if LQueryFID is a parent of RQueryFID (or vice versa) then these can be a
   /// random token in the parent.
-  unsigned LCommonOffset, RCommonOffset;
+  uint64_t LCommonOffset, RCommonOffset;
 
 public:
   /// Return true if the currently cached values match up with
@@ -569,7 +569,7 @@ public:
 
   /// If the cache is valid, compute the result given the
   /// specified offsets in the LHS/RHS FileID's.
-  bool getCachedResult(unsigned LOffset, unsigned ROffset) const {
+  bool getCachedResult(uint64_t LOffset, uint64_t ROffset) const {
     // If one of the query files is the common file, use the offset.  Otherwise,
     // use the #include loc in the common file.
     if (LQueryFID != CommonFID) LOffset = LCommonOffset;
@@ -599,8 +599,8 @@ public:
     IsLQFIDBeforeRQFID = false;
   }
 
-  void setCommonLoc(FileID commonFID, unsigned lCommonOffset,
-                    unsigned rCommonOffset) {
+  void setCommonLoc(FileID commonFID, uint64_t lCommonOffset,
+                    uint64_t rCommonOffset) {
     CommonFID = commonFID;
     LCommonOffset = lCommonOffset;
     RCommonOffset = rCommonOffset;
@@ -730,8 +730,8 @@ class SourceManager : public RefCountedBase<SourceManager> {
   /// method which is used to speedup getLineNumber calls to nearby locations.
   mutable FileID LastLineNoFileIDQuery;
   mutable const SrcMgr::ContentCache *LastLineNoContentCache;
-  mutable unsigned LastLineNoFilePos;
-  mutable unsigned LastLineNoResult;
+  mutable uint64_t LastLineNoFilePos;
+  mutable uint64_t LastLineNoResult;
 
   /// The file ID for the main source file of the translation unit.
   FileID MainFileID;
@@ -740,15 +740,15 @@ class SourceManager : public RefCountedBase<SourceManager> {
   FileID PreambleFileID;
 
   // Statistics for -print-stats.
-  mutable unsigned NumLinearScans = 0;
-  mutable unsigned NumBinaryProbes = 0;
+  mutable uint64_t NumLinearScans = 0;
+  mutable uint64_t NumBinaryProbes = 0;
 
   /// Associates a FileID with its "included/expanded in" decomposed
   /// location.
   ///
   /// Used to cache results from and speed-up \c getDecomposedIncludedLoc
   /// function.
-  mutable llvm::DenseMap<FileID, std::pair<FileID, unsigned>> IncludedLocMap;
+  mutable llvm::DenseMap<FileID, std::pair<FileID, uint64_t>> IncludedLocMap;
 
   /// The key value into the IsBeforeInTUCache table.
   using IsBeforeInTUCacheKey = std::pair<FileID, FileID>;
@@ -775,7 +775,7 @@ class SourceManager : public RefCountedBase<SourceManager> {
 
   /// Lazily computed map of macro argument chunks to their expanded
   /// source location.
-  using MacroArgsMap = std::map<unsigned, SourceLocation>;
+  using MacroArgsMap = std::map<uint64_t, SourceLocation>;
 
   mutable llvm::DenseMap<FileID, std::unique_ptr<MacroArgsMap>>
       MacroArgsCacheMap;
@@ -907,7 +907,7 @@ public:
   /// \p ExpansionLoc is the parameter name in the (expanded) macro body.
   SourceLocation createMacroArgExpansionLoc(SourceLocation SpellingLoc,
                                             SourceLocation ExpansionLoc,
-                                            unsigned Length);
+                                            uint64_t Length);
 
   /// Creates an expansion SLocEntry for a macro use. Returns its start.
   ///
@@ -916,7 +916,7 @@ public:
   SourceLocation createExpansionLoc(SourceLocation SpellingLoc,
                                     SourceLocation ExpansionLocStart,
                                     SourceLocation ExpansionLocEnd,
-                                    unsigned Length,
+                                    uint64_t Length,
                                     bool ExpansionIsTokenRange = true,
                                     int LoadedID = 0,
                                     SourceLocation::UIntTy LoadedOffset = 0);
@@ -1224,7 +1224,7 @@ public:
   SourceLocation getImmediateSpellingLoc(SourceLocation Loc) const;
 
   /// Form a SourceLocation from a FileID and Offset pair.
-  SourceLocation getComposedLoc(FileID FID, unsigned Offset) const {
+  SourceLocation getComposedLoc(FileID FID, uint64_t Offset) const {
     auto *Entry = getSLocEntryOrNull(FID);
     if (!Entry)
       return SourceLocation();
@@ -1238,7 +1238,7 @@ public:
   ///
   /// The first element is the FileID, the second is the offset from the
   /// start of the buffer of the location.
-  std::pair<FileID, unsigned> getDecomposedLoc(SourceLocation Loc) const {
+  std::pair<FileID, uint64_t> getDecomposedLoc(SourceLocation Loc) const {
     FileID FID = getFileID(Loc);
     auto *Entry = getSLocEntryOrNull(FID);
     if (!Entry)
@@ -1250,14 +1250,14 @@ public:
   ///
   /// If the location is an expansion record, walk through it until we find
   /// the final location expanded.
-  std::pair<FileID, unsigned>
+  std::pair<FileID, uint64_t>
   getDecomposedExpansionLoc(SourceLocation Loc) const {
     FileID FID = getFileID(Loc);
     auto *E = getSLocEntryOrNull(FID);
     if (!E)
       return std::make_pair(FileID(), 0);
 
-    unsigned Offset = Loc.getOffset()-E->getOffset();
+    uint64_t Offset = Loc.getOffset()-E->getOffset();
     if (Loc.isFileID())
       return std::make_pair(FID, Offset);
 
@@ -1268,14 +1268,14 @@ public:
   ///
   /// If the location is an expansion record, walk through it until we find
   /// its spelling record.
-  std::pair<FileID, unsigned>
+  std::pair<FileID, uint64_t>
   getDecomposedSpellingLoc(SourceLocation Loc) const {
     FileID FID = getFileID(Loc);
     auto *E = getSLocEntryOrNull(FID);
     if (!E)
       return std::make_pair(FileID(), 0);
 
-    unsigned Offset = Loc.getOffset()-E->getOffset();
+    uint64_t Offset = Loc.getOffset()-E->getOffset();
     if (Loc.isFileID())
       return std::make_pair(FID, Offset);
     return getDecomposedSpellingLocSlowCase(E, Offset);
@@ -1283,13 +1283,13 @@ public:
 
   /// Returns the "included/expanded in" decomposed location of the given
   /// FileID.
-  std::pair<FileID, unsigned> getDecomposedIncludedLoc(FileID FID) const;
+  std::pair<FileID, uint64_t> getDecomposedIncludedLoc(FileID FID) const;
 
   /// Returns the offset from the start of the file that the
   /// specified SourceLocation represents.
   ///
   /// This is not very meaningful for a macro ID.
-  unsigned getFileOffset(SourceLocation SpellingLoc) const {
+  uint64_t getFileOffset(SourceLocation SpellingLoc) const {
     return getDecomposedLoc(SpellingLoc).second;
   }
 
@@ -1335,7 +1335,7 @@ public:
   /// If it's true and \p RelativeOffset is non-null, it will be set to the
   /// relative offset of \p Loc inside the chunk.
   bool
-  isInSLocAddrSpace(SourceLocation Loc, SourceLocation Start, unsigned Length,
+  isInSLocAddrSpace(SourceLocation Loc, SourceLocation Start, uint64_t Length,
                     SourceLocation::UIntTy *RelativeOffset = nullptr) const {
     assert(((Start.getOffset() < NextLocalOffset &&
                Start.getOffset()+Length <= NextLocalOffset) ||
@@ -1391,13 +1391,13 @@ public:
   /// returns zero if the column number isn't known.  This may only be called
   /// on a file sloc, so you must choose a spelling or expansion location
   /// before calling this method.
-  unsigned getColumnNumber(FileID FID, unsigned FilePos,
+  uint64_t getColumnNumber(FileID FID, uint64_t FilePos,
                            bool *Invalid = nullptr) const;
-  unsigned getSpellingColumnNumber(SourceLocation Loc,
+  uint64_t getSpellingColumnNumber(SourceLocation Loc,
                                    bool *Invalid = nullptr) const;
-  unsigned getExpansionColumnNumber(SourceLocation Loc,
+  uint64_t getExpansionColumnNumber(SourceLocation Loc,
                                     bool *Invalid = nullptr) const;
-  unsigned getPresumedColumnNumber(SourceLocation Loc,
+  uint64_t getPresumedColumnNumber(SourceLocation Loc,
                                    bool *Invalid = nullptr) const;
 
   /// Given a SourceLocation, return the spelling line number
@@ -1406,10 +1406,10 @@ public:
   /// This requires building and caching a table of line offsets for the
   /// MemoryBuffer, so this is not cheap: use only when about to emit a
   /// diagnostic.
-  unsigned getLineNumber(FileID FID, unsigned FilePos, bool *Invalid = nullptr) const;
-  unsigned getSpellingLineNumber(SourceLocation Loc, bool *Invalid = nullptr) const;
-  unsigned getExpansionLineNumber(SourceLocation Loc, bool *Invalid = nullptr) const;
-  unsigned getPresumedLineNumber(SourceLocation Loc, bool *Invalid = nullptr) const;
+  uint64_t getLineNumber(FileID FID, uint64_t FilePos, bool *Invalid = nullptr) const;
+  uint64_t getSpellingLineNumber(SourceLocation Loc, bool *Invalid = nullptr) const;
+  uint64_t getExpansionLineNumber(SourceLocation Loc, bool *Invalid = nullptr) const;
+  uint64_t getPresumedLineNumber(SourceLocation Loc, bool *Invalid = nullptr) const;
 
   /// Return the filename or buffer identifier of the buffer the
   /// location is in.
@@ -1529,13 +1529,13 @@ public:
   }
 
   /// The size of the SLocEntry that \p FID represents.
-  unsigned getFileIDSize(FileID FID) const;
+  uint64_t getFileIDSize(FileID FID) const;
 
   /// Given a specific FileID, returns true if \p Loc is inside that
   /// FileID chunk and sets relative offset (offset of \p Loc from beginning
   /// of FileID) to \p relativeOffset.
   bool isInFileID(SourceLocation Loc, FileID FID,
-                  unsigned *RelativeOffset = nullptr) const {
+                  uint64_t *RelativeOffset = nullptr) const {
     SourceLocation::UIntTy Offs = Loc.getOffset();
     if (isOffsetInFileID(FID, Offs)) {
       if (RelativeOffset)
@@ -1557,7 +1557,7 @@ public:
   /// specified by Loc.
   ///
   /// If FilenameID is -1, it is considered to be unspecified.
-  void AddLineNote(SourceLocation Loc, unsigned LineNo, int FilenameID,
+  void AddLineNote(SourceLocation Loc, uint64_t LineNo, int FilenameID,
                    bool IsFileEntry, bool IsFileExit,
                    SrcMgr::CharacteristicKind FileKind);
 
@@ -1602,7 +1602,7 @@ public:
   /// If the source file is included multiple times, the source location will
   /// be based upon the first inclusion.
   SourceLocation translateFileLineCol(const FileEntry *SourceFile,
-                                      unsigned Line, unsigned Col) const;
+                                      uint64_t Line, uint64_t Col) const;
 
   /// Get the FileID for the given file.
   ///
@@ -1616,7 +1616,7 @@ public:
   /// Get the source location in \p FID for the given line:col.
   /// Returns null location if \p FID is not a file SLocEntry.
   SourceLocation translateLineCol(FileID FID,
-                                  unsigned Line, unsigned Col) const;
+                                  uint64_t Line, uint64_t Col) const;
 
   /// If \p Loc points inside a function macro argument, the returned
   /// location will be the macro location in which the argument was expanded.
@@ -1642,8 +1642,8 @@ public:
   ///          are in the same TU. The second bool is true if the first is true
   ///          and \p LOffs is before \p ROffs.
   std::pair<bool, bool>
-  isInTheSameTranslationUnit(std::pair<FileID, unsigned> &LOffs,
-                             std::pair<FileID, unsigned> &ROffs) const;
+  isInTheSameTranslationUnit(std::pair<FileID, uint64_t> &LOffs,
+                             std::pair<FileID, uint64_t> &ROffs) const;
 
   /// Determines the order of 2 source locations in the "source location
   /// address space".
@@ -1818,7 +1818,7 @@ private:
   /// the SLocEntry table and producing a source location that refers to it.
   SourceLocation
   createExpansionLocImpl(const SrcMgr::ExpansionInfo &Expansion,
-                         unsigned Length, int LoadedID = 0,
+                         uint64_t Length, int LoadedID = 0,
                          SourceLocation::UIntTy LoadedOffset = 0);
 
   /// Return true if the specified FileID contains the
@@ -1875,17 +1875,17 @@ private:
   SourceLocation getSpellingLocSlowCase(SourceLocation Loc) const;
   SourceLocation getFileLocSlowCase(SourceLocation Loc) const;
 
-  std::pair<FileID, unsigned>
+  std::pair<FileID, uint64_t>
   getDecomposedExpansionLocSlowCase(const SrcMgr::SLocEntry *E) const;
-  std::pair<FileID, unsigned>
+  std::pair<FileID, uint64_t>
   getDecomposedSpellingLocSlowCase(const SrcMgr::SLocEntry *E,
-                                   unsigned Offset) const;
+                                   uint64_t Offset) const;
   void computeMacroArgsCache(MacroArgsMap &MacroArgsCache, FileID FID) const;
   void associateFileChunkWithMacroArgExp(MacroArgsMap &MacroArgsCache,
                                          FileID FID,
                                          SourceLocation SpellLoc,
                                          SourceLocation ExpansionLoc,
-                                         unsigned ExpansionLength) const;
+                                         uint64_t ExpansionLength) const;
 };
 
 /// Comparison function object.

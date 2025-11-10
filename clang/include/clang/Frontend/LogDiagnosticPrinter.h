@@ -27,10 +27,10 @@ class LogDiagnosticPrinter : public DiagnosticConsumer {
     std::string Filename;
 
     /// The source file line number, if available.
-    unsigned Line;
+    uint64_t Line;
 
     /// The source file column number, if available.
-    unsigned Column;
+    uint64_tColumn;
 
     /// The ID of the diagnostic.
     unsigned DiagnosticID;
