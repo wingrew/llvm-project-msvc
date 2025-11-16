@@ -611,7 +611,7 @@ FileID SourceManager::createFileIDImpl(ContentCache &File, StringRef Filename,
     SLocEntryLoaded[Index] = true;
     return FileID::get(LoadedID);
   }
-  unsigned FileSize = File.getSize();
+  uint64_t FileSize = File.getSize();
   if (!(NextLocalOffset + FileSize + 1 > NextLocalOffset &&
         NextLocalOffset + FileSize + 1 <= CurrentLoadedOffset)) {
     Diag.Report(IncludePos, diag::err_include_too_large);
@@ -631,7 +631,7 @@ FileID SourceManager::createFileIDImpl(ContentCache &File, StringRef Filename,
 }
 
 SourceLocation SourceManager::createMacroArgExpansionLoc(
-    SourceLocation SpellingLoc, SourceLocation ExpansionLoc, uint64_t Length) {
+    SourceLocation SpellingLoc, SourceLocation ExpansionLoc, unsigned Length) {
   ExpansionInfo Info = ExpansionInfo::createForMacroArg(SpellingLoc,
                                                         ExpansionLoc);
   return createExpansionLocImpl(Info, Length);
@@ -639,7 +639,7 @@ SourceLocation SourceManager::createMacroArgExpansionLoc(
 
 SourceLocation SourceManager::createExpansionLoc(
     SourceLocation SpellingLoc, SourceLocation ExpansionLocStart,
-    SourceLocation ExpansionLocEnd, uint64_t Length,
+    SourceLocation ExpansionLocEnd, unsigned Length,
     bool ExpansionIsTokenRange, int LoadedID,
     SourceLocation::UIntTy LoadedOffset) {
   ExpansionInfo Info = ExpansionInfo::create(
@@ -659,7 +659,7 @@ SourceLocation SourceManager::createTokenSplitLoc(SourceLocation Spelling,
 
 SourceLocation
 SourceManager::createExpansionLocImpl(const ExpansionInfo &Info,
-                                      uint64_t Length, int LoadedID,
+                                      unsigned Length, int LoadedID,
                                       SourceLocation::UIntTy LoadedOffset) {
   if (LoadedID < 0) {
     assert(LoadedID != -1 && "Loading sentinel FileID");
@@ -1176,7 +1176,7 @@ const char *SourceManager::getCharacterData(SourceLocation SL,
 
 /// getColumnNumber - Return the column # for the specified file position.
 /// this is significantly cheaper to compute than the line number.
-uint64_t SourceManager::getColumnNumber(FileID FID, uint64_t FilePos,
+unsigned SourceManager::getColumnNumber(FileID FID, uint64_t FilePos,
                                         bool *Invalid) const {
   llvm::Optional<llvm::MemoryBufferRef> MemBuf = getBufferOrNone(FID);
   if (Invalid)
@@ -1230,21 +1230,21 @@ static bool isInvalid(LocType Loc, bool *Invalid) {
   return MyInvalid;
 }
 
-uint64_t SourceManager::getSpellingColumnNumber(SourceLocation Loc,
+unsigned SourceManager::getSpellingColumnNumber(SourceLocation Loc,
                                                 bool *Invalid) const {
   if (isInvalid(Loc, Invalid)) return 0;
   std::pair<FileID, uint64_t> LocInfo = getDecomposedSpellingLoc(Loc);
   return getColumnNumber(LocInfo.first, LocInfo.second, Invalid);
 }
 
-uint64_t SourceManager::getExpansionColumnNumber(SourceLocation Loc,
+unsigned SourceManager::getExpansionColumnNumber(SourceLocation Loc,
                                                  bool *Invalid) const {
   if (isInvalid(Loc, Invalid)) return 0;
   std::pair<FileID, uint64_t> LocInfo = getDecomposedExpansionLoc(Loc);
   return getColumnNumber(LocInfo.first, LocInfo.second, Invalid);
 }
 
-uint64_t SourceManager::getPresumedColumnNumber(SourceLocation Loc,
+unsigned SourceManager::getPresumedColumnNumber(SourceLocation Loc,
                                                 bool *Invalid) const {
   PresumedLoc PLoc = getPresumedLoc(Loc);
   if (isInvalid(PLoc, Invalid)) return 0;
@@ -1638,7 +1638,7 @@ uint64_t SourceManager::getFileIDSize(FileID FID) const {
 /// be based upon an arbitrary inclusion.
 SourceLocation SourceManager::translateFileLineCol(const FileEntry *SourceFile,
                                                   uint64_t Line,
-                                                  uint64_t Col) const {
+                                                  unsigned Col) const {
   assert(SourceFile && "Null source file!");
   assert(Line && Col && "Line and column should start from 1!");
 
@@ -1691,7 +1691,7 @@ FileID SourceManager::translateFile(const FileEntry *SourceFile) const {
 /// Returns null location if \arg FID is not a file SLocEntry.
 SourceLocation SourceManager::translateLineCol(FileID FID,
                                                uint64_t Line,
-                                               uint64_t Col) const {
+                                               unsigned Col) const {
   // Lines are used as a one-based index into a zero-based array. This assert
   // checks for possible buffer underruns.
   assert(Line && Col && "Line and column should start from 1!");
@@ -1823,7 +1823,7 @@ void SourceManager::associateFileChunkWithMacroArgExp(
                                          FileID FID,
                                          SourceLocation SpellLoc,
                                          SourceLocation ExpansionLoc,
-                                         uint64_t ExpansionLength) const {
+                                         unsigned ExpansionLength) const {
   if (!SpellLoc.isFileID()) {
     SourceLocation::UIntTy SpellBeginOffs = SpellLoc.getOffset();
     SourceLocation::UIntTy SpellEndOffs = SpellBeginOffs + ExpansionLength;

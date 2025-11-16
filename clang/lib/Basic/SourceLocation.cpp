@@ -213,7 +213,7 @@ uint64_t FullSourceLoc::getLineNumber(bool *Invalid) const {
   return SrcMgr->getLineNumber(getFileID(), getFileOffset(), Invalid);
 }
 
-uint64_t FullSourceLoc::getColumnNumber(bool *Invalid) const {
+unsigned FullSourceLoc::getColumnNumber(bool *Invalid) const {
   assert(isValid());
   return SrcMgr->getColumnNumber(getFileID(), getFileOffset(), Invalid);
 }
@@ -228,7 +228,7 @@ uint64_t FullSourceLoc::getExpansionLineNumber(bool *Invalid) const {
   return SrcMgr->getExpansionLineNumber(*this, Invalid);
 }
 
-uint64_t FullSourceLoc::getExpansionColumnNumber(bool *Invalid) const {
+unsigned FullSourceLoc::getExpansionColumnNumber(bool *Invalid) const {
   assert(isValid());
   return SrcMgr->getExpansionColumnNumber(*this, Invalid);
 }
@@ -238,7 +238,7 @@ uint64_t FullSourceLoc::getSpellingLineNumber(bool *Invalid) const {
   return SrcMgr->getSpellingLineNumber(*this, Invalid);
 }
 
-uint64_t FullSourceLoc::getSpellingColumnNumber(bool *Invalid) const {
+unsigned FullSourceLoc::getSpellingColumnNumber(bool *Invalid) const {
   assert(isValid());
   return SrcMgr->getSpellingColumnNumber(*this, Invalid);
 }

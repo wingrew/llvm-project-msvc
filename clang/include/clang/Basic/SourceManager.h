@@ -740,8 +740,8 @@ class SourceManager : public RefCountedBase<SourceManager> {
   FileID PreambleFileID;
 
   // Statistics for -print-stats.
-  mutable uint64_t NumLinearScans = 0;
-  mutable uint64_t NumBinaryProbes = 0;
+  mutable unsigned NumLinearScans = 0;
+  mutable unsigned NumBinaryProbes = 0;
 
   /// Associates a FileID with its "included/expanded in" decomposed
   /// location.
@@ -775,7 +775,7 @@ class SourceManager : public RefCountedBase<SourceManager> {
 
   /// Lazily computed map of macro argument chunks to their expanded
   /// source location.
-  using MacroArgsMap = std::map<uint64_t, SourceLocation>;
+  using MacroArgsMap = std::map<unsigned, SourceLocation>;
 
   mutable llvm::DenseMap<FileID, std::unique_ptr<MacroArgsMap>>
       MacroArgsCacheMap;
@@ -907,7 +907,7 @@ public:
   /// \p ExpansionLoc is the parameter name in the (expanded) macro body.
   SourceLocation createMacroArgExpansionLoc(SourceLocation SpellingLoc,
                                             SourceLocation ExpansionLoc,
-                                            uint64_t Length);
+                                            unsigned Length);
 
   /// Creates an expansion SLocEntry for a macro use. Returns its start.
   ///
@@ -916,7 +916,7 @@ public:
   SourceLocation createExpansionLoc(SourceLocation SpellingLoc,
                                     SourceLocation ExpansionLocStart,
                                     SourceLocation ExpansionLocEnd,
-                                    uint64_t Length,
+                                    unsigned Length,
                                     bool ExpansionIsTokenRange = true,
                                     int LoadedID = 0,
                                     SourceLocation::UIntTy LoadedOffset = 0);
@@ -1391,13 +1391,13 @@ public:
   /// returns zero if the column number isn't known.  This may only be called
   /// on a file sloc, so you must choose a spelling or expansion location
   /// before calling this method.
-  uint64_t getColumnNumber(FileID FID, uint64_t FilePos,
+  unsigned getColumnNumber(FileID FID, uint64_t FilePos,
                            bool *Invalid = nullptr) const;
-  uint64_t getSpellingColumnNumber(SourceLocation Loc,
+  unsigned getSpellingColumnNumber(SourceLocation Loc,
                                    bool *Invalid = nullptr) const;
-  uint64_t getExpansionColumnNumber(SourceLocation Loc,
+  unsigned getExpansionColumnNumber(SourceLocation Loc,
                                     bool *Invalid = nullptr) const;
-  uint64_t getPresumedColumnNumber(SourceLocation Loc,
+  unsigned getPresumedColumnNumber(SourceLocation Loc,
                                    bool *Invalid = nullptr) const;
 
   /// Given a SourceLocation, return the spelling line number
@@ -1602,7 +1602,7 @@ public:
   /// If the source file is included multiple times, the source location will
   /// be based upon the first inclusion.
   SourceLocation translateFileLineCol(const FileEntry *SourceFile,
-                                      uint64_t Line, uint64_t Col) const;
+                                      uint64_t Line, unsigned Col) const;
 
   /// Get the FileID for the given file.
   ///
@@ -1616,7 +1616,7 @@ public:
   /// Get the source location in \p FID for the given line:col.
   /// Returns null location if \p FID is not a file SLocEntry.
   SourceLocation translateLineCol(FileID FID,
-                                  uint64_t Line, uint64_t Col) const;
+                                  uint64_t Line, unsigned Col) const;
 
   /// If \p Loc points inside a function macro argument, the returned
   /// location will be the macro location in which the argument was expanded.
@@ -1818,7 +1818,7 @@ private:
   /// the SLocEntry table and producing a source location that refers to it.
   SourceLocation
   createExpansionLocImpl(const SrcMgr::ExpansionInfo &Expansion,
-                         uint64_t Length, int LoadedID = 0,
+                         unsigned Length, int LoadedID = 0,
                          SourceLocation::UIntTy LoadedOffset = 0);
 
   /// Return true if the specified FileID contains the
@@ -1885,7 +1885,7 @@ private:
                                          FileID FID,
                                          SourceLocation SpellLoc,
                                          SourceLocation ExpansionLoc,
-                                         uint64_t ExpansionLength) const;
+                                         unsigned ExpansionLength) const;
 };
 
 /// Comparison function object.
