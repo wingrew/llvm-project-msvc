@@ -454,7 +454,7 @@ void HTMLDiagnostics::dumpCoverageData(
       os << ", ";
 
     os << "\"" << I->first.getHashValue() << "\": {";
-    for (unsigned LineNo : I->second) {
+    for (uint64_t LineNo : I->second) {
       if (LineNo != *(I->second.begin()))
         os << ", ";
 

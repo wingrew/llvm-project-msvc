@@ -1967,7 +1967,7 @@ static void updateExecutedLinesWithDiagnosticPieces(PathDiagnostic &PD) {
   for (const auto &P : path) {
     FullSourceLoc Loc = P->getLocation().asLocation().getExpansionLoc();
     FileID FID = Loc.getFileID();
-    unsigned LineNo = Loc.getLineNumber();
+    uint64_t LineNo = Loc.getLineNumber();
     assert(FID.isValid());
     ExecutedLines[FID].insert(LineNo);
   }
@@ -3140,11 +3140,11 @@ static void populateExecutedLinesWithFunctionSignature(
     : SignatureSourceRange.getEnd();
   if (!Start.isValid() || !End.isValid())
     return;
-  unsigned StartLine = SM.getExpansionLineNumber(Start);
-  unsigned EndLine = SM.getExpansionLineNumber(End);
+  uint64_t StartLine = SM.getExpansionLineNumber(Start);
+  uint64_t EndLine = SM.getExpansionLineNumber(End);
 
   FileID FID = SM.getFileID(SM.getExpansionLoc(Start));
-  for (unsigned Line = StartLine; Line <= EndLine; Line++)
+  for (uint64_t Line = StartLine; Line <= EndLine; Line++)
     ExecutedLines[FID].insert(Line);
 }
 
@@ -3156,7 +3156,7 @@ static void populateExecutedLinesWithStmt(
     return;
   SourceLocation ExpansionLoc = SM.getExpansionLoc(Loc);
   FileID FID = SM.getFileID(ExpansionLoc);
-  unsigned LineNo = SM.getExpansionLineNumber(ExpansionLoc);
+  uint64_t LineNo = SM.getExpansionLineNumber(ExpansionLoc);
   ExecutedLines[FID].insert(LineNo);
 }
 
