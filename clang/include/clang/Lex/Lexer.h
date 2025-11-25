@@ -59,7 +59,7 @@ enum ConflictMarkerKind {
 /// The preamble includes the BOM, if any.
 struct PreambleBounds {
   /// Size of the preamble in bytes.
-  unsigned Size;
+  uint64_t Size;
 
   /// Whether the preamble ends at the start of a new line.
   ///
@@ -67,7 +67,7 @@ struct PreambleBounds {
   /// a line after skipping the preamble.
   bool PreambleEndsAtStartOfLine;
 
-  PreambleBounds(unsigned Size, bool PreambleEndsAtStartOfLine)
+  PreambleBounds(uint64_t Size, bool PreambleEndsAtStartOfLine)
       : Size(Size), PreambleEndsAtStartOfLine(PreambleEndsAtStartOfLine) {}
 };
 
@@ -190,7 +190,7 @@ public:
   static Lexer *Create_PragmaLexer(SourceLocation SpellingLoc,
                                    SourceLocation ExpansionLocStart,
                                    SourceLocation ExpansionLocEnd,
-                                   unsigned TokLen, Preprocessor &PP);
+                                   uint64_t TokLen, Preprocessor &PP);
 
   /// getFileLoc - Return the File Location for the file we are lexing out of.
   /// The physical location encodes the location where the characters come from,
@@ -296,7 +296,7 @@ public:
 
   /// getSourceLocation - Return a source location identifier for the specified
   /// offset in the current file.
-  SourceLocation getSourceLocation(const char *Loc, unsigned TokLen = 1) const;
+  SourceLocation getSourceLocation(const char *Loc, uint64_t TokLen = 1) const;
 
   /// getSourceLocation - Return a source location for the next character in
   /// the current file.
@@ -368,7 +368,7 @@ public:
   /// its length in bytes in the input file.  If the token needs cleaning (e.g.
   /// includes a trigraph or an escaped newline) then this count includes bytes
   /// that are part of that.
-  static unsigned MeasureTokenLength(SourceLocation Loc,
+  static uint64_t MeasureTokenLength(SourceLocation Loc,
                                      const SourceManager &SM,
                                      const LangOptions &LangOpts);
 
@@ -618,7 +618,7 @@ private:
   /// TokEnd.
   void FormTokenWithChars(Token &Result, const char *TokEnd,
                           tok::TokenKind Kind) {
-    unsigned TokLen = TokEnd-BufferPtr;
+    uint64_t TokLen = TokEnd-BufferPtr;
     Result.setLength(TokLen);
     Result.setLocation(getSourceLocation(BufferPtr, TokLen));
     Result.setKind(Kind);

@@ -57,7 +57,7 @@ const unsigned VERSION_MINOR = 0;
 ///
 /// The ID numbers of identifiers are consecutive (in order of discovery)
 /// and start at 1. 0 is reserved for NULL.
-using IdentifierID = uint32_t;
+using IdentifierID = uint64_t;
 
 /// An ID number that refers to a declaration in an AST file.
 ///
@@ -65,7 +65,7 @@ using IdentifierID = uint32_t;
 /// discovery), with values below NUM_PREDEF_DECL_IDS being reserved.
 /// At the start of a chain of precompiled headers, declaration ID 1 is
 /// used for the translation unit declaration.
-using DeclID = uint32_t;
+using DeclID = uint64_t;
 
 // FIXME: Turn these into classes so we can have some type safety when
 // we go from local ID to global and vice-versa.
@@ -150,7 +150,7 @@ using LocalMacroID = uint32_t;
 const unsigned int NUM_PREDEF_MACRO_IDS = 1;
 
 /// An ID number that refers to an ObjC selector in an AST file.
-using SelectorID = uint32_t;
+using SelectorID = uint64_t;
 
 /// The number of predefined selector IDs.
 const unsigned int NUM_PREDEF_SELECTOR_IDS = 1;

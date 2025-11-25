@@ -71,7 +71,7 @@ class TokenLexer {
   SourceLocation MacroDefStart;
 
   /// Length of the macro definition.
-  unsigned MacroDefLength;
+  uint64_t MacroDefLength;
 
   /// Lexical information about the expansion point of the macro: the identifier
   /// that the macro expanded from had these properties.

@@ -64,7 +64,7 @@ class MacroInfo {
   unsigned NumReplacementTokens = 0;
 
   /// Length in characters of the macro definition.
-  mutable unsigned DefinitionLength;
+  mutable uint64_t DefinitionLength;
   mutable bool IsDefinitionLengthCached : 1;
 
   /// True if this macro is function-like, false if it is object-like.
@@ -132,7 +132,7 @@ public:
   SourceLocation getDefinitionEndLoc() const { return EndLocation; }
 
   /// Get length in characters of the macro definition.
-  unsigned getDefinitionLength(const SourceManager &SM) const {
+  uint64_t getDefinitionLength(const SourceManager &SM) const {
     if (IsDefinitionLengthCached)
       return DefinitionLength;
     return getDefinitionLengthSlow(SM);
@@ -301,7 +301,7 @@ public:
 private:
   friend class Preprocessor;
 
-  unsigned getDefinitionLengthSlow(const SourceManager &SM) const;
+  uint64_t getDefinitionLengthSlow(const SourceManager &SM) const;
 };
 
 /// Encapsulates changes to the "macros namespace" (the location where

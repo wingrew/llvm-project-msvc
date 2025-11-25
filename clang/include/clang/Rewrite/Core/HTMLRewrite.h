@@ -44,7 +44,7 @@ namespace html {
 
   /// HighlightRange - This is the same as the above method, but takes
   /// decomposed file locations.
-  void HighlightRange(RewriteBuffer &RB, unsigned B, unsigned E,
+  void HighlightRange(RewriteBuffer &RB, uint64_t B, uint64_t E,
                       const char *BufferStart,
                       const char *StartTag, const char *EndTag);
 

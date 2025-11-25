@@ -74,7 +74,7 @@ public:
   int findPositionInParent(NodeId Id) const;
 
   // Returns the starting and ending offset of the node in its source file.
-  std::pair<unsigned, unsigned> getSourceRangeOffsets(const Node &N) const;
+  std::pair<uint64_t, uint64_t> getSourceRangeOffsets(const Node &N) const;
 
   /// Serialize the node attributes to a string representation. This should
   /// uniquely distinguish nodes of the same kind. Note that this function just

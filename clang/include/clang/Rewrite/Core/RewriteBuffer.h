@@ -57,13 +57,13 @@ public:
   raw_ostream &write(raw_ostream &Stream) const;
 
   /// RemoveText - Remove the specified text.
-  void RemoveText(unsigned OrigOffset, unsigned Size,
-                  bool removeLineIfEmpty = false);
+
+  void RemoveText(uint64_t OrigOffset, uint64_t Size, bool removeLineIfEmpty);
 
   /// InsertText - Insert some text at the specified point, where the offset in
   /// the buffer is specified relative to the original SourceBuffer.  The
   /// text is inserted after the specified location.
-  void InsertText(unsigned OrigOffset, StringRef Str,
+  void InsertText(uint64_t OrigOffset, StringRef Str,
                   bool InsertAfter = true);
 
 
@@ -78,7 +78,7 @@ public:
   /// InsertTextAfter - Insert some text at the specified point, where the
   /// offset in the buffer is specified relative to the original SourceBuffer.
   /// The text is inserted after the specified location.
-  void InsertTextAfter(unsigned OrigOffset, StringRef Str) {
+  void InsertTextAfter(uint64_t OrigOffset, StringRef Str) {
     InsertText(OrigOffset, Str);
   }
 
@@ -94,20 +94,20 @@ private:
   /// RewriteBuffer.  If AfterInserts is true and if the OrigOffset indicates a
   /// position where text is inserted, the location returned will be after any
   /// inserted text at the position.
-  unsigned getMappedOffset(unsigned OrigOffset,
+  uint64_t getMappedOffset(uint64_t OrigOffset,
                            bool AfterInserts = false) const{
     return Deltas.getDeltaAt(2*OrigOffset+AfterInserts)+OrigOffset;
   }
 
   /// AddInsertDelta - When an insertion is made at a position, this
   /// method is used to record that information.
-  void AddInsertDelta(unsigned OrigOffset, int Change) {
+  void AddInsertDelta(uint64_t OrigOffset, int64_t Change) {
     return Deltas.AddDelta(2*OrigOffset, Change);
   }
 
   /// AddReplaceDelta - When a replacement/deletion is made at a position, this
   /// method is used to record that information.
-  void AddReplaceDelta(unsigned OrigOffset, int Change) {
+  void AddReplaceDelta(uint64_t OrigOffset, uint64_t Change) {
     return Deltas.AddDelta(2*OrigOffset+1, Change);
   }
 };

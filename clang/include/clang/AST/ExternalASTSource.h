@@ -107,7 +107,7 @@ public:
   /// returns non-zero for GetNumKnownSelectors().
   ///
   /// The default implementation of this method is a no-op.
-  virtual Selector GetExternalSelector(uint32_t ID);
+  virtual Selector GetExternalSelector(uint64_t ID);
 
   /// Returns the number of selectors known to the external AST
   /// source.
@@ -188,8 +188,8 @@ public:
   /// Get the decls that are contained in a file in the Offset/Length
   /// range. \p Length can be 0 to indicate a point at \p Offset instead of
   /// a range.
-  virtual void FindFileRegionDecls(FileID File, unsigned Offset,
-                                   unsigned Length,
+  virtual void FindFileRegionDecls(FileID File, uint64_t Offset,
+                                   uint64_t Length,
                                    SmallVectorImpl<Decl *> &Decls);
 
   /// Gives the external AST source an opportunity to complete

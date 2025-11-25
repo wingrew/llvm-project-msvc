@@ -83,7 +83,7 @@ class PrintPPOutputPPCallbacks : public PPCallbacks {
 public:
   raw_ostream &OS;
 private:
-  unsigned CurLine;
+  uint64_t CurLine;
 
   bool EmittedTokensOnThisLine;
   bool EmittedDirectiveOnThisLine;
@@ -190,7 +190,7 @@ public:
   /// @return Whether column adjustments are necessary.
   bool MoveToLine(const Token &Tok, bool RequireStartOfLine) {
     PresumedLoc PLoc = SM.getPresumedLoc(Tok.getLocation());
-    unsigned TargetLine = PLoc.isValid() ? PLoc.getLine() : CurLine;
+    uint64_t TargetLine = PLoc.isValid() ? PLoc.getLine() : CurLine;
     bool IsFirstInFile =
         Tok.isAtStartOfLine() && PLoc.isValid() && PLoc.getLine() == 1;
     return MoveToLine(TargetLine, RequireStartOfLine) || IsFirstInFile;
@@ -200,16 +200,16 @@ public:
   /// line was inserted.
   bool MoveToLine(SourceLocation Loc, bool RequireStartOfLine) {
     PresumedLoc PLoc = SM.getPresumedLoc(Loc);
-    unsigned TargetLine = PLoc.isValid() ? PLoc.getLine() : CurLine;
+    uint64_t TargetLine = PLoc.isValid() ? PLoc.getLine() : CurLine;
     return MoveToLine(TargetLine, RequireStartOfLine);
   }
-  bool MoveToLine(unsigned LineNo, bool RequireStartOfLine);
+  bool MoveToLine(uint64_t LineNo, bool RequireStartOfLine);
 
   bool AvoidConcat(const Token &PrevPrevTok, const Token &PrevTok,
                    const Token &Tok) {
     return ConcatInfo.AvoidConcat(PrevPrevTok, PrevTok, Tok);
   }
-  void WriteLineInfo(unsigned LineNo, const char *Extra=nullptr,
+  void WriteLineInfo(uint64_t LineNo, const char *Extra=nullptr,
                      unsigned ExtraLen=0);
   bool LineMarkersAreDisabled() const { return DisableLineMarkers; }
   void HandleNewlinesInToken(const char *TokStr, unsigned Len);
@@ -228,7 +228,7 @@ public:
 };
 }  // end anonymous namespace
 
-void PrintPPOutputPPCallbacks::WriteLineInfo(unsigned LineNo,
+void PrintPPOutputPPCallbacks::WriteLineInfo(uint64_t LineNo,
                                              const char *Extra,
                                              unsigned ExtraLen) {
   startNewLineIfNeeded();
@@ -258,7 +258,7 @@ void PrintPPOutputPPCallbacks::WriteLineInfo(unsigned LineNo,
 /// object.  We can do this by emitting some number of \n's, or be emitting a
 /// #line directive.  This returns false if already at the specified line, true
 /// if some newlines were emitted.
-bool PrintPPOutputPPCallbacks::MoveToLine(unsigned LineNo,
+bool PrintPPOutputPPCallbacks::MoveToLine(uint64_t LineNo,
                                           bool RequireStartOfLine) {
   // If it is required to start a new line or finish the current, insert
   // vertical whitespace now and take it into account when moving to the
@@ -333,7 +333,7 @@ void PrintPPOutputPPCallbacks::FileChanged(SourceLocation Loc,
   if (UserLoc.isInvalid())
     return;
 
-  unsigned NewLine = UserLoc.getLine();
+  uint64_t NewLine = UserLoc.getLine();
 
   if (Reason == PPCallbacks::EnterFile) {
     SourceLocation IncludeLoc = UserLoc.getIncludeLoc();

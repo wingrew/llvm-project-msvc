@@ -3017,7 +3017,7 @@ bool ModuleMapParser::parseModuleMapFile() {
 
 bool ModuleMap::parseModuleMapFile(const FileEntry *File, bool IsSystem,
                                    const DirectoryEntry *Dir, FileID ID,
-                                   unsigned *Offset,
+                                   uint64_t *Offset,
                                    SourceLocation ExternModuleLoc) {
   assert(Target && "Missing target information");
   llvm::DenseMap<const FileEntry *, bool>::iterator Known

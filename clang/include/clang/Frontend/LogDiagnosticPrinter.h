@@ -30,7 +30,7 @@ class LogDiagnosticPrinter : public DiagnosticConsumer {
     uint64_t Line;
 
     /// The source file column number, if available.
-    uint64_tColumn;
+    uint64_t Column;
 
     /// The ID of the diagnostic.
     unsigned DiagnosticID;

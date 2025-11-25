@@ -534,7 +534,7 @@ public:
   /// Get the decls that are contained in a file in the Offset/Length
   /// range. \p Length can be 0 to indicate a point at \p Offset instead of
   /// a range.
-  void findFileRegionDecls(FileID File, uint64_t Offset, unsigned Length,
+  void findFileRegionDecls(FileID File, uint64_t Offset, uint64_t Length,
                            SmallVectorImpl<Decl *> &Decls);
 
   /// Retrieve a reference to the current top-level name hash value.

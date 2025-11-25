@@ -294,7 +294,7 @@ class FileInfo {
   /// preprocessing of this \#include, including this SLocEntry.
   ///
   /// Zero means the preprocessor didn't provide such info for this SLocEntry.
-  unsigned NumCreatedFIDs : 31;
+  uint64_t NumCreatedFIDs : 31;
 
   /// Whether this FileInfo has any \#line directives.
   unsigned HasLineDirectives : 1;
@@ -907,7 +907,7 @@ public:
   /// \p ExpansionLoc is the parameter name in the (expanded) macro body.
   SourceLocation createMacroArgExpansionLoc(SourceLocation SpellingLoc,
                                             SourceLocation ExpansionLoc,
-                                            unsigned Length);
+                                            uint64_t Length);
 
   /// Creates an expansion SLocEntry for a macro use. Returns its start.
   ///
@@ -916,7 +916,7 @@ public:
   SourceLocation createExpansionLoc(SourceLocation SpellingLoc,
                                     SourceLocation ExpansionLocStart,
                                     SourceLocation ExpansionLocEnd,
-                                    unsigned Length,
+                                    uint64_t Length,
                                     bool ExpansionIsTokenRange = true,
                                     int LoadedID = 0,
                                     SourceLocation::UIntTy LoadedOffset = 0);
@@ -1393,9 +1393,9 @@ public:
   /// before calling this method.
   unsigned getColumnNumber(FileID FID, uint64_t FilePos,
                            bool *Invalid = nullptr) const;
-  unsigned getSpellingColumnNumber(SourceLocation Loc,
+  uint64_t getSpellingColumnNumber(SourceLocation Loc,
                                    bool *Invalid = nullptr) const;
-  unsigned getExpansionColumnNumber(SourceLocation Loc,
+  uint64_t getExpansionColumnNumber(SourceLocation Loc,
                                     bool *Invalid = nullptr) const;
   unsigned getPresumedColumnNumber(SourceLocation Loc,
                                    bool *Invalid = nullptr) const;
@@ -1818,7 +1818,7 @@ private:
   /// the SLocEntry table and producing a source location that refers to it.
   SourceLocation
   createExpansionLocImpl(const SrcMgr::ExpansionInfo &Expansion,
-                         unsigned Length, int LoadedID = 0,
+                         uint64_t Length, int LoadedID = 0,
                          SourceLocation::UIntTy LoadedOffset = 0);
 
   /// Return true if the specified FileID contains the

@@ -1025,7 +1025,7 @@ private:
   /// excluded conditional directives. It maps the source buffer pointer at
   /// the beginning of a skipped block, to the number of bytes that should be
   /// skipped.
-  llvm::DenseMap<const char *, unsigned> RecordedSkippedRanges;
+  llvm::DenseMap<const char *, uint64_t> RecordedSkippedRanges;
 
   void updateOutOfDateIdentifier(IdentifierInfo &II) const;
 

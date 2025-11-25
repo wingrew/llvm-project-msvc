@@ -150,8 +150,8 @@ void clang::RewriteMacrosInInput(Preprocessor &PP, raw_ostream *OS) {
 
     // Okay, both tokens are from the same file.  Get their offsets from the
     // start of the file.
-    unsigned PPOffs = SM.getFileOffset(PPLoc);
-    unsigned RawOffs = SM.getFileOffset(RawTok.getLocation());
+    uint64_t PPOffs = SM.getFileOffset(PPLoc);
+    uint64_t RawOffs = SM.getFileOffset(RawTok.getLocation());
 
     // If the offsets are the same and the token kind is the same, ignore them.
     if (PPOffs == RawOffs && isSameToken(RawTok, PPTok)) {
@@ -191,7 +191,7 @@ void clang::RewriteMacrosInInput(Preprocessor &PP, raw_ostream *OS) {
     // Otherwise, there was a replacement an expansion.  Insert the new token
     // in the output buffer.  Insert the whole run of new tokens at once to get
     // them in the right order.
-    unsigned InsertPos = PPOffs;
+    uint64_t InsertPos = PPOffs;
     std::string Expansion;
     while (PPOffs < RawOffs) {
       Expansion += ' ' + PP.getSpelling(PPTok);

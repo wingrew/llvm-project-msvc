@@ -195,7 +195,7 @@ void Lexer::resetExtendedTokenMode() {
 Lexer *Lexer::Create_PragmaLexer(SourceLocation SpellingLoc,
                                  SourceLocation ExpansionLocStart,
                                  SourceLocation ExpansionLocEnd,
-                                 unsigned TokLen, Preprocessor &PP) {
+                                 uint64_t TokLen, Preprocessor &PP) {
   SourceManager &SM = PP.getSourceManager();
 
   // Create the lexer as if we were going to lex the file normally.
@@ -227,7 +227,7 @@ Lexer *Lexer::Create_PragmaLexer(SourceLocation SpellingLoc,
   return L;
 }
 
-void Lexer::seek(unsigned Offset, bool IsAtStartOfLine) {
+void Lexer::seek(uint64_t Offset, bool IsAtStartOfLine) {
   this->IsAtPhysicalStartOfLine = IsAtStartOfLine;
   this->IsAtStartOfLine = IsAtStartOfLine;
   assert((BufferStart + Offset) <= BufferEnd);
@@ -448,7 +448,7 @@ unsigned Lexer::getSpelling(const Token &Tok, const char *&Buffer,
 /// its length in bytes in the input file.  If the token needs cleaning (e.g.
 /// includes a trigraph or an escaped newline) then this count includes bytes
 /// that are part of that.
-unsigned Lexer::MeasureTokenLength(SourceLocation Loc,
+uint64_t Lexer::MeasureTokenLength(SourceLocation Loc,
                                    const SourceManager &SM,
                                    const LangOptions &LangOpts) {
   Token TheTok;
@@ -602,7 +602,7 @@ PreambleBounds Lexer::ComputePreamble(StringRef Buffer,
   Token TheTok;
   SourceLocation ActiveCommentLoc;
 
-  unsigned MaxLineOffset = 0;
+  uint64_t MaxLineOffset = 0;
   if (MaxLines) {
     const char *CurPtr = Buffer.begin();
     unsigned CurLine = 0;
@@ -639,7 +639,7 @@ PreambleBounds Lexer::ComputePreamble(StringRef Buffer,
 
     // Keep track of the # of lines in the preamble.
     if (TheTok.isAtStartOfLine()) {
-      unsigned TokOffset = TheTok.getLocation().getRawEncoding() - StartOffset;
+      uint64_t TokOffset = TheTok.getLocation().getRawEncoding() - StartOffset;
 
       // If we were asked to limit the number of lines in the preamble,
       // and we're about to exceed that limit, we're done.
@@ -784,7 +784,7 @@ unsigned Lexer::getTokenPrefixLength(SourceLocation TokStart, unsigned CharNo,
 /// location should refer to. The default offset (0) produces a source
 /// location pointing just past the end of the token; an offset of 1 produces
 /// a source location pointing to the last character in the token, etc.
-SourceLocation Lexer::getLocForEndOfToken(SourceLocation Loc, unsigned Offset,
+SourceLocation Lexer::getLocForEndOfToken(SourceLocation Loc, uint64_t Offset,
                                           const SourceManager &SM,
                                           const LangOptions &LangOpts) {
   if (Loc.isInvalid())
@@ -795,7 +795,7 @@ SourceLocation Lexer::getLocForEndOfToken(SourceLocation Loc, unsigned Offset,
       return {}; // Points inside the macro expansion.
   }
 
-  unsigned Len = Lexer::MeasureTokenLength(Loc, SM, LangOpts);
+  uint64_t Len = Lexer::MeasureTokenLength(Loc, SM, LangOpts);
   if (Len > Offset)
     Len = Len - Offset;
   else
@@ -835,7 +835,7 @@ bool Lexer::isAtEndOfMacroExpansion(SourceLocation loc,
   assert(loc.isValid() && loc.isMacroID() && "Expected a valid macro loc");
 
   SourceLocation spellLoc = SM.getSpellingLoc(loc);
-  unsigned tokLen = MeasureTokenLength(spellLoc, SM, LangOpts);
+  uint64_t tokLen = MeasureTokenLength(spellLoc, SM, LangOpts);
   if (tokLen == 0)
     return false;
 
@@ -873,7 +873,7 @@ static CharSourceRange makeRangeFromFileLocs(CharSourceRange Range,
   if (FID.isInvalid())
     return {};
 
-  unsigned EndOffs;
+  uint64_t EndOffs;
   if (!SM.isInFileID(End, FID, &EndOffs) ||
       BeginOffs > EndOffs)
     return {};
@@ -975,7 +975,7 @@ StringRef Lexer::getSourceText(CharSourceRange Range,
     return {};
   }
 
-  unsigned EndOffs;
+  uint64_t EndOffs;
   if (!SM.isInFileID(Range.getEnd(), beginInfo.first, &EndOffs) ||
       beginInfo.second > EndOffs) {
     if (Invalid) *Invalid = true;
@@ -1036,7 +1036,7 @@ StringRef Lexer::getImmediateMacroName(SourceLocation Loc,
   // Dig out the buffer where the macro name was spelled and the extents of the
   // name so that we can render it into the expansion note.
   std::pair<FileID, unsigned> ExpansionInfo = SM.getDecomposedLoc(Loc);
-  unsigned MacroTokenLength = Lexer::MeasureTokenLength(Loc, SM, LangOpts);
+  uint64_t MacroTokenLength = Lexer::MeasureTokenLength(Loc, SM, LangOpts);
   StringRef ExpansionBuffer = SM.getBufferData(ExpansionInfo.first);
   return ExpansionBuffer.substr(ExpansionInfo.second, MacroTokenLength);
 }
@@ -1061,7 +1061,7 @@ StringRef Lexer::getImmediateMacroNameForDiagnostics(
   // Dig out the buffer where the macro name was spelled and the extents of the
   // name so that we can render it into the expansion note.
   std::pair<FileID, unsigned> ExpansionInfo = SM.getDecomposedLoc(Loc);
-  unsigned MacroTokenLength = Lexer::MeasureTokenLength(Loc, SM, LangOpts);
+  uint64_t MacroTokenLength = Lexer::MeasureTokenLength(Loc, SM, LangOpts);
   StringRef ExpansionBuffer = SM.getBufferData(ExpansionInfo.first);
   return ExpansionBuffer.substr(ExpansionInfo.second, MacroTokenLength);
 }
@@ -1120,10 +1120,10 @@ StringRef Lexer::getIndentationForLine(SourceLocation Loc,
 /// This is currently only used for _Pragma implementation, so it is the slow
 /// path of the hot getSourceLocation method.  Do not allow it to be inlined.
 static LLVM_ATTRIBUTE_NOINLINE SourceLocation GetMappedTokenLoc(
-    Preprocessor &PP, SourceLocation FileLoc, unsigned CharNo, unsigned TokLen);
+    Preprocessor &PP, SourceLocation FileLoc, unsigned CharNo, uint64_t TokLen);
 static SourceLocation GetMappedTokenLoc(Preprocessor &PP,
                                         SourceLocation FileLoc,
-                                        unsigned CharNo, unsigned TokLen) {
+                                        unsigned CharNo, uint64_t TokLen) {
   assert(FileLoc.isMacroID() && "Must be a macro expansion");
 
   // Otherwise, we're lexing "mapped tokens".  This is used for things like
@@ -1146,13 +1146,13 @@ static SourceLocation GetMappedTokenLoc(Preprocessor &PP,
 /// getSourceLocation - Return a source location identifier for the specified
 /// offset in the current file.
 SourceLocation Lexer::getSourceLocation(const char *Loc,
-                                        unsigned TokLen) const {
+                                        uint64_t TokLen) const {
   assert(Loc >= BufferStart && Loc <= BufferEnd &&
          "Location out of range for this buffer!");
 
   // In the normal case, we're just lexing from a simple file buffer, return
   // the file id from FileLoc with the offset specified.
-  unsigned CharNo = Loc-BufferStart;
+  uint64_t CharNo = Loc-BufferStart;
   if (FileLoc.isFileID())
     return FileLoc.getLocWithOffset(CharNo);
 
@@ -1440,7 +1440,7 @@ Slash:
 //===----------------------------------------------------------------------===//
 
 /// Routine that indiscriminately sets the offset into the source file.
-void Lexer::SetByteOffset(unsigned Offset, bool StartOfLine) {
+void Lexer::SetByteOffset(uint64_t Offset, bool StartOfLine) {
   BufferPtr = BufferStart + Offset;
   if (BufferPtr > BufferEnd)
     BufferPtr = BufferEnd;

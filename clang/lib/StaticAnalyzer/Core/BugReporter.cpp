@@ -1582,8 +1582,8 @@ static Optional<size_t> getLengthOnSingleLine(const SourceManager &SM,
   if (!Buffer)
     return None;
 
-  unsigned BeginOffset = SM.getFileOffset(ExpansionRange.getBegin());
-  unsigned EndOffset = SM.getFileOffset(ExpansionRange.getEnd());
+  uint64_t BeginOffset = SM.getFileOffset(ExpansionRange.getBegin());
+  uint64_t EndOffset = SM.getFileOffset(ExpansionRange.getEnd());
   StringRef Snippet = Buffer->getBuffer().slice(BeginOffset, EndOffset);
 
   // We're searching the raw bytes of the buffer here, which might include

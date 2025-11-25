@@ -457,7 +457,7 @@ private:
   ContinuousRangeMap<unsigned, ModuleFile*, 64> GlobalSLocEntryMap;
 
   using GlobalSLocOffsetMapType =
-      ContinuousRangeMap<unsigned, ModuleFile *, 64>;
+      ContinuousRangeMap<uint64_t, ModuleFile *, 64>;
 
   /// A map of reversed (SourceManager::MaxLoadedOffset - SLocOffset)
   /// SourceLocation offsets to the modules containing them.
@@ -1954,7 +1954,7 @@ public:
   /// Get the decls that are contained in a file in the Offset/Length
   /// range. \p Length can be 0 to indicate a point at \p Offset instead of
   /// a range.
-  void FindFileRegionDecls(FileID File, uint64_t Offset, unsigned Length,
+  void FindFileRegionDecls(FileID File, uint64_t Offset, uint64_t Length,
                            SmallVectorImpl<Decl *> &Decls) override;
 
   /// Notify ASTReader that we started deserialization of
@@ -2059,7 +2059,7 @@ public:
   /// Load a selector from disk, registering its ID if it exists.
   void LoadSelector(Selector Sel);
 
-  void SetIdentifierInfo(unsigned ID, IdentifierInfo *II);
+  void SetIdentifierInfo(uint64_t ID, IdentifierInfo *II);
   void SetGloballyVisibleDecls(IdentifierInfo *II,
                                const SmallVectorImpl<uint32_t> &DeclIDs,
                                SmallVectorImpl<Decl *> *Decls = nullptr);

@@ -136,7 +136,7 @@ private:
     return DirsWithToks.empty() ? pp_none : DirsWithToks.back().Kind;
   }
 
-  unsigned getOffsetAt(const char *CurPtr) const {
+  uint64_t getOffsetAt(const char *CurPtr) const {
     return CurPtr - Input.data();
   }
 

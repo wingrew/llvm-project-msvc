@@ -1250,8 +1250,8 @@ void HTMLDiagnostics::HighlightRange(Rewriter& R, FileID BugFileID,
     return;
 
   // Compute the column number of the end.
-  unsigned EndColNo = SM.getExpansionColumnNumber(InstantiationEnd);
-  unsigned OldEndColNo = EndColNo;
+  uint64_t EndColNo = SM.getExpansionColumnNumber(InstantiationEnd);
+  uint64_t OldEndColNo = EndColNo;
 
   if (EndColNo) {
     // Add in the length of the token, so that we cover multi-char tokens.

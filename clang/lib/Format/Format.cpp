@@ -2576,7 +2576,7 @@ private:
 struct IncludeDirective {
   StringRef Filename;
   StringRef Text;
-  unsigned Offset;
+  uint64_t Offset;
   int Category;
   int Priority;
 };
@@ -2584,7 +2584,7 @@ struct IncludeDirective {
 struct JavaImportDirective {
   StringRef Identifier;
   StringRef Text;
-  unsigned Offset;
+  uint64_t Offset;
   SmallVector<StringRef> AssociatedCommentLines;
   bool IsStatic;
 };
@@ -2592,8 +2592,8 @@ struct JavaImportDirective {
 } // end anonymous namespace
 
 // Determines whether 'Ranges' intersects with ('Start', 'End').
-static bool affectsRange(ArrayRef<tooling::Range> Ranges, unsigned Start,
-                         unsigned End) {
+static bool affectsRange(ArrayRef<tooling::Range> Ranges, uint64_t Start,
+                         uint64_t End) {
   for (auto Range : Ranges) {
     if (Range.getOffset() < End &&
         Range.getOffset() + Range.getLength() > Start) {
@@ -2610,14 +2610,14 @@ static bool affectsRange(ArrayRef<tooling::Range> Ranges, unsigned Start,
 // removed. OffsetToEOL describes the cursor's position relative to the end of
 // its current line.
 // If `Cursor` is not on any #include, `Index` will be UINT_MAX.
-static std::pair<unsigned, unsigned>
+static std::pair<uint64_t, uint64_t>
 FindCursorIndex(const SmallVectorImpl<IncludeDirective> &Includes,
-                const SmallVectorImpl<unsigned> &Indices, unsigned Cursor) {
-  unsigned CursorIndex = UINT_MAX;
-  unsigned OffsetToEOL = 0;
-  for (int i = 0, e = Includes.size(); i != e; ++i) {
-    unsigned Start = Includes[Indices[i]].Offset;
-    unsigned End = Start + Includes[Indices[i]].Text.size();
+                const SmallVectorImpl<unsigned> &Indices, uint64_t Cursor) {
+  uint64_t CursorIndex =std::numeric_limits<uint64_t>::max();
+  uint64_t OffsetToEOL = 0;
+  for (int i = 0, e = (uint64_t)Includes.size(); i != e; ++i) {
+    uint64_t Start = Includes[Indices[i]].Offset;
+    uint64_t End = Start + Includes[Indices[i]].Text.size();
     if (!(Cursor >= Start && Cursor < End))
       continue;
     CursorIndex = Indices[i];
@@ -2664,12 +2664,12 @@ static void sortCppIncludes(const FormatStyle &Style,
                             const SmallVectorImpl<IncludeDirective> &Includes,
                             ArrayRef<tooling::Range> Ranges, StringRef FileName,
                             StringRef Code, tooling::Replacements &Replaces,
-                            unsigned *Cursor) {
+                            uint64_t *Cursor) {
   tooling::IncludeCategoryManager Categories(Style.IncludeStyle, FileName);
-  const unsigned IncludesBeginOffset = Includes.front().Offset;
-  const unsigned IncludesEndOffset =
-      Includes.back().Offset + Includes.back().Text.size();
-  const unsigned IncludesBlockSize = IncludesEndOffset - IncludesBeginOffset;
+  const uint64_t IncludesBeginOffset = Includes.front().Offset;
+  const uint64_t IncludesEndOffset =
+      Includes.back().Offset + (uint64_t)Includes.back().Text.size();
+  const uint64_t IncludesBlockSize = IncludesEndOffset - IncludesBeginOffset;
   if (!affectsRange(Ranges, IncludesBeginOffset, IncludesEndOffset))
     return;
   SmallVector<unsigned, 16> Indices =
@@ -2693,9 +2693,9 @@ static void sortCppIncludes(const FormatStyle &Style,
 
   // The index of the include on which the cursor will be put after
   // sorting/deduplicating.
-  unsigned CursorIndex;
+  uint64_t CursorIndex;
   // The offset from cursor to the end of line.
-  unsigned CursorToEOLOffset;
+  uint64_t CursorToEOLOffset;
   if (Cursor) {
     std::tie(CursorIndex, CursorToEOLOffset) =
         FindCursorIndex(Includes, Indices, *Cursor);
@@ -2739,7 +2739,7 @@ static void sortCppIncludes(const FormatStyle &Style,
   }
 
   if (Cursor && *Cursor >= IncludesEndOffset)
-    *Cursor += result.size() - IncludesBlockSize;
+    *Cursor += (uint64_t)result.size() - IncludesBlockSize;
 
   // If the #includes are out of order, we generate a single replacement fixing
   // the entire range of blocks. Otherwise, no replacement is generated.
@@ -2769,11 +2769,11 @@ tooling::Replacements sortCppIncludes(const FormatStyle &Style, StringRef Code,
                                       ArrayRef<tooling::Range> Ranges,
                                       StringRef FileName,
                                       tooling::Replacements &Replaces,
-                                      unsigned *Cursor) {
-  unsigned Prev = llvm::StringSwitch<size_t>(Code)
+                                      uint64_t *Cursor) {
+  uint64_t Prev = llvm::StringSwitch<size_t>(Code)
                       .StartsWith("\xEF\xBB\xBF", 3) // UTF-8 BOM
                       .Default(0);
-  unsigned SearchFrom = 0;
+  uint64_t SearchFrom = 0;
   llvm::Regex IncludeRegex(CppIncludeRegexPattern);
   SmallVector<StringRef, 4> Matches;
   SmallVector<IncludeDirective, 16> IncludesInBlock;
@@ -2901,10 +2901,10 @@ static void sortJavaImports(const FormatStyle &Style,
                             const SmallVectorImpl<JavaImportDirective> &Imports,
                             ArrayRef<tooling::Range> Ranges, StringRef FileName,
                             StringRef Code, tooling::Replacements &Replaces) {
-  unsigned ImportsBeginOffset = Imports.front().Offset;
-  unsigned ImportsEndOffset =
+  uint64_t ImportsBeginOffset = Imports.front().Offset;
+  uint64_t ImportsEndOffset =
       Imports.back().Offset + Imports.back().Text.size();
-  unsigned ImportsBlockSize = ImportsEndOffset - ImportsBeginOffset;
+  uint64_t ImportsBlockSize = ImportsEndOffset - ImportsBeginOffset;
   if (!affectsRange(Ranges, ImportsBeginOffset, ImportsEndOffset))
     return;
 
@@ -2983,8 +2983,8 @@ tooling::Replacements sortJavaImports(const FormatStyle &Style, StringRef Code,
                                       ArrayRef<tooling::Range> Ranges,
                                       StringRef FileName,
                                       tooling::Replacements &Replaces) {
-  unsigned Prev = 0;
-  unsigned SearchFrom = 0;
+  uint64_t Prev = 0;
+  uint64_t SearchFrom = 0;
   llvm::Regex ImportRegex(JavaImportRegexPattern);
   SmallVector<StringRef, 4> Matches;
   SmallVector<JavaImportDirective, 16> ImportsInBlock;
@@ -3042,7 +3042,7 @@ bool isLikelyXml(StringRef Code) { return Code.ltrim().startswith("<"); }
 
 tooling::Replacements sortIncludes(const FormatStyle &Style, StringRef Code,
                                    ArrayRef<tooling::Range> Ranges,
-                                   StringRef FileName, unsigned *Cursor) {
+                                   StringRef FileName, uint64_t *Cursor) {
   tooling::Replacements Replaces;
   if (!Style.SortIncludes || Style.DisableFormat)
     return Replaces;

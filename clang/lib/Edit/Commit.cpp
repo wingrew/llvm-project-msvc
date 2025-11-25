@@ -253,7 +253,7 @@ bool Commit::canInsertAfterToken(SourceLocation loc, FileOffset &offs,
     return false;
 
   SourceLocation spellLoc = SourceMgr.getSpellingLoc(loc);
-  unsigned tokLen = Lexer::MeasureTokenLength(spellLoc, SourceMgr, LangOpts);
+  uint64_t tokLen = Lexer::MeasureTokenLength(spellLoc, SourceMgr, LangOpts);
   AfterLoc = loc.getLocWithOffset(tokLen);
 
   if (loc.isMacroID())

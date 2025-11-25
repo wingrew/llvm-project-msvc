@@ -631,7 +631,7 @@ FileID SourceManager::createFileIDImpl(ContentCache &File, StringRef Filename,
 }
 
 SourceLocation SourceManager::createMacroArgExpansionLoc(
-    SourceLocation SpellingLoc, SourceLocation ExpansionLoc, unsigned Length) {
+    SourceLocation SpellingLoc, SourceLocation ExpansionLoc, uint64_t Length) {
   ExpansionInfo Info = ExpansionInfo::createForMacroArg(SpellingLoc,
                                                         ExpansionLoc);
   return createExpansionLocImpl(Info, Length);
@@ -639,7 +639,7 @@ SourceLocation SourceManager::createMacroArgExpansionLoc(
 
 SourceLocation SourceManager::createExpansionLoc(
     SourceLocation SpellingLoc, SourceLocation ExpansionLocStart,
-    SourceLocation ExpansionLocEnd, unsigned Length,
+    SourceLocation ExpansionLocEnd, uint64_t Length,
     bool ExpansionIsTokenRange, int LoadedID,
     SourceLocation::UIntTy LoadedOffset) {
   ExpansionInfo Info = ExpansionInfo::create(
@@ -659,7 +659,7 @@ SourceLocation SourceManager::createTokenSplitLoc(SourceLocation Spelling,
 
 SourceLocation
 SourceManager::createExpansionLocImpl(const ExpansionInfo &Info,
-                                      unsigned Length, int LoadedID,
+                                      uint64_t Length, int LoadedID,
                                       SourceLocation::UIntTy LoadedOffset) {
   if (LoadedID < 0) {
     assert(LoadedID != -1 && "Loading sentinel FileID");
@@ -1230,14 +1230,14 @@ static bool isInvalid(LocType Loc, bool *Invalid) {
   return MyInvalid;
 }
 
-unsigned SourceManager::getSpellingColumnNumber(SourceLocation Loc,
+uint64_t SourceManager::getSpellingColumnNumber(SourceLocation Loc,
                                                 bool *Invalid) const {
   if (isInvalid(Loc, Invalid)) return 0;
   std::pair<FileID, uint64_t> LocInfo = getDecomposedSpellingLoc(Loc);
   return getColumnNumber(LocInfo.first, LocInfo.second, Invalid);
 }
 
-unsigned SourceManager::getExpansionColumnNumber(SourceLocation Loc,
+uint64_t SourceManager::getExpansionColumnNumber(SourceLocation Loc,
                                                  bool *Invalid) const {
   if (isInvalid(Loc, Invalid)) return 0;
   std::pair<FileID, uint64_t> LocInfo = getDecomposedExpansionLoc(Loc);
@@ -1539,7 +1539,7 @@ PresumedLoc SourceManager::getPresumedLoc(SourceLocation Loc,
   uint64_t LineNo = getLineNumber(LocInfo.first, LocInfo.second, &Invalid);
   if (Invalid)
     return PresumedLoc();
-  uint64_t ColNo  = getColumnNumber(LocInfo.first, LocInfo.second, &Invalid);
+  unsigned ColNo  = getColumnNumber(LocInfo.first, LocInfo.second, &Invalid);
   if (Invalid)
     return PresumedLoc();
 

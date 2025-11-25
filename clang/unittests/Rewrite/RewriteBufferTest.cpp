@@ -24,7 +24,7 @@ static std::string writeOutput(const RewriteBuffer &Buf) {
   return Result;
 }
 
-static void tagRange(unsigned Offset, unsigned Len, StringRef tagName,
+static void tagRange(uint64_t Offset, uint64_t Len, StringRef tagName,
                      RewriteBuffer &Buf) {
   std::string BeginTag;
   raw_string_ostream(BeginTag) << '<' << tagName << '>';

@@ -2741,7 +2741,7 @@ llvm::Constant *CodeGenModule::EmitAnnotationUnit(SourceLocation Loc) {
 llvm::Constant *CodeGenModule::EmitAnnotationLineNo(SourceLocation L) {
   SourceManager &SM = getContext().getSourceManager();
   PresumedLoc PLoc = SM.getPresumedLoc(L);
-  unsigned LineNo = PLoc.isValid() ? PLoc.getLine() :
+  uint64_t LineNo = PLoc.isValid() ? PLoc.getLine() :
     SM.getExpansionLineNumber(L);
   return llvm::ConstantInt::get(Int32Ty, LineNo);
 }

@@ -52,7 +52,7 @@ void MultiplexExternalSemaSource::CompleteRedeclChain(const Decl *D) {
     Sources[i]->CompleteRedeclChain(D);
 }
 
-Selector MultiplexExternalSemaSource::GetExternalSelector(uint32_t ID) {
+Selector MultiplexExternalSemaSource::GetExternalSelector(uint64_t ID) {
   Selector Sel;
   for(size_t i = 0; i < Sources.size(); ++i) {
     Sel = Sources[i]->GetExternalSelector(ID);
@@ -122,8 +122,8 @@ void MultiplexExternalSemaSource::FindExternalLexicalDecls(
 }
 
 void MultiplexExternalSemaSource::FindFileRegionDecls(FileID File,
-                                                      unsigned Offset,
-                                                      unsigned Length,
+                                                      uint64_t Offset,
+                                                      uint64_t Length,
                                                 SmallVectorImpl<Decl *> &Decls){
   for(size_t i = 0; i < Sources.size(); ++i)
     Sources[i]->FindFileRegionDecls(File, Offset, Length, Decls);
