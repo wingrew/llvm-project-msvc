@@ -149,7 +149,7 @@ public:
     // \c EscapedNewlineColumn will be calculated in
     // \c calculateLineBreakInformation.
     bool IsTrailingComment;
-    unsigned TokenLength;
+    uint64_t TokenLength;
     unsigned PreviousEndOfTokenColumn;
     unsigned EscapedNewlineColumn;
 

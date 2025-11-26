@@ -44,12 +44,12 @@ namespace tooling {
 class Range {
 public:
   Range() = default;
-  Range(uint64_t Offset, unsigned Length) : Offset(Offset), Length(Length) {}
+  Range(uint64_t Offset, uint64_t Length) : Offset(Offset), Length(Length) {}
 
   /// Accessors.
   /// @{
   uint64_t getOffset() const { return Offset; }
-  unsigned getLength() const { return Length; }
+  uint64_t getLength() const { return Length; }
   /// @}
 
   /// \name Range Predicates
@@ -73,7 +73,7 @@ public:
 
 private:
   uint64_t Offset = 0;
-  unsigned Length = 0;
+  uint64_t Length = 0;
 };
 
 /// A text replacement.
@@ -91,13 +91,13 @@ public:
   /// \param FilePath A source file accessible via a SourceManager.
   /// \param Offset The byte offset of the start of the range in the file.
   /// \param Length The length of the range in bytes.
-  Replacement(StringRef FilePath, uint64_t Offset, unsigned Length,
+  Replacement(StringRef FilePath, uint64_t Offset, uint64_t Length,
               StringRef ReplacementText);
 
   /// Creates a Replacement of the range [Start, Start+Length) with
   /// ReplacementText.
   Replacement(const SourceManager &Sources, SourceLocation Start,
-              unsigned Length, StringRef ReplacementText);
+              uint64_t Length, StringRef ReplacementText);
 
   /// Creates a Replacement of the given range with ReplacementText.
   Replacement(const SourceManager &Sources, const CharSourceRange &Range,
@@ -131,7 +131,7 @@ public:
 
 private:
   void setFromSourceLocation(const SourceManager &Sources, SourceLocation Start,
-                             unsigned Length, StringRef ReplacementText);
+                             uint64_t Length, StringRef ReplacementText);
   void setFromSourceRange(const SourceManager &Sources,
                           const CharSourceRange &Range,
                           StringRef ReplacementText,

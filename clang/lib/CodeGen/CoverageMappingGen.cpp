@@ -226,7 +226,7 @@ public:
   SourceLocation getPreciseTokenLocEnd(SourceLocation Loc) {
     // We avoid getLocForEndOfToken here, because it doesn't do what we want for
     // macro locations, which we just treat as expanded files.
-    unsigned TokLen =
+    uint64_t TokLen =
         Lexer::MeasureTokenLength(SM.getSpellingLoc(Loc), SM, LangOpts);
     return Loc.getLocWithOffset(TokLen);
   }

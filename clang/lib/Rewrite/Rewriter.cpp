@@ -58,12 +58,12 @@ static inline bool isWhitespaceExceptNL(unsigned char c) {
   }
 }
 
-void RewriteBuffer::RemoveText(unsigned OrigOffset, unsigned Size,
+void RewriteBuffer::RemoveText(uint64_t OrigOffset, uint64_t Size,
                                bool removeLineIfEmpty) {
   // Nothing to remove, exit early.
   if (Size == 0) return;
 
-  unsigned RealOffset = getMappedOffset(OrigOffset, true);
+  uint64_t RealOffset = getMappedOffset(OrigOffset, true);
   assert(RealOffset+Size <= Buffer.size() && "Invalid location");
 
   // Remove the dead characters.
@@ -77,9 +77,9 @@ void RewriteBuffer::RemoveText(unsigned OrigOffset, unsigned Size,
     // remove the line as well.
 
     iterator curLineStart = begin();
-    unsigned curLineStartOffs = 0;
+    uint64_t curLineStartOffs = 0;
     iterator posI = begin();
-    for (unsigned i = 0; i != RealOffset; ++i) {
+    for (uint64_t i = 0; i != RealOffset; ++i) {
       if (*posI == '\n') {
         curLineStart = posI;
         ++curLineStart;
@@ -88,7 +88,7 @@ void RewriteBuffer::RemoveText(unsigned OrigOffset, unsigned Size,
       ++posI;
     }
 
-    unsigned lineSize = 0;
+    uint64_t lineSize = 0;
     posI = curLineStart;
     while (posI != end() && isWhitespaceExceptNL(*posI)) {
       ++posI;
@@ -112,12 +112,12 @@ void RewriteBuffer::RemoveText(unsigned OrigOffset, unsigned Size,
   }
 }
 
-void RewriteBuffer::InsertText(unsigned OrigOffset, StringRef Str,
+void RewriteBuffer::InsertText(uint64_t OrigOffset, StringRef Str,
                                bool InsertAfter) {
   // Nothing to insert, exit early.
   if (Str.empty()) return;
 
-  unsigned RealOffset = getMappedOffset(OrigOffset, InsertAfter);
+  uint64_t RealOffset = getMappedOffset(OrigOffset, InsertAfter);
   Buffer.insert(RealOffset, Str.begin(), Str.end());
 
   // Add a delta so that future changes are offset correctly.
@@ -257,13 +257,13 @@ bool Rewriter::InsertText(SourceLocation Loc, StringRef Str,
                           bool InsertAfter, bool indentNewLines) {
   if (!isRewritable(Loc)) return true;
   FileID FID;
-  unsigned StartOffs = getLocationOffsetAndFileID(Loc, FID);
+  uint64_t StartOffs = getLocationOffsetAndFileID(Loc, FID);
 
   SmallString<128> indentedStr;
   if (indentNewLines && Str.contains('\n')) {
     StringRef MB = SourceMgr->getBufferData(FID);
 
-    unsigned lineNo = SourceMgr->getLineNumber(FID, StartOffs) - 1;
+    uint64_t lineNo = SourceMgr->getLineNumber(FID, StartOffs) - 1;
     const SrcMgr::ContentCache *Content =
         &SourceMgr->getSLocEntry(FID).getFile().getContentCache();
     unsigned lineOffs = Content->SourceLineCache[lineNo];

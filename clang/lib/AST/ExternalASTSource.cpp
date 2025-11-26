@@ -40,8 +40,8 @@ ExternalASTSource::hasExternalDefinitions(const Decl *D) {
   return EK_ReplyHazy;
 }
 
-void ExternalASTSource::FindFileRegionDecls(FileID File, unsigned Offset,
-                                            unsigned Length,
+void ExternalASTSource::FindFileRegionDecls(FileID File, uint64_t Offset,
+                                            uint64_t Length,
                                             SmallVectorImpl<Decl *> &Decls) {}
 
 void ExternalASTSource::CompleteRedeclChain(const Decl *D) {}
@@ -72,7 +72,7 @@ Decl *ExternalASTSource::GetExternalDecl(uint32_t ID) {
   return nullptr;
 }
 
-Selector ExternalASTSource::GetExternalSelector(uint32_t ID) {
+Selector ExternalASTSource::GetExternalSelector(uint64_t ID) {
   return Selector();
 }
 

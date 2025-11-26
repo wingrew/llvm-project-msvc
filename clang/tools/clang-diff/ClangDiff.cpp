@@ -263,9 +263,9 @@ static std::string getChangeKindAbbr(diff::ChangeKind Kind) {
   llvm_unreachable("Invalid enumeration value.");
 }
 
-static unsigned printHtmlForNode(raw_ostream &OS, const diff::ASTDiff &Diff,
+static uint64_t printHtmlForNode(raw_ostream &OS, const diff::ASTDiff &Diff,
                                  diff::SyntaxTree &Tree, bool IsLeft,
-                                 diff::NodeId Id, unsigned Offset) {
+                                 diff::NodeId Id, uint64_t Offset) {
   const diff::Node &Node = Tree.getNode(Id);
   char MyTag, OtherTag;
   diff::NodeId LeftId, RightId;
@@ -281,7 +281,7 @@ static unsigned printHtmlForNode(raw_ostream &OS, const diff::ASTDiff &Diff,
     LeftId = TargetId;
     RightId = Id;
   }
-  unsigned Begin, End;
+  uint64_t Begin, End;
   std::tie(Begin, End) = Tree.getSourceRangeOffsets(Node);
   const SourceManager &SrcMgr = Tree.getASTContext().getSourceManager();
   auto Code = SrcMgr.getBufferOrFake(SrcMgr.getMainFileID()).getBuffer();

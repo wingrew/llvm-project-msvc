@@ -1222,12 +1222,12 @@ bool ASTUnit::Parse(std::shared_ptr<PCHContainerOperations> PCHContainerOps,
   return false;
 }
 
-static std::pair<unsigned, unsigned>
+static std::pair<uint64_t, uint64_t>
 makeStandaloneRange(CharSourceRange Range, const SourceManager &SM,
                     const LangOptions &LangOpts) {
   CharSourceRange FileRange = Lexer::makeFileCharRange(Range, SM, LangOpts);
-  unsigned Offset = SM.getFileOffset(FileRange.getBegin());
-  unsigned EndOffset = SM.getFileOffset(FileRange.getEnd());
+  uint64_t Offset = SM.getFileOffset(FileRange.getBegin());
+  uint64_t EndOffset = SM.getFileOffset(FileRange.getEnd());
   return std::make_pair(Offset, EndOffset);
 }
 
@@ -2119,7 +2119,7 @@ void AugmentedCodeCompleteConsumer::ProcessCodeCompleteResults(Sema &S,
 }
 
 void ASTUnit::CodeComplete(
-    StringRef File, unsigned Line, unsigned Column,
+    StringRef File, uint64_t Line, uint64_t Column,
     ArrayRef<RemappedFile> RemappedFiles, bool IncludeMacros,
     bool IncludeCodePatterns, bool IncludeBriefComments,
     CodeCompleteConsumer &Consumer,
@@ -2429,7 +2429,7 @@ void ASTUnit::addFileLevelDecl(Decl *D) {
   Decls->insert(I, LocDecl);
 }
 
-void ASTUnit::findFileRegionDecls(FileID File, unsigned Offset, unsigned Length,
+void ASTUnit::findFileRegionDecls(FileID File, uint64_t Offset, uint64_t Length,
                                   SmallVectorImpl<Decl *> &Decls) {
   if (File.isInvalid())
     return;
@@ -2473,14 +2473,14 @@ void ASTUnit::findFileRegionDecls(FileID File, unsigned Offset, unsigned Length,
 }
 
 SourceLocation ASTUnit::getLocation(const FileEntry *File,
-                                    unsigned Line, unsigned Col) const {
+                                    uint64_t Line, uint64_t Col) const {
   const SourceManager &SM = getSourceManager();
   SourceLocation Loc = SM.translateFileLineCol(File, Line, Col);
   return SM.getMacroArgExpandedLocation(Loc);
 }
 
 SourceLocation ASTUnit::getLocation(const FileEntry *File,
-                                    unsigned Offset) const {
+                                    uint64_t Offset) const {
   const SourceManager &SM = getSourceManager();
   SourceLocation FileLoc = SM.translateFileLineCol(File, 1, 1);
   return SM.getMacroArgExpandedLocation(FileLoc.getLocWithOffset(Offset));
@@ -2497,7 +2497,7 @@ SourceLocation ASTUnit::mapLocationFromPreamble(SourceLocation Loc) const {
   if (Loc.isInvalid() || !Preamble || PreambleID.isInvalid())
     return Loc;
 
-  unsigned Offs;
+  uint64_t Offs;
   if (SourceMgr->isInFileID(Loc, PreambleID, &Offs) && Offs < Preamble->getBounds().Size) {
     SourceLocation FileLoc
         = SourceMgr->getLocForStartOfFile(SourceMgr->getMainFileID());
@@ -2518,7 +2518,7 @@ SourceLocation ASTUnit::mapLocationToPreamble(SourceLocation Loc) const {
   if (Loc.isInvalid() || !Preamble || PreambleID.isInvalid())
     return Loc;
 
-  unsigned Offs;
+  uint64_t Offs;
   if (SourceMgr->isInFileID(Loc, SourceMgr->getMainFileID(), &Offs) &&
       Offs < Preamble->getBounds().Size) {
     SourceLocation FileLoc = SourceMgr->getLocForStartOfFile(PreambleID);

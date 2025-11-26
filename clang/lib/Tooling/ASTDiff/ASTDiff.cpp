@@ -990,7 +990,7 @@ int SyntaxTree::findPositionInParent(NodeId Id) const {
   return TreeImpl->findPositionInParent(Id);
 }
 
-std::pair<unsigned, unsigned>
+std::pair<uint64_t, uint64_t>
 SyntaxTree::getSourceRangeOffsets(const Node &N) const {
   const SourceManager &SrcMgr = TreeImpl->AST.getSourceManager();
   SourceRange Range = N.ASTNode.getSourceRange();
@@ -1001,8 +1001,8 @@ SyntaxTree::getSourceRangeOffsets(const Node &N) const {
     if (ThisExpr->isImplicit())
       EndLoc = BeginLoc;
   }
-  unsigned Begin = SrcMgr.getFileOffset(SrcMgr.getExpansionLoc(BeginLoc));
-  unsigned End = SrcMgr.getFileOffset(SrcMgr.getExpansionLoc(EndLoc));
+  uint64_t Begin = SrcMgr.getFileOffset(SrcMgr.getExpansionLoc(BeginLoc));
+  uint64_t End = SrcMgr.getFileOffset(SrcMgr.getExpansionLoc(EndLoc));
   return {Begin, End};
 }
 

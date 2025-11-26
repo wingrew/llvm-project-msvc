@@ -7653,7 +7653,7 @@ public:
 } // namespace
 
 void ASTReader::FindFileRegionDecls(FileID File,
-                                    unsigned Offset, unsigned Length,
+                                    uint64_t Offset, uint64_t Length,
                                     SmallVectorImpl<Decl *> &Decls) {
   SourceManager &SM = getSourceManager();
 

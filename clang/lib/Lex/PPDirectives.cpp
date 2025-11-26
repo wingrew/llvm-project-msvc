@@ -516,7 +516,7 @@ void Preprocessor::SkipExcludedConditionalBlock(SourceLocation HashTokenLoc,
     Preprocessor &PP;
 
     const char *BeginPtr = nullptr;
-    unsigned *SkipRangePtr = nullptr;
+    uint64_t *SkipRangePtr = nullptr;
 
     SkippingRangeStateTy(Preprocessor &PP) : PP(PP) {}
 

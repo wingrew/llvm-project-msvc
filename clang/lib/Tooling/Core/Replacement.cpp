@@ -44,13 +44,13 @@ static const char * const InvalidLocation = "";
 
 Replacement::Replacement() : FilePath(InvalidLocation) {}
 
-Replacement::Replacement(StringRef FilePath, unsigned Offset, unsigned Length,
+Replacement::Replacement(StringRef FilePath, uint64_t Offset, uint64_t Length,
                          StringRef ReplacementText)
     : FilePath(std::string(FilePath)), ReplacementRange(Offset, Length),
       ReplacementText(std::string(ReplacementText)) {}
 
 Replacement::Replacement(const SourceManager &Sources, SourceLocation Start,
-                         unsigned Length, StringRef ReplacementText) {
+                         uint64_t Length, StringRef ReplacementText) {
   setFromSourceLocation(Sources, Start, Length, ReplacementText);
 }
 
@@ -118,7 +118,7 @@ bool operator==(const Replacement &LHS, const Replacement &RHS) {
 } // namespace clang
 
 void Replacement::setFromSourceLocation(const SourceManager &Sources,
-                                        SourceLocation Start, unsigned Length,
+                                        SourceLocation Start, uint64_t Length,
                                         StringRef ReplacementText) {
   const std::pair<FileID, unsigned> DecomposedLocation =
       Sources.getDecomposedLoc(Start);
@@ -131,13 +131,13 @@ void Replacement::setFromSourceLocation(const SourceManager &Sources,
 // FIXME: This should go into the Lexer, but we need to figure out how
 // to handle ranges for refactoring in general first - there is no obvious
 // good way how to integrate this into the Lexer yet.
-static int getRangeSize(const SourceManager &Sources,
+static int64_t getRangeSize(const SourceManager &Sources,
                         const CharSourceRange &Range,
                         const LangOptions &LangOpts) {
   SourceLocation SpellingBegin = Sources.getSpellingLoc(Range.getBegin());
   SourceLocation SpellingEnd = Sources.getSpellingLoc(Range.getEnd());
-  std::pair<FileID, unsigned> Start = Sources.getDecomposedLoc(SpellingBegin);
-  std::pair<FileID, unsigned> End = Sources.getDecomposedLoc(SpellingEnd);
+  std::pair<FileID, uint64_t> Start = Sources.getDecomposedLoc(SpellingBegin);
+  std::pair<FileID, uint64_t> End = Sources.getDecomposedLoc(SpellingEnd);
   if (Start.first != End.first) return -1;
   if (Range.isTokenRange())
     End.second += Lexer::MeasureTokenLength(SpellingEnd, Sources, LangOpts);
@@ -543,7 +543,7 @@ std::vector<Range> Replacements::getAffectedRanges() const {
   return combineAndSortRanges(ChangedRanges);
 }
 
-unsigned Replacements::getShiftedCodePosition(unsigned Position) const {
+uint64_t Replacements::getShiftedCodePosition(uint64_t Position) const {
   unsigned Offset = 0;
   for (const auto &R : Replaces) {
     if (R.getOffset() + R.getLength() <= Position) {

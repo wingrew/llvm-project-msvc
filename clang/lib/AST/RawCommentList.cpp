@@ -326,7 +326,7 @@ void RawCommentList::addComment(const RawComment &RC,
   }
 }
 
-const std::map<unsigned, RawComment *> *
+const std::map<uint64_t, RawComment *> *
 RawCommentList::getCommentsInFile(FileID File) const {
   auto CommentsInFile = OrderedComments.find(File);
   if (CommentsInFile == OrderedComments.end())
@@ -337,21 +337,21 @@ RawCommentList::getCommentsInFile(FileID File) const {
 
 bool RawCommentList::empty() const { return OrderedComments.empty(); }
 
-unsigned RawCommentList::getCommentBeginLine(RawComment *C, FileID File,
-                                             unsigned Offset) const {
+uint64_t RawCommentList::getCommentBeginLine(RawComment *C, FileID File,
+                                             uint64_t Offset) const {
   auto Cached = CommentBeginLine.find(C);
   if (Cached != CommentBeginLine.end())
     return Cached->second;
-  const unsigned Line = SourceMgr.getLineNumber(File, Offset);
+  const uint64_t Line = SourceMgr.getLineNumber(File, Offset);
   CommentBeginLine[C] = Line;
   return Line;
 }
 
-unsigned RawCommentList::getCommentEndOffset(RawComment *C) const {
+uint64_t RawCommentList::getCommentEndOffset(RawComment *C) const {
   auto Cached = CommentEndOffset.find(C);
   if (Cached != CommentEndOffset.end())
     return Cached->second;
-  const unsigned Offset =
+  const uint64_t Offset =
       SourceMgr.getDecomposedLoc(C->getSourceRange().getEnd()).second;
   CommentEndOffset[C] = Offset;
   return Offset;
@@ -405,7 +405,7 @@ RawComment::getFormattedLines(const SourceManager &SourceMgr,
   // previousLine will record the line number when we previously saw a newline
   // token and recorded a comment line. If we see another newline token on the
   // same line, don't record anything in between.
-  unsigned PreviousLine = 0;
+  uint64_t PreviousLine = 0;
 
   // Processes one line of the comment and adds it to the result.
   // Handles skipping the indent at the start of the line.

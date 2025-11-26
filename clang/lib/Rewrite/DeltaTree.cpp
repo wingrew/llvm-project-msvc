@@ -15,6 +15,7 @@
 #include "llvm/Support/Casting.h"
 #include <cassert>
 #include <cstring>
+#include "DeltaTree.h"
 
 using namespace clang;
 
@@ -39,10 +40,10 @@ namespace {
   /// SourceDelta records are used to keep track of how the input SourceLocation
   /// object is mapped into the output buffer.
   struct SourceDelta {
-    unsigned FileLoc;
-    int Delta;
+    uint64_t FileLoc;
+    int64_t Delta;
 
-    static SourceDelta get(unsigned Loc, int D) {
+    static SourceDelta get(uint64_t Loc, int64_t D) {
       SourceDelta Delta;
       Delta.FileLoc = Loc;
       Delta.Delta = D;
@@ -81,13 +82,13 @@ namespace {
 
     /// FullDelta - This is the full delta of all the values in this node and
     /// all children nodes.
-    int FullDelta = 0;
+    int64_t FullDelta = 0;
 
   public:
     DeltaTreeNode(bool isLeaf = true) : IsLeaf(isLeaf) {}
 
     bool isLeaf() const { return IsLeaf; }
-    int getFullDelta() const { return FullDelta; }
+    int64_t getFullDelta() const { return FullDelta; }
     bool isFull() const { return NumValuesUsed == 2*WidthFactor-1; }
 
     unsigned getNumValuesUsed() const { return NumValuesUsed; }
@@ -106,10 +107,11 @@ namespace {
     /// this node.  If insertion is easy, do it and return false.  Otherwise,
     /// split the node, populate InsertRes with info about the split, and return
     /// true.
-    bool DoInsertion(unsigned FileIndex, int Delta, InsertResult *InsertRes);
+
+    bool DoInsertion(uint64_t FileIndex, int64_t Delta,
+                     InsertResult *InsertRes);
 
     void DoSplit(InsertResult &InsertRes);
-
 
     /// RecomputeFullDeltaLocally - Recompute the FullDelta field by doing a
     /// local walk over our contained deltas.
@@ -168,7 +170,7 @@ void DeltaTreeNode::Destroy() {
 /// RecomputeFullDeltaLocally - Recompute the FullDelta field by doing a
 /// local walk over our contained deltas.
 void DeltaTreeNode::RecomputeFullDeltaLocally() {
-  int NewFullDelta = 0;
+  int64_t NewFullDelta = 0;
   for (unsigned i = 0, e = getNumValuesUsed(); i != e; ++i)
     NewFullDelta += Values[i].Delta;
   if (auto *IN = dyn_cast<DeltaTreeInteriorNode>(this))
@@ -181,13 +183,13 @@ void DeltaTreeNode::RecomputeFullDeltaLocally() {
 /// this node.  If insertion is easy, do it and return false.  Otherwise,
 /// split the node, populate InsertRes with info about the split, and return
 /// true.
-bool DeltaTreeNode::DoInsertion(unsigned FileIndex, int Delta,
+bool DeltaTreeNode::DoInsertion(uint64_t FileIndex, int64_t Delta,
                                 InsertResult *InsertRes) {
   // Maintain full delta for this node.
   FullDelta += Delta;
 
   // Find the insertion point, the first delta whose index is >= FileIndex.
-  unsigned i = 0, e = getNumValuesUsed();
+  uint64_t i = 0, e = getNumValuesUsed();
   while (i != e && FileIndex > getValue(i).FileLoc)
     ++i;
 
@@ -405,10 +407,10 @@ DeltaTree::~DeltaTree() {
 /// getDeltaAt - Return the accumulated delta at the specified file offset.
 /// This includes all insertions or delections that occurred *before* the
 /// specified file index.
-int DeltaTree::getDeltaAt(unsigned FileIndex) const {
+int64_t DeltaTree::getDeltaAt(uint64_t FileIndex) const {
   const DeltaTreeNode *Node = getRoot(Root);
 
-  int Result = 0;
+  int64_t Result = 0;
 
   // Walk down the tree.
   while (true) {
@@ -452,7 +454,7 @@ int DeltaTree::getDeltaAt(unsigned FileIndex) const {
 /// AddDelta - When a change is made that shifts around the text buffer,
 /// this method is used to record that info.  It inserts a delta of 'Delta'
 /// into the current DeltaTree at offset FileIndex.
-void DeltaTree::AddDelta(unsigned FileIndex, int Delta) {
+void DeltaTree::AddDelta(uint64_t FileIndex, int64_t Delta) {
   assert(Delta && "Adding a noop?");
   DeltaTreeNode *MyRoot = getRoot(Root);
 

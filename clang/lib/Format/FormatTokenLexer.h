@@ -131,7 +131,7 @@ private:
 
   void readRawToken(FormatToken &Tok);
 
-  void resetLexer(unsigned Offset);
+  void resetLexer(uint64_t Offset);
 };
 
 } // namespace format

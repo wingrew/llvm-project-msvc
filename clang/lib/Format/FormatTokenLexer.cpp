@@ -1187,7 +1187,7 @@ void FormatTokenLexer::readRawToken(FormatToken &Tok) {
   }
 }
 
-void FormatTokenLexer::resetLexer(unsigned Offset) {
+void FormatTokenLexer::resetLexer(uint64_t Offset) {
   StringRef Buffer = SourceMgr.getBufferData(ID);
   LangOpts = getFormattingLangOpts(Style);
   Lex.reset(new Lexer(SourceMgr.getLocForStartOfFile(ID), LangOpts,

@@ -39,7 +39,7 @@ public:
 template <> class MacroInfoSizeChecker<8> {
 public:
   constexpr static bool AsExpected =
-      sizeof(MacroInfo) == (32 + sizeof(SourceLocation) * 2);
+      sizeof(MacroInfo) == (40 + sizeof(SourceLocation) * 2);
 };
 
 static_assert(MacroInfoSizeChecker<sizeof(void *)>::AsExpected,
@@ -54,7 +54,7 @@ MacroInfo::MacroInfo(SourceLocation DefLoc)
       IsAllowRedefinitionsWithoutWarning(false), IsWarnIfUnused(false),
       UsedForHeaderGuard(false) {}
 
-unsigned MacroInfo::getDefinitionLengthSlow(const SourceManager &SM) const {
+uint64_t MacroInfo::getDefinitionLengthSlow(const SourceManager &SM) const {
   assert(!IsDefinitionLengthCached);
   IsDefinitionLengthCached = true;
 
@@ -71,9 +71,9 @@ unsigned MacroInfo::getDefinitionLengthSlow(const SourceManager &SM) const {
          "Macro defined in macro?");
   assert((macroEnd.isFileID() || lastToken.is(tok::comment)) &&
          "Macro defined in macro?");
-  std::pair<FileID, unsigned>
+  std::pair<FileID, uint64_t>
       startInfo = SM.getDecomposedExpansionLoc(macroStart);
-  std::pair<FileID, unsigned>
+  std::pair<FileID, uint64_t>
       endInfo = SM.getDecomposedExpansionLoc(macroEnd);
   assert(startInfo.first == endInfo.first &&
          "Macro definition spanning multiple FileIDs ?");

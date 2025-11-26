@@ -37,8 +37,8 @@ void html::HighlightRange(Rewriter &R, SourceLocation B, SourceLocation E,
   FileID FID = SM.getFileID(B);
   assert(SM.getFileID(E) == FID && "B/E not in the same file!");
 
-  unsigned BOffset = SM.getFileOffset(B);
-  unsigned EOffset = SM.getFileOffset(E);
+  uint64_t BOffset = SM.getFileOffset(B);
+  uint64_t EOffset = SM.getFileOffset(E);
 
   // Include the whole end token in the range.
   if (IsTokenRange)
@@ -55,7 +55,7 @@ void html::HighlightRange(Rewriter &R, SourceLocation B, SourceLocation E,
 
 /// HighlightRange - This is the same as the above method, but takes
 /// decomposed file locations.
-void html::HighlightRange(RewriteBuffer &RB, unsigned B, unsigned E,
+void html::HighlightRange(RewriteBuffer &RB, uint64_t B, uint64_t E,
                           const char *BufferStart,
                           const char *StartTag, const char *EndTag) {
   // Insert the tag at the absolute start/end of the range.
@@ -66,8 +66,8 @@ void html::HighlightRange(RewriteBuffer &RB, unsigned B, unsigned E,
   // not blank, insert tags on that line as well.
   bool HadOpenTag = true;
 
-  unsigned LastNonWhiteSpace = B;
-  for (unsigned i = B; i != E; ++i) {
+  uint64_t LastNonWhiteSpace = B;
+  for (uint64_t i = B; i != E; ++i) {
     switch (BufferStart[i]) {
     case '\r':
     case '\n':
@@ -462,8 +462,8 @@ void html::SyntaxHighlight(Rewriter &R, FileID FID, const Preprocessor &PP) {
   while (Tok.isNot(tok::eof)) {
     // Since we are lexing unexpanded tokens, all tokens are from the main
     // FileID.
-    unsigned TokOffs = SM.getFileOffset(Tok.getLocation());
-    unsigned TokLen = Tok.getLength();
+    uint64_t TokOffs = SM.getFileOffset(Tok.getLocation());
+    uint64_t TokLen = Tok.getLength();
     switch (Tok.getKind()) {
     default: break;
     case tok::identifier:
@@ -508,7 +508,7 @@ void html::SyntaxHighlight(Rewriter &R, FileID FID, const Preprocessor &PP) {
 
       // Eat all of the tokens until we get to the next one at the start of
       // line.
-      unsigned TokEnd = TokOffs+TokLen;
+      uint64_t TokEnd = TokOffs+TokLen;
       L.LexFromRawLexer(Tok);
       while (!Tok.isAtStartOfLine() && Tok.isNot(tok::eof)) {
         TokEnd = SM.getFileOffset(Tok.getLocation())+Tok.getLength();

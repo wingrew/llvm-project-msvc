@@ -1381,7 +1381,7 @@ llvm::Value *CGOpenMPRuntime::emitUpdateLocation(CodeGenFunction &CGF,
       FunctionName = FD->getQualifiedNameAsString();
     PresumedLoc PLoc = CGF.getContext().getSourceManager().getPresumedLoc(Loc);
     const char *FileName = PLoc.getFilename();
-    unsigned Line = PLoc.getLine();
+    uint64_t Line = PLoc.getLine();
     unsigned Column = PLoc.getColumn();
     SrcLocStr = OMPBuilder.getOrCreateSrcLocStr(FunctionName, FileName, Line,
                                                 Column, SrcLocStrSize);
@@ -1597,7 +1597,7 @@ CGOpenMPRuntime::createDispatchNextFunction(unsigned IVSize, bool IVSigned) {
 /// the relevant entry source location.
 static void getTargetEntryUniqueInfo(ASTContext &C, SourceLocation Loc,
                                      unsigned &DeviceID, unsigned &FileID,
-                                     unsigned &LineNum) {
+                                     uint64_t &LineNum) {
   SourceManager &SM = C.getSourceManager();
 
   // The loc should be always valid and have a file ID (the user cannot use
@@ -1635,7 +1635,8 @@ Address CGOpenMPRuntime::getAddrOfDeclareTargetVar(const VarDecl *VD) {
       llvm::raw_svector_ostream OS(PtrName);
       OS << CGM.getMangledName(GlobalDecl(VD));
       if (!VD->isExternallyVisible()) {
-        unsigned DeviceID, FileID, Line;
+        unsigned DeviceID, FileID;
+        unit64_t Line;
         getTargetEntryUniqueInfo(CGM.getContext(),
                                  VD->getCanonicalDecl()->getBeginLoc(),
                                  DeviceID, FileID, Line);
@@ -1860,7 +1861,7 @@ bool CGOpenMPRuntime::emitDeclareTargetVarDefinition(const VarDecl *VD,
   // conflict with any target region.
   unsigned DeviceID;
   unsigned FileID;
-  unsigned Line;
+  uint64_t Line;
   getTargetEntryUniqueInfo(CGM.getContext(), Loc, DeviceID, FileID, Line);
   SmallString<128> Buffer, Out;
   {
@@ -6418,7 +6419,7 @@ void CGOpenMPRuntime::emitTargetOutlinedFunctionHelper(
                                !CGM.getLangOpts().OpenMPOffloadMandatory;
   unsigned DeviceID;
   unsigned FileID;
-  unsigned Line;
+  uint64_t Line;
   getTargetEntryUniqueInfo(CGM.getContext(), D.getBeginLoc(), DeviceID, FileID,
                            Line);
   SmallString<64> EntryFnName;
@@ -10508,7 +10509,7 @@ void CGOpenMPRuntime::scanForTargetRegionsFunctions(const Stmt *S,
     const auto &E = *cast<OMPExecutableDirective>(S);
     unsigned DeviceID;
     unsigned FileID;
-    unsigned Line;
+    uint64_t Line;
     getTargetEntryUniqueInfo(CGM.getContext(), E.getBeginLoc(), DeviceID,
                              FileID, Line);
 

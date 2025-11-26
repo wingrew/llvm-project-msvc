@@ -73,7 +73,7 @@ public:
   void CompleteRedeclChain(const Decl *D) override;
 
   /// Resolve a selector ID into a selector.
-  Selector GetExternalSelector(uint32_t ID) override;
+  Selector GetExternalSelector(uint64_t ID) override;
 
   /// Returns the number of selectors known to the external AST
   /// source.
@@ -115,7 +115,7 @@ public:
   /// Get the decls that are contained in a file in the Offset/Length
   /// range. \p Length can be 0 to indicate a point at \p Offset instead of
   /// a range.
-  void FindFileRegionDecls(FileID File, unsigned Offset,unsigned Length,
+  void FindFileRegionDecls(FileID File, uint64_t Offset,uint64_t Length,
                            SmallVectorImpl<Decl *> &Decls) override;
 
   /// Gives the external AST source an opportunity to complete

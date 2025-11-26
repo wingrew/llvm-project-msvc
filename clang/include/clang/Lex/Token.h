@@ -125,7 +125,7 @@ public:
   SourceLocation getLocation() const {
     return SourceLocation::getFromRawEncoding(Loc);
   }
-  unsigned getLength() const {
+  uint64_t getLength() const {
     assert(!isAnnotation() && "Annotation tokens have no length field");
     return UintData;
   }

@@ -122,9 +122,9 @@ void WhitespaceManager::calculateLineBreakInformation() {
         Changes[i].OriginalWhitespaceRange.getBegin();
     SourceLocation PreviousOriginalWhitespaceEnd =
         Changes[i - 1].OriginalWhitespaceRange.getEnd();
-    unsigned OriginalWhitespaceStartOffset =
+    uint64_t OriginalWhitespaceStartOffset =
         SourceMgr.getFileOffset(OriginalWhitespaceStart);
-    unsigned PreviousOriginalWhitespaceEndOffset =
+    uint64_t PreviousOriginalWhitespaceEndOffset =
         SourceMgr.getFileOffset(PreviousOriginalWhitespaceEnd);
     assert(PreviousOriginalWhitespaceEndOffset <=
            OriginalWhitespaceStartOffset);
@@ -1407,7 +1407,7 @@ void WhitespaceManager::generateChanges() {
 }
 
 void WhitespaceManager::storeReplacement(SourceRange Range, StringRef Text) {
-  unsigned WhitespaceLength = SourceMgr.getFileOffset(Range.getEnd()) -
+  uint64_t WhitespaceLength = SourceMgr.getFileOffset(Range.getEnd()) -
                               SourceMgr.getFileOffset(Range.getBegin());
   // Don't create a replacement, if it does not change anything.
   if (StringRef(SourceMgr.getCharacterData(Range.getBegin()),

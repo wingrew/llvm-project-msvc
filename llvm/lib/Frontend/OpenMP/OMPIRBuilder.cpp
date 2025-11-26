@@ -593,7 +593,7 @@ Constant *OpenMPIRBuilder::getOrCreateSrcLocStr(StringRef LocStr,
 
 Constant *OpenMPIRBuilder::getOrCreateSrcLocStr(StringRef FunctionName,
                                                 StringRef FileName,
-                                                unsigned Line, unsigned Column,
+                                                uint64_t Line, unsigned Column,
                                                 uint32_t &SrcLocStrSize) {
   SmallString<128> Buffer;
   Buffer.push_back(';');

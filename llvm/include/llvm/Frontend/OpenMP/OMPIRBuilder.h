@@ -778,7 +778,7 @@ public:
   /// Return the (LLVM-IR) string describing the source location identified by
   /// the arguments.
   Constant *getOrCreateSrcLocStr(StringRef FunctionName, StringRef FileName,
-                                 unsigned Line, unsigned Column,
+                                 uint64_t Line, unsigned Column,
                                  uint32_t &SrcLocStrSize);
 
   /// Return the (LLVM-IR) string describing the DebugLoc \p DL. Use \p F as

@@ -53,7 +53,7 @@ static llvm::Constant *createSourceLocStrFromLocation(Location loc,
                                                       uint32_t &strLen) {
   if (auto fileLoc = loc.dyn_cast<FileLineColLoc>()) {
     StringRef fileName = fileLoc.getFilename();
-    unsigned lineNo = fileLoc.getLine();
+    uint64_t lineNo = fileLoc.getLine();
     unsigned colNo = fileLoc.getColumn();
     return builder.getOrCreateSrcLocStr(name, fileName, lineNo, colNo, strLen);
   }

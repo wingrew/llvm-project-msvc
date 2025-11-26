@@ -257,7 +257,7 @@ void JSONNodeDumper::writeBareSourceLocation(SourceLocation Loc,
     if (PresumedFile != ActualFile && LastLocPresumedFilename != PresumedFile)
       JOS.attribute("presumedFile", PresumedFile);
 
-    unsigned PresumedLine = Presumed.getLine();
+    uint64_t PresumedLine = Presumed.getLine();
     if (ActualLine != PresumedLine && LastLocPresumedLine != PresumedLine)
       JOS.attribute("presumedLine", PresumedLine);
 

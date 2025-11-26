@@ -504,7 +504,7 @@ static void printCoverage(const PathDiagnostic *D,
     Indent(o, IndentLevel) << "<key>" << FileKey << "</key>\n";
     Indent(o, IndentLevel) << "<array>\n";
     IndentLevel++;
-    for (unsigned LineNo : I->second) {
+    for (uint64_t LineNo : I->second) {
       Indent(o, IndentLevel);
       EmitInteger(o, LineNo) << "\n";
     }

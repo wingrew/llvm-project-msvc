@@ -139,7 +139,7 @@ class TextNodeDumper
   /// Keep track of the last location we print out so that we can
   /// print out deltas from then on out.
   const char *LastLocFilename = "";
-  unsigned LastLocLine = ~0U;
+  uint64_t LastLocLine = ~0U;
 
   /// \p Context, \p SM, and \p Traits can be null. This is because we want
   /// to be able to call \p dump() in a debugger without having to pass the

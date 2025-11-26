@@ -266,7 +266,7 @@ struct SourceColumnMap {
            == m_columnToByte.size());
   }
   int columns() const { return m_byteToColumn.back(); }
-  int bytes() const { return m_columnToByte.back(); }
+  int64_t bytes() const { return m_columnToByte.back(); }
 
   /// Map a byte to the column which it is at the start of, or return -1
   /// if it is not at the start of a column (for a UTF-8 trailing byte).
@@ -276,7 +276,7 @@ struct SourceColumnMap {
   }
 
   /// Map a byte to the first column which contains it.
-  int byteToContainingColumn(int N) const {
+  int64_t byteToContainingColumn(int N) const {
     assert(0 <= N && N < static_cast<int>(m_byteToColumn.size()));
     while (m_byteToColumn[N] == -1)
       --N;
@@ -805,7 +805,7 @@ void TextDiagnostic::emitDiagnosticLoc(FullSourceLoc Loc, PresumedLoc PLoc,
     }
     return;
   }
-  unsigned LineNo = PLoc.getLine();
+  uint64_t LineNo = PLoc.getLine();
 
   if (!DiagOpts->ShowLocation)
     return;
@@ -924,7 +924,7 @@ void TextDiagnostic::emitBuildingModuleLocation(FullSourceLoc Loc,
 }
 
 /// Find the suitable set of lines to show to include a set of ranges.
-static llvm::Optional<std::pair<unsigned, unsigned>>
+static llvm::Optional<std::pair<uint64_t, uint64_t>>
 findLinesForRange(const CharSourceRange &R, FileID FID,
                   const SourceManager &SM) {
   if (!R.isValid()) return None;
@@ -1057,7 +1057,7 @@ static void highlightRange(const CharSourceRange &R,
 }
 
 static std::string buildFixItInsertionLine(FileID FID,
-                                           unsigned LineNo,
+                                           uint64_t LineNo,
                                            const SourceColumnMap &map,
                                            ArrayRef<FixItHint> Hints,
                                            const SourceManager &SM,
@@ -1065,14 +1065,14 @@ static std::string buildFixItInsertionLine(FileID FID,
   std::string FixItInsertionLine;
   if (Hints.empty() || !DiagOpts->ShowFixits)
     return FixItInsertionLine;
-  unsigned PrevHintEndCol = 0;
+  uint64_t PrevHintEndCol = 0;
 
   for (ArrayRef<FixItHint>::iterator I = Hints.begin(), E = Hints.end();
        I != E; ++I) {
     if (!I->CodeToInsert.empty()) {
       // We have an insertion hint. Determine whether the inserted
       // code contains no newlines and is on the same line as the caret.
-      std::pair<FileID, unsigned> HintLocInfo
+      std::pair<FileID, uint64_t> HintLocInfo
         = SM.getDecomposedExpansionLoc(I->RemoveRange.getBegin());
       if (FID == HintLocInfo.first &&
           LineNo == SM.getLineNumber(HintLocInfo.first, HintLocInfo.second) &&
@@ -1082,12 +1082,12 @@ static std::string buildFixItInsertionLine(FileID FID,
         // Note: When modifying this function, be very careful about what is a
         // "column" (printed width, platform-dependent) and what is a
         // "byte offset" (SourceManager "column").
-        unsigned HintByteOffset
+        uint64_t HintByteOffset
           = SM.getColumnNumber(HintLocInfo.first, HintLocInfo.second) - 1;
 
         // The hint must start inside the source or right at the end
-        assert(HintByteOffset < static_cast<unsigned>(map.bytes())+1);
-        unsigned HintCol = map.byteToContainingColumn(HintByteOffset);
+        assert(HintByteOffset < static_cast<uint64_t>(map.bytes())+1);
+        uint64_t HintCol = map.byteToContainingColumn(HintByteOffset);
 
         // If we inserted a long previous hint, push this one forwards, and add
         // an extra space to show that this is not part of the previous
@@ -1101,7 +1101,7 @@ static std::string buildFixItInsertionLine(FileID FID,
 
         // This should NOT use HintByteOffset, because the source might have
         // Unicode characters in earlier columns.
-        unsigned NewFixItLineSize = FixItInsertionLine.size() +
+        uint64_t NewFixItLineSize = FixItInsertionLine.size() +
           (HintCol - PrevHintEndCol) + I->CodeToInsert.size();
         if (NewFixItLineSize > FixItInsertionLine.size())
           FixItInsertionLine.resize(NewFixItLineSize, ' ');

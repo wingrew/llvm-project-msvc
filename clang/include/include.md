@@ -91,8 +91,6 @@ E:\llvm-msvc\llvm-project-msvc\clang\include\clang\AST\OpenMPClause.h
 ----
 E:\llvm-msvc\llvm-project-msvc\clang\include\clang\AST\PrettyDeclStackTrace.h
 
-----
-E:\llvm-msvc\llvm-project-msvc\clang\include\clang\AST\RawCommentList.h
 
 ----
 E:\llvm-msvc\llvm-project-msvc\clang\include\clang\AST\StmtOpenMP.h
@@ -111,9 +109,6 @@ E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Basic\AttributeCommonInfo.h
 
 ----
 E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Basic\AttrSubjectMatchRules.h
-
-----
-E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Basic\Diagnostic.h
 
 ----
 E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Basic\Module.h
@@ -242,9 +237,6 @@ E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Sema\Weak.h
 E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Serialization\ASTBitCodes.h
 
 ----
-E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Serialization\ASTReader.h
-
-----
 E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Serialization\SourceLocationEncoding.h
 
 ----
@@ -267,10 +259,6 @@ E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Tooling\Refactoring\Lookup.h
 
 ----
 E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Tooling\Refactoring\Rename\SymbolOccurrences.h
-
-----
-E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Tooling\Syntax\Tokens.h
-  31,1: #include "clang/Basic/SourceLocation.h"
 
 ----
 E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Tooling\Transformer\Parsing.h
@@ -296,6 +284,10 @@ E:\llvm-msvc\llvm-project-msvc\clang\include\clang\AST\RawCommentList.h
 
 ----
 E:\llvm-msvc\llvm-project-msvc\clang\include\clang\AST\Stmt.h
+
+---
+
+E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Basic\Diagnostic.h
 
 ----
 E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Edit\FileOffset.h
@@ -325,6 +317,9 @@ E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Lex\Preprocessor.h
 E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Lex\TokenLexer.h
 
 ----
+E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Serialization\ASTReader.h
+
+----
 E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Serialization\ASTWriter.h
 
 ----
@@ -336,7 +331,10 @@ E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Serialization\ModuleManager.h
 ----
 E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Tooling\Core\Replacement.h
 
-
+----
+E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Tooling\Syntax\Tokens.h
+  31,1: #include "clang/Basic/SourceLocation.h"
+  
 ### 
 E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Rewrite\Core\Rewriter.h
 

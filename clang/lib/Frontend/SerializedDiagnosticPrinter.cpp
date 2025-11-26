@@ -363,7 +363,7 @@ void SDiagsWriter::AddCharSourceRangeToRecord(CharSourceRange Range,
                                               RecordDataImpl &Record,
                                               const SourceManager &SM) {
   AddLocToRecord(FullSourceLoc(Range.getBegin(), SM), Record);
-  unsigned TokSize = 0;
+  uint64_t TokSize = 0;
   if (Range.isTokenRange())
     TokSize = Lexer::MeasureTokenLength(Range.getEnd(),
                                         SM, *LangOpts);
