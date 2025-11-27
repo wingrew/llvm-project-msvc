@@ -29,7 +29,7 @@
 #include <new>
 #include <type_traits>
 #include <utility>
-
+#include <cstdint>
 namespace llvm {
 
 template <typename IteratorT> class iterator_range;

@@ -758,7 +758,7 @@ private:
 
   /// Get line number for the location. If location is invalid
   /// then use current location.
-  unsigned getLineNumber(SourceLocation Loc);
+  uint64_t getLineNumber(SourceLocation Loc);
 
   /// Get column number for the location. If location is
   /// invalid then use current location.

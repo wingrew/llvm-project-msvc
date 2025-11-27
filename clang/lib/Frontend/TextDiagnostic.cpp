@@ -940,8 +940,8 @@ findLinesForRange(const CharSourceRange &R, FileID FID,
 
 /// Add as much of range B into range A as possible without exceeding a maximum
 /// size of MaxRange. Ranges are inclusive.
-static std::pair<unsigned, unsigned>
-maybeAddRange(std::pair<unsigned, unsigned> A, std::pair<unsigned, unsigned> B,
+static std::pair<uint64_t, uint64_t>
+maybeAddRange(std::pair<uint64_t, uint64_t> A, std::pair<uint64_t, uint64_t> B,
               unsigned MaxRange) {
   // If A is already the maximum size, we're done.
   unsigned Slack = MaxRange - (A.second - A.first + 1);
@@ -949,8 +949,8 @@ maybeAddRange(std::pair<unsigned, unsigned> A, std::pair<unsigned, unsigned> B,
     return A;
 
   // Easy case: merge succeeds within MaxRange.
-  unsigned Min = std::min(A.first, B.first);
-  unsigned Max = std::max(A.second, B.second);
+  uint64_t Min = std::min(A.first, B.first);
+  uint64_t Max = std::max(A.second, B.second);
   if (Max - Min + 1 <= MaxRange)
     return {Min, Max};
 
@@ -975,7 +975,7 @@ maybeAddRange(std::pair<unsigned, unsigned> A, std::pair<unsigned, unsigned> B,
 
 /// Highlight a SourceRange (with ~'s) for any characters on LineNo.
 static void highlightRange(const CharSourceRange &R,
-                           unsigned LineNo, FileID FID,
+                           uint64_t LineNo, FileID FID,
                            const SourceColumnMap &map,
                            std::string &CaretLine,
                            const SourceManager &SM,
@@ -1156,7 +1156,7 @@ void TextDiagnostic::emitSnippetAndCaret(
   if (Invalid)
     return;
 
-  unsigned CaretLineNo = Loc.getLineNumber();
+  uint64_t CaretLineNo = Loc.getLineNumber();
   unsigned CaretColNo = Loc.getColumnNumber();
 
   // Arbitrarily stop showing snippets when the line is too long.
@@ -1166,14 +1166,14 @@ void TextDiagnostic::emitSnippetAndCaret(
 
   // Find the set of lines to include.
   const unsigned MaxLines = DiagOpts->SnippetLineLimit;
-  std::pair<unsigned, unsigned> Lines = {CaretLineNo, CaretLineNo};
+  std::pair<uint64_t, uint64_t> Lines = {CaretLineNo, CaretLineNo};
   for (SmallVectorImpl<CharSourceRange>::iterator I = Ranges.begin(),
                                                   E = Ranges.end();
        I != E; ++I)
     if (auto OptionalRange = findLinesForRange(*I, FID, SM))
       Lines = maybeAddRange(Lines, *OptionalRange, MaxLines);
 
-  for (unsigned LineNo = Lines.first; LineNo != Lines.second + 1; ++LineNo) {
+  for (uint64_t LineNo = Lines.first; LineNo != Lines.second + 1; ++LineNo) {
     const char *BufStart = BufData.data();
     const char *BufEnd = BufStart + BufData.size();
 
@@ -1330,8 +1330,8 @@ void TextDiagnostic::emitParseableFixits(ArrayRef<FixItHint> Hints,
     SourceLocation BLoc = I->RemoveRange.getBegin();
     SourceLocation ELoc = I->RemoveRange.getEnd();
 
-    std::pair<FileID, unsigned> BInfo = SM.getDecomposedLoc(BLoc);
-    std::pair<FileID, unsigned> EInfo = SM.getDecomposedLoc(ELoc);
+    std::pair<FileID, uint64_t> BInfo = SM.getDecomposedLoc(BLoc);
+    std::pair<FileID, uint64_t> EInfo = SM.getDecomposedLoc(ELoc);
 
     // Adjust for token ranges.
     if (I->RemoveRange.isTokenRange())

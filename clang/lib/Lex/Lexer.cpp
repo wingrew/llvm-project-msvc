@@ -334,7 +334,7 @@ StringRef Lexer::getSpelling(SourceLocation loc,
                              const LangOptions &options,
                              bool *invalid) {
   // Break down the source location.
-  std::pair<FileID, unsigned> locInfo = SM.getDecomposedLoc(loc);
+  std::pair<FileID, uint64_t> locInfo = SM.getDecomposedLoc(loc);
 
   // Try to the load the file buffer.
   bool invalidTemp = false;
@@ -472,7 +472,7 @@ bool Lexer::getRawToken(SourceLocation Loc, Token &Result,
   // If this comes from a macro expansion, we really do want the macro name, not
   // the token this macro expanded to.
   Loc = SM.getExpansionLoc(Loc);
-  std::pair<FileID, unsigned> LocInfo = SM.getDecomposedLoc(Loc);
+  std::pair<FileID, uint64_t> LocInfo = SM.getDecomposedLoc(Loc);
   bool Invalid = false;
   StringRef Buffer = SM.getBufferData(LocInfo.first, &Invalid);
   if (Invalid)
@@ -493,7 +493,7 @@ bool Lexer::getRawToken(SourceLocation Loc, Token &Result,
 
 /// Returns the pointer that points to the beginning of line that contains
 /// the given offset, or null if the offset if invalid.
-static const char *findBeginningOfLine(StringRef Buffer, unsigned Offset) {
+static const char *findBeginningOfLine(StringRef Buffer, uint64_t Offset) {
   const char *BufStart = Buffer.data();
   if (Offset >= Buffer.size())
     return nullptr;
@@ -514,7 +514,7 @@ static SourceLocation getBeginningOfFileToken(SourceLocation Loc,
                                               const SourceManager &SM,
                                               const LangOptions &LangOpts) {
   assert(Loc.isFileID());
-  std::pair<FileID, unsigned> LocInfo = SM.getDecomposedLoc(Loc);
+  std::pair<FileID, uint64_t> LocInfo = SM.getDecomposedLoc(Loc);
   if (LocInfo.first.isInvalid())
     return Loc;
 
@@ -569,8 +569,8 @@ SourceLocation Lexer::GetBeginningOfToken(SourceLocation Loc,
 
   SourceLocation FileLoc = SM.getSpellingLoc(Loc);
   SourceLocation BeginFileLoc = getBeginningOfFileToken(FileLoc, SM, LangOpts);
-  std::pair<FileID, unsigned> FileLocInfo = SM.getDecomposedLoc(FileLoc);
-  std::pair<FileID, unsigned> BeginFileLocInfo =
+  std::pair<FileID, uint64_t> FileLocInfo = SM.getDecomposedLoc(FileLoc);
+  std::pair<FileID, uint64_t> BeginFileLocInfo =
       SM.getDecomposedLoc(BeginFileLoc);
   assert(FileLocInfo.first == BeginFileLocInfo.first &&
          FileLocInfo.second >= BeginFileLocInfo.second);
@@ -868,7 +868,7 @@ static CharSourceRange makeRangeFromFileLocs(CharSourceRange Range,
 
   // Break down the source locations.
   FileID FID;
-  unsigned BeginOffs;
+  uint64_t BeginOffs;
   std::tie(FID, BeginOffs) = SM.getDecomposedLoc(Begin);
   if (FID.isInvalid())
     return {};
@@ -969,7 +969,7 @@ StringRef Lexer::getSourceText(CharSourceRange Range,
   }
 
   // Break down the source location.
-  std::pair<FileID, unsigned> beginInfo = SM.getDecomposedLoc(Range.getBegin());
+  std::pair<FileID, uint64_t> beginInfo = SM.getDecomposedLoc(Range.getBegin());
   if (beginInfo.first.isInvalid()) {
     if (Invalid) *Invalid = true;
     return {};
@@ -1035,8 +1035,8 @@ StringRef Lexer::getImmediateMacroName(SourceLocation Loc,
 
   // Dig out the buffer where the macro name was spelled and the extents of the
   // name so that we can render it into the expansion note.
-  std::pair<FileID, unsigned> ExpansionInfo = SM.getDecomposedLoc(Loc);
-  uint64_t MacroTokenLength = Lexer::MeasureTokenLength(Loc, SM, LangOpts);
+  std::pair<FileID, uint64_t> ExpansionInfo = SM.getDecomposedLoc(Loc);
+  unsigned MacroTokenLength = Lexer::MeasureTokenLength(Loc, SM, LangOpts);
   StringRef ExpansionBuffer = SM.getBufferData(ExpansionInfo.first);
   return ExpansionBuffer.substr(ExpansionInfo.second, MacroTokenLength);
 }
@@ -1094,7 +1094,7 @@ StringRef Lexer::getIndentationForLine(SourceLocation Loc,
                                        const SourceManager &SM) {
   if (Loc.isInvalid() || Loc.isMacroID())
     return {};
-  std::pair<FileID, unsigned> LocInfo = SM.getDecomposedLoc(Loc);
+  std::pair<FileID, uint64_t> LocInfo = SM.getDecomposedLoc(Loc);
   if (LocInfo.first.isInvalid())
     return {};
   bool Invalid = false;
@@ -1120,10 +1120,10 @@ StringRef Lexer::getIndentationForLine(SourceLocation Loc,
 /// This is currently only used for _Pragma implementation, so it is the slow
 /// path of the hot getSourceLocation method.  Do not allow it to be inlined.
 static LLVM_ATTRIBUTE_NOINLINE SourceLocation GetMappedTokenLoc(
-    Preprocessor &PP, SourceLocation FileLoc, unsigned CharNo, uint64_t TokLen);
+    Preprocessor &PP, SourceLocation FileLoc, uint64_t CharNo, uint64_t TokLen);
 static SourceLocation GetMappedTokenLoc(Preprocessor &PP,
                                         SourceLocation FileLoc,
-                                        unsigned CharNo, uint64_t TokLen) {
+                                        uint64_t CharNo, uint64_t TokLen) {
   assert(FileLoc.isMacroID() && "Must be a macro expansion");
 
   // Otherwise, we're lexing "mapped tokens".  This is used for things like
@@ -1266,7 +1266,7 @@ Optional<Token> Lexer::findNextToken(SourceLocation Loc,
   Loc = Lexer::getLocForEndOfToken(Loc, 0, SM, LangOpts);
 
   // Break down the source location.
-  std::pair<FileID, unsigned> LocInfo = SM.getDecomposedLoc(Loc);
+  std::pair<FileID, uint64_t> LocInfo = SM.getDecomposedLoc(Loc);
 
   // Try to load the file buffer.
   bool InvalidTemp = false;

@@ -1330,7 +1330,7 @@ void Preprocessor::HandleDirective(Token &Result) {
 
 /// GetLineValue - Convert a numeric token into an unsigned value, emitting
 /// Diagnostic DiagID if it is invalid, and returning the value in Val.
-static bool GetLineValue(Token &DigitTok, unsigned &Val,
+static bool GetLineValue(Token &DigitTok, uint64_t &Val,
                          unsigned DiagID, Preprocessor &PP,
                          bool IsGNULineDirective=false) {
   if (DigitTok.isNot(tok::numeric_constant)) {
@@ -1366,7 +1366,7 @@ static bool GetLineValue(Token &DigitTok, unsigned &Val,
       return true;
     }
 
-    unsigned NextVal = Val*10+(DigitTokBegin[i]-'0');
+    uint64_t NextVal = Val*10+(DigitTokBegin[i]-'0');
     if (NextVal < Val) { // overflow.
       PP.Diag(DigitTok, DiagID);
       PP.DiscardUntilEndOfDirective();
@@ -1396,7 +1396,7 @@ void Preprocessor::HandleLineDirective() {
   Lex(DigitTok);
 
   // Validate the number and convert it to an unsigned.
-  unsigned LineNo;
+  uint64_t LineNo;
   if (GetLineValue(DigitTok, LineNo, diag::err_pp_line_requires_integer,*this))
     return;
 
@@ -1405,13 +1405,13 @@ void Preprocessor::HandleLineDirective() {
 
   // Enforce C99 6.10.4p3: "The digit sequence shall not specify ... a
   // number greater than 2147483647".  C90 requires that the line # be <= 32767.
-  unsigned LineLimit = 32768U;
-  if (LangOpts.C99 || LangOpts.CPlusPlus11)
-    LineLimit = 2147483648U;
-  if (LineNo >= LineLimit)
-    Diag(DigitTok, diag::ext_pp_line_too_big) << LineLimit;
-  else if (LangOpts.CPlusPlus11 && LineNo >= 32768U)
-    Diag(DigitTok, diag::warn_cxx98_compat_pp_line_too_big);
+  // unsigned LineLimit = 32768U;
+  // if (LangOpts.C99 || LangOpts.CPlusPlus11)
+  //   LineLimit = 2147483648U;
+  // if (LineNo >= LineLimit)
+  //   Diag(DigitTok, diag::ext_pp_line_too_big) << LineLimit;
+  // else if (LangOpts.CPlusPlus11 && LineNo >= 32768U)
+  //   Diag(DigitTok, diag::warn_cxx98_compat_pp_line_too_big);
 
   int FilenameID = -1;
   Token StrTok;
@@ -1470,7 +1470,7 @@ void Preprocessor::HandleLineDirective() {
 static bool ReadLineMarkerFlags(bool &IsFileEntry, bool &IsFileExit,
                                 SrcMgr::CharacteristicKind &FileKind,
                                 Preprocessor &PP) {
-  unsigned FlagVal;
+  uint64_t FlagVal;
   Token FlagTok;
   PP.Lex(FlagTok);
   if (FlagTok.is(tok::eod)) return false;
@@ -1554,7 +1554,7 @@ static bool ReadLineMarkerFlags(bool &IsFileEntry, bool &IsFileExit,
 void Preprocessor::HandleDigitDirective(Token &DigitTok) {
   // Validate the number and convert it to an unsigned.  GNU does not have a
   // line # limit other than it fit in 32-bits.
-  unsigned LineNo;
+  uint64_t LineNo;
   if (GetLineValue(DigitTok, LineNo, diag::err_pp_linemarker_requires_integer,
                    *this, true))
     return;

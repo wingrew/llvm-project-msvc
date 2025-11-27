@@ -234,7 +234,7 @@ llvm::raw_ostream &syntax::operator<<(llvm::raw_ostream &OS, const Token &T) {
   return OS << T.str();
 }
 
-FileRange::FileRange(FileID File, unsigned BeginOffset, unsigned EndOffset)
+FileRange::FileRange(FileID File, uint64_t BeginOffset, uint64_t EndOffset)
     : File(File), Begin(BeginOffset), End(EndOffset) {
   assert(File.isValid());
   assert(BeginOffset <= EndOffset);

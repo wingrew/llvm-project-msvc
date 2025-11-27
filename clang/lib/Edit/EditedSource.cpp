@@ -140,7 +140,7 @@ bool EditedSource::commitInsert(SourceLocation OrigLoc,
 
 bool EditedSource::commitInsertFromRange(SourceLocation OrigLoc,
                                    FileOffset Offs,
-                                   FileOffset InsertFromRangeOffs, unsigned Len,
+                                   FileOffset InsertFromRangeOffs, uint64_t Len,
                                    bool beforePreviousInsertions) {
   if (Len == 0)
     return true;
@@ -197,7 +197,7 @@ bool EditedSource::commitInsertFromRange(SourceLocation OrigLoc,
 }
 
 void EditedSource::commitRemove(SourceLocation OrigLoc,
-                                FileOffset BeginOffs, unsigned Len) {
+                                FileOffset BeginOffs, uint64_t Len) {
   if (Len == 0)
     return;
 
@@ -241,7 +241,7 @@ void EditedSource::commitRemove(SourceLocation OrigLoc,
     TopFA = &I->second;
     if (TopEnd >= EndOffs)
       return;
-    unsigned diff = EndOffs.getOffset() - TopEnd.getOffset();
+    uint64_t diff = EndOffs.getOffset() - TopEnd.getOffset();
     TopEnd = EndOffs;
     TopFA->RemoveLen += diff;
     if (B == BeginOffs)
@@ -263,7 +263,7 @@ void EditedSource::commitRemove(SourceLocation OrigLoc,
     }
 
     if (B < TopEnd) {
-      unsigned diff = E.getOffset() - TopEnd.getOffset();
+      uint64_t diff = E.getOffset() - TopEnd.getOffset();
       TopEnd = E;
       TopFA->RemoveLen += diff;
       FileEdits.erase(I);
@@ -336,7 +336,7 @@ static bool canRemoveWhitespace(char left, char beforeWSpace, char right,
 /// -Insert a space if removing the range is going to mess up the source tokens.
 static void adjustRemoval(const SourceManager &SM, const LangOptions &LangOpts,
                           SourceLocation Loc, FileOffset offs,
-                          unsigned &len, StringRef &text) {
+                          uint64_t &len, StringRef &text) {
   assert(len && text.empty());
   SourceLocation BeginTokLoc = Lexer::GetBeginningOfToken(Loc, SM, LangOpts);
   if (BeginTokLoc != Loc)
@@ -347,8 +347,8 @@ static void adjustRemoval(const SourceManager &SM, const LangOptions &LangOpts,
   if (Invalid)
     return;
 
-  unsigned begin = offs.getOffset();
-  unsigned end = begin + len;
+  uint64_t begin = offs.getOffset();
+  uint64_t end = begin + len;
 
   // Do not try to extend the removal if we're at the end of the buffer already.
   if (end == buffer.size())
@@ -380,7 +380,7 @@ static void adjustRemoval(const SourceManager &SM, const LangOptions &LangOpts,
 }
 
 static void applyRewrite(EditsReceiver &receiver,
-                         StringRef text, FileOffset offs, unsigned len,
+                         StringRef text, FileOffset offs, uint64_t len,
                          const SourceManager &SM, const LangOptions &LangOpts,
                          bool shouldAdjustRemovals) {
   assert(offs.getFID().isValid());
@@ -410,7 +410,7 @@ void EditedSource::applyRewrites(EditsReceiver &receiver,
                                  bool shouldAdjustRemovals) {
   SmallString<128> StrVec;
   FileOffset CurOffs, CurEnd;
-  unsigned CurLen;
+  uint64_t CurLen;
 
   if (FileEdits.empty())
     return;

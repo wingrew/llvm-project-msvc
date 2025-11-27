@@ -109,7 +109,7 @@ public:
 
     Loc = SM.getFileLoc(Loc);
     FileID FID = SM.getFileID(Loc);
-    unsigned Line = SM.getLineNumber(FID, SM.getFileOffset(Loc));
+    uint64_t Line = SM.getLineNumber(FID, SM.getFileOffset(Loc));
     unsigned Col = SM.getColumnNumber(FID, SM.getFileOffset(Loc));
     OS << Line << ':' << Col << " | ";
 
@@ -147,7 +147,7 @@ public:
 
     Loc = SM.getFileLoc(Loc);
     FileID FID = SM.getFileID(Loc);
-    unsigned Line = SM.getLineNumber(FID, SM.getFileOffset(Loc));
+    uint64_t Line = SM.getLineNumber(FID, SM.getFileOffset(Loc));
     unsigned Col = SM.getColumnNumber(FID, SM.getFileOffset(Loc));
     OS << Line << ':' << Col << " | ";
 
@@ -170,7 +170,7 @@ public:
 
     Loc = SM.getFileLoc(Loc);
     FileID FID = SM.getFileID(Loc);
-    unsigned Line = SM.getLineNumber(FID, SM.getFileOffset(Loc));
+    uint64_t Line = SM.getLineNumber(FID, SM.getFileOffset(Loc));
     unsigned Col = SM.getColumnNumber(FID, SM.getFileOffset(Loc));
     OS << Line << ':' << Col << " | ";
 

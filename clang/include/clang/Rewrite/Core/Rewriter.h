@@ -138,7 +138,7 @@ public:
   }
 
   /// RemoveText - Remove the specified text region.
-  bool RemoveText(SourceLocation Start, unsigned Length,
+  bool RemoveText(SourceLocation Start, uint64_t Length,
                   RewriteOptions opts = RewriteOptions());
 
   /// Remove the specified text region.
@@ -155,7 +155,7 @@ public:
   /// ReplaceText - This method replaces a range of characters in the input
   /// buffer with a new string.  This is effectively a combined "remove/insert"
   /// operation.
-  bool ReplaceText(SourceLocation Start, unsigned OrigLength,
+  bool ReplaceText(SourceLocation Start, uint64_t OrigLength,
                    StringRef NewStr);
 
   /// ReplaceText - This method replaces a range of characters in the input
@@ -215,7 +215,7 @@ public:
   bool overwriteChangedFiles();
 
 private:
-  unsigned getLocationOffsetAndFileID(SourceLocation Loc, FileID &FID) const;
+  uint64_t getLocationOffsetAndFileID(SourceLocation Loc, FileID &FID) const;
 };
 
 } // namespace clang

@@ -263,7 +263,7 @@ bool CursorVisitor::visitFileRegion() {
   ASTUnit *Unit = cxtu::getASTUnit(TU);
   SourceManager &SM = Unit->getSourceManager();
 
-  std::pair<FileID, unsigned> Begin = SM.getDecomposedLoc(
+  std::pair<FileID, uint64_t> Begin = SM.getDecomposedLoc(
                                   SM.getFileLoc(RegionOfInterest.getBegin())),
                               End = SM.getDecomposedLoc(
                                   SM.getFileLoc(RegionOfInterest.getEnd()));
@@ -280,8 +280,8 @@ bool CursorVisitor::visitFileRegion() {
     return false;
 
   FileID File = Begin.first;
-  unsigned Offset = Begin.second;
-  unsigned Length = End.second - Begin.second;
+  uint64_t Offset = Begin.second;
+  uint64_t Length = End.second - Begin.second;
 
   if (!VisitDeclsOnly && !VisitPreprocessorLast)
     if (visitPreprocessedEntitiesInRegion())
@@ -308,8 +308,8 @@ static bool isInLexicalContext(Decl *D, DeclContext *DC) {
   return false;
 }
 
-bool CursorVisitor::visitDeclsFromFileRegion(FileID File, unsigned Offset,
-                                             unsigned Length) {
+bool CursorVisitor::visitDeclsFromFileRegion(FileID File, uint64_t Offset,
+                                             uint64_t Length) {
   ASTUnit *Unit = cxtu::getASTUnit(TU);
   SourceManager &SM = Unit->getSourceManager();
   SourceRange Range = RegionOfInterest;
@@ -6928,8 +6928,8 @@ CXCursor clang_getOverloadedDecl(CXCursor cursor, unsigned index) {
 }
 
 void clang_getDefinitionSpellingAndExtent(
-    CXCursor C, const char **startBuf, const char **endBuf, unsigned *startLine,
-    unsigned *startColumn, unsigned *endLine, unsigned *endColumn) {
+    CXCursor C, const char **startBuf, const char **endBuf, uint64_t *startLine,
+    unsigned *startColumn, uint64_t *endLine, unsigned *endColumn) {
   assert(getCursorDecl(C) && "CXCursor has null decl");
   const auto *FD = cast<FunctionDecl>(getCursorDecl(C));
   const auto *Body = cast<CompoundStmt>(FD->getBody());

@@ -130,7 +130,7 @@ class JSONNodeDumper
   PrintingPolicy PrintPolicy;
   const comments::CommandTraits *Traits;
   StringRef LastLocFilename, LastLocPresumedFilename;
-  unsigned LastLocLine, LastLocPresumedLine;
+  uint64_t LastLocLine, LastLocPresumedLine;
 
   using InnerAttrVisitor = ConstAttrVisitor<JSONNodeDumper>;
   using InnerCommentVisitor =

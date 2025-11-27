@@ -1154,7 +1154,7 @@ public:
   Stmt &operator=(Stmt &&) = delete;
 
   Stmt(StmtClass SC) {
-    static_assert(sizeof(*this) <= 8,
+    static_assert(sizeof(*this) <= 16,
                   "changing bitfields changed sizeof(Stmt)");
     static_assert(sizeof(*this) % alignof(void *) == 0,
                   "Insufficient alignment!");
@@ -1627,9 +1627,9 @@ class CaseStmt final
     return caseStmtIsGNURange();
   }
 
-  uint64_t lhsOffset() const { return LhsOffset; }
-  uint64_t rhsOffset() const { return LhsOffset + caseStmtIsGNURange(); }
-  uint64_t subStmtOffset() const { return rhsOffset() + SubStmtOffsetFromRhs; }
+  unsigned lhsOffset() const { return LhsOffset; }
+  unsigned rhsOffset() const { return LhsOffset + caseStmtIsGNURange(); }
+  unsigned subStmtOffset() const { return rhsOffset() + SubStmtOffsetFromRhs; }
 
   /// Build a case statement assuming that the storage for the
   /// trailing objects has been properly allocated.
@@ -2212,12 +2212,12 @@ class SwitchStmt final : public Stmt,
     return NumMandatoryStmtPtr + hasInitStorage() + hasVarStorage();
   }
 
-  int64_t initOffset() const { return InitOffset; }
-  int64_t varOffset() const { return InitOffset + hasInitStorage(); }
-  int64_t condOffset() const {
+  unsigned initOffset() const { return InitOffset; }
+  unsigned varOffset() const { return InitOffset + hasInitStorage(); }
+  unsigned condOffset() const {
     return InitOffset + hasInitStorage() + hasVarStorage();
   }
-  int64_t bodyOffset() const { return condOffset() + BodyOffsetFromCond; }
+  unsigned bodyOffset() const { return condOffset() + BodyOffsetFromCond; }
 
   /// Build a switch statement.
   SwitchStmt(const ASTContext &Ctx, Stmt *Init, VarDecl *Var, Expr *Cond,
@@ -2394,9 +2394,9 @@ class WhileStmt final : public Stmt,
 
   SourceLocation LParenLoc, RParenLoc;
 
-  uint64_t varOffset() const { return VarOffset; }
-  uint64_t condOffset() const { return VarOffset + hasVarStorage(); }
-  uint64_t bodyOffset() const { return condOffset() + BodyOffsetFromCond; }
+  unsigned varOffset() const { return VarOffset; }
+  unsigned condOffset() const { return VarOffset + hasVarStorage(); }
+  unsigned bodyOffset() const { return condOffset() + BodyOffsetFromCond; }
 
   unsigned numTrailingObjects(OverloadToken<Stmt *>) const {
     return NumMandatoryStmtPtr + hasVarStorage();

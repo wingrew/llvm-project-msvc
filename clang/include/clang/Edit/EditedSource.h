@@ -39,7 +39,7 @@ class EditedSource {
 
   struct FileEdit {
     StringRef Text;
-    unsigned RemoveLen = 0;
+    uint64_t RemoveLen = 0;
 
     FileEdit() = default;
   };
@@ -95,9 +95,9 @@ private:
   bool commitInsert(SourceLocation OrigLoc, FileOffset Offs, StringRef text,
                     bool beforePreviousInsertions);
   bool commitInsertFromRange(SourceLocation OrigLoc, FileOffset Offs,
-                             FileOffset InsertFromRangeOffs, unsigned Len,
+                             FileOffset InsertFromRangeOffs, uint64_t Len,
                              bool beforePreviousInsertions);
-  void commitRemove(SourceLocation OrigLoc, FileOffset BeginOffs, unsigned Len);
+  void commitRemove(SourceLocation OrigLoc, FileOffset BeginOffs, uint64_t Len);
 
   StringRef getSourceText(FileOffset BeginOffs, FileOffset EndOffs,
                           bool &Invalid);

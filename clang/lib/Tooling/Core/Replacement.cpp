@@ -120,7 +120,7 @@ bool operator==(const Replacement &LHS, const Replacement &RHS) {
 void Replacement::setFromSourceLocation(const SourceManager &Sources,
                                         SourceLocation Start, uint64_t Length,
                                         StringRef ReplacementText) {
-  const std::pair<FileID, unsigned> DecomposedLocation =
+  const std::pair<FileID, uint64_t> DecomposedLocation =
       Sources.getDecomposedLoc(Start);
   const FileEntry *Entry = Sources.getFileEntryForID(DecomposedLocation.first);
   this->FilePath = std::string(Entry ? Entry->getName() : InvalidLocation);
@@ -155,8 +155,8 @@ void Replacement::setFromSourceRange(const SourceManager &Sources,
 
 Replacement
 Replacements::getReplacementInChangedCode(const Replacement &R) const {
-  unsigned NewStart = getShiftedCodePosition(R.getOffset());
-  unsigned NewEnd = getShiftedCodePosition(R.getOffset() + R.getLength());
+  uint64_t NewStart = getShiftedCodePosition(R.getOffset());
+  uint64_t NewEnd = getShiftedCodePosition(R.getOffset() + R.getLength());
   return Replacement(R.getFilePath(), NewStart, NewEnd - NewStart,
                      R.getReplacementText());
 }
@@ -197,7 +197,7 @@ Replacements Replacements::getCanonicalReplacements() const {
       continue;
     }
     auto &Prev = NewReplaces.back();
-    unsigned PrevEnd = Prev.getOffset() + Prev.getLength();
+    uint64_t PrevEnd = Prev.getOffset() + Prev.getLength();
     if (PrevEnd < R.getOffset()) {
       NewReplaces.push_back(R);
     } else {
@@ -249,7 +249,7 @@ llvm::Error Replacements::add(const Replacement &R) {
         replacement_error::wrong_file_path, R, *Replaces.begin());
 
   // Special-case header insertions.
-  if (R.getOffset() == std::numeric_limits<unsigned>::max()) {
+  if (R.getOffset() == std::numeric_limits<uint64_t>::max()) {
     Replaces.insert(R);
     return llvm::Error::success();
   }
@@ -378,8 +378,8 @@ public:
   // set the next element is coming from.
   void merge(const Replacement &R) {
     if (MergeSecond) {
-      unsigned REnd = R.getOffset() + Delta + R.getLength();
-      unsigned End = Offset + Text.size();
+      uint64_t REnd = R.getOffset() + Delta + R.getLength();
+      uint64_t End = Offset + Text.size();
       if (REnd > End) {
         Length += REnd - End;
         MergeSecond = false;
@@ -390,7 +390,7 @@ public:
       Text = (Head + R.getReplacementText() + Tail).str();
       Delta += R.getReplacementText().size() - R.getLength();
     } else {
-      unsigned End = Offset + Length;
+      uint64_t End = Offset + Length;
       StringRef RText = R.getReplacementText();
       StringRef Tail = RText.substr(End - R.getOffset());
       Text = (Text + Tail).str();
@@ -433,7 +433,7 @@ private:
   // Data of the actually merged replacement. FilePath and Offset aren't changed
   // as the element is only extended to the right.
   const StringRef FilePath;
-  const unsigned Offset;
+  const uint64_t Offset;
   unsigned Length;
   std::string Text;
 };
@@ -493,7 +493,7 @@ static std::vector<Range> combineAndSortRanges(std::vector<Range> Ranges) {
         Result.back().getOffset() + Result.back().getLength() < R.getOffset()) {
       Result.push_back(R);
     } else {
-      unsigned NewEnd =
+      uint64_t NewEnd =
           std::max(Result.back().getOffset() + Result.back().getLength(),
                    R.getOffset() + R.getLength());
       Result[Result.size() - 1] =
@@ -535,7 +535,7 @@ std::vector<Range> Replacements::getAffectedRanges() const {
   std::vector<Range> ChangedRanges;
   int Shift = 0;
   for (const auto &R : Replaces) {
-    unsigned Offset = R.getOffset() + Shift;
+    uint64_t Offset = R.getOffset() + Shift;
     unsigned Length = R.getReplacementText().size();
     Shift += Length - R.getLength();
     ChangedRanges.push_back(Range(Offset, Length));
@@ -544,7 +544,7 @@ std::vector<Range> Replacements::getAffectedRanges() const {
 }
 
 uint64_t Replacements::getShiftedCodePosition(uint64_t Position) const {
-  unsigned Offset = 0;
+  uint64_t Offset = 0;
   for (const auto &R : Replaces) {
     if (R.getOffset() + R.getLength() <= Position) {
       Offset += R.getReplacementText().size() - R.getLength();

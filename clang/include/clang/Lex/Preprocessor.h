@@ -298,7 +298,7 @@ private:
   const FileEntry *CodeCompletionFile = nullptr;
 
   /// The offset in file for the code-completion point.
-  unsigned CodeCompletionOffset = 0;
+  uint64_t CodeCompletionOffset = 0;
 
   /// The location for the code-completion point. This gets instantiated
   /// when the CodeCompletionFile gets \#include'ed for preprocessing.
@@ -1787,7 +1787,7 @@ public:
   ///
   /// \returns true if an error occurred, false otherwise.
   bool SetCodeCompletionPoint(const FileEntry *File,
-                              unsigned Line, unsigned Column);
+                              uint64_t Line, uint64_t Column);
 
   /// Determine if we are performing code completion.
   bool isCodeCompletionEnabled() const { return CodeCompletionFile != nullptr; }

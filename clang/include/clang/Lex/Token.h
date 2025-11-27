@@ -131,7 +131,7 @@ public:
   }
 
   void setLocation(SourceLocation L) { Loc = L.getRawEncoding(); }
-  void setLength(unsigned Len) {
+  void setLength(uint64_t Len) {
     assert(!isAnnotation() && "Annotation tokens have no length field");
     UintData = Len;
   }

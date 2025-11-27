@@ -57,22 +57,22 @@ namespace clang {
   /// different offsets) which is a nice constant time operation.
   struct RopePiece {
     llvm::IntrusiveRefCntPtr<RopeRefCountString> StrData;
-    unsigned StartOffs = 0;
-    unsigned EndOffs = 0;
+    uint64_t StartOffs = 0;
+    uint64_t EndOffs = 0;
 
     RopePiece() = default;
-    RopePiece(llvm::IntrusiveRefCntPtr<RopeRefCountString> Str, unsigned Start,
-              unsigned End)
+    RopePiece(llvm::IntrusiveRefCntPtr<RopeRefCountString> Str, uint64_t Start,
+              uint64_t End)
         : StrData(std::move(Str)), StartOffs(Start), EndOffs(End) {}
 
-    const char &operator[](unsigned Offset) const {
+    const char &operator[](uint64_t Offset) const {
       return StrData->Data[Offset+StartOffs];
     }
-    char &operator[](unsigned Offset) {
+    char &operator[](uint64_t Offset) {
       return StrData->Data[Offset+StartOffs];
     }
 
-    unsigned size() const { return EndOffs-StartOffs; }
+    uint64_t size() const { return EndOffs-StartOffs; }
   };
 
   //===--------------------------------------------------------------------===//
@@ -151,14 +151,14 @@ namespace clang {
 
     iterator begin() const { return iterator(Root); }
     iterator end() const { return iterator(); }
-    unsigned size() const;
-    unsigned empty() const { return size() == 0; }
+    uint64_t size() const;
+    uint64_t empty() const { return size() == 0; }
 
     void clear();
 
-    void insert(unsigned Offset, const RopePiece &R);
+    void insert(uint64_t Offset, const RopePiece &R);
 
-    void erase(unsigned Offset, unsigned NumBytes);
+    void erase(uint64_t Offset, uint64_t NumBytes);
   };
 
   //===--------------------------------------------------------------------===//
@@ -198,13 +198,13 @@ public:
       Chunks.insert(0, MakeRopeString(Start, End));
   }
 
-  void insert(unsigned Offset, const char *Start, const char *End) {
+  void insert(uint64_t Offset, const char *Start, const char *End) {
     assert(Offset <= size() && "Invalid position to insert!");
     if (Start == End) return;
     Chunks.insert(Offset, MakeRopeString(Start, End));
   }
 
-  void erase(unsigned Offset, unsigned NumBytes) {
+  void erase(uint64_t Offset, uint64_t NumBytes) {
     assert(Offset+NumBytes <= size() && "Invalid region to erase!");
     if (NumBytes == 0) return;
     Chunks.erase(Offset, NumBytes);

@@ -886,7 +886,7 @@ void HTMLDiagnostics::HandlePiece(Rewriter &R, FileID BugFileID,
 
   SourceManager &SM = R.getSourceMgr();
   assert(&Pos.getManager() == &SM && "SourceManagers are different!");
-  std::pair<FileID, unsigned> LPosInfo = SM.getDecomposedExpansionLoc(Pos);
+  std::pair<FileID, uint64_t> LPosInfo = SM.getDecomposedExpansionLoc(Pos);
 
   if (LPosInfo.first != BugFileID)
     return;
