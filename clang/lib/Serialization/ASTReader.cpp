@@ -1347,8 +1347,8 @@ void ASTReader::ParseLineTable(ModuleFile &F, const RecordData &Record) {
     Entries.clear();
     Entries.reserve(NumEntries);
     for (unsigned I = 0; I != NumEntries; ++I) {
-      unsigned FileOffset = Record[Idx++];
-      unsigned LineNo = Record[Idx++];
+      uint64_t FileOffset = Record[Idx++];
+      uint64_t LineNo = Record[Idx++];
       int FilenameID = FileIDs[Record[Idx++]];
       SrcMgr::CharacteristicKind FileKind
         = (SrcMgr::CharacteristicKind)Record[Idx++];

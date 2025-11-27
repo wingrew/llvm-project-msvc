@@ -205,7 +205,7 @@ static SourceLocation getDeclLocForCommentSearch(const Decl *D,
 
 RawComment *ASTContext::getRawCommentForDeclNoCacheImpl(
     const Decl *D, const SourceLocation RepresentativeLocForDecl,
-    const std::map<unsigned, RawComment *> &CommentsInTheFile) const {
+    const std::map<uint64_t, RawComment *> &CommentsInTheFile) const {
   // If the declaration doesn't map directly to a location in a file, we
   // can't find the comment.
   if (RepresentativeLocForDecl.isInvalid() ||

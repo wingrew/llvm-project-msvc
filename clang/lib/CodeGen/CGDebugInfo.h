@@ -775,7 +775,7 @@ private:
 
   /// Collect various properties of a VarDecl.
   void collectVarDeclProps(const VarDecl *VD, llvm::DIFile *&Unit,
-                           unsigned &LineNo, QualType &T, StringRef &Name,
+                           uint64_t &LineNo, QualType &T, StringRef &Name,
                            StringRef &LinkageName,
                            llvm::MDTuple *&TemplateParameters,
                            llvm::DIScope *&VDContext);

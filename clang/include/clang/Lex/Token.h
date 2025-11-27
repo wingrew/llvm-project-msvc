@@ -125,13 +125,13 @@ public:
   SourceLocation getLocation() const {
     return SourceLocation::getFromRawEncoding(Loc);
   }
-  uint64_t getLength() const {
+  unsigned getLength() const {
     assert(!isAnnotation() && "Annotation tokens have no length field");
     return UintData;
   }
 
   void setLocation(SourceLocation L) { Loc = L.getRawEncoding(); }
-  void setLength(uint64_t Len) {
+  void setLength(unsigned Len) {
     assert(!isAnnotation() && "Annotation tokens have no length field");
     UintData = Len;
   }

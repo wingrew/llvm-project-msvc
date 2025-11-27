@@ -863,7 +863,7 @@ public:
   /// same file where \p RepresentativeLocForDecl is.
   RawComment *getRawCommentForDeclNoCacheImpl(
       const Decl *D, const SourceLocation RepresentativeLocForDecl,
-      const std::map<unsigned, RawComment *> &CommentsInFile) const;
+      const std::map<uint64_t, RawComment *> &CommentsInFile) const;
 
   /// Return the documentation comment attached to a given declaration,
   /// without looking into cache.

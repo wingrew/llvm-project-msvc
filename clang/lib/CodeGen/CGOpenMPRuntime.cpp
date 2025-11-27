@@ -1636,7 +1636,7 @@ Address CGOpenMPRuntime::getAddrOfDeclareTargetVar(const VarDecl *VD) {
       OS << CGM.getMangledName(GlobalDecl(VD));
       if (!VD->isExternallyVisible()) {
         unsigned DeviceID, FileID;
-        unit64_t Line;
+        uint64_t Line;
         getTargetEntryUniqueInfo(CGM.getContext(),
                                  VD->getCanonicalDecl()->getBeginLoc(),
                                  DeviceID, FileID, Line);
@@ -3135,7 +3135,7 @@ void CGOpenMPRuntime::createOffloadEntriesAndInfoMetadata() {
       [this, &C, MD, &OrderedEntries, &ParentFunctions, &GetMDInt,
        &GetMDString](
           unsigned DeviceID, unsigned FileID, StringRef ParentName,
-          unsigned Line,
+          uint64_t Line,
           const OffloadEntriesInfoManagerTy::OffloadEntryInfoTargetRegion &E) {
         // Generate metadata for target regions. Each entry of this metadata
         // contains:

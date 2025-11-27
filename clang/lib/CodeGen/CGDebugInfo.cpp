@@ -4117,7 +4117,7 @@ void CGDebugInfo::emitFunctionStart(GlobalDecl GD, SourceLocation Loc,
       SPFlags | llvm::DISubprogram::SPFlagDefinition;
 
   const uint64_t LineNo = getLineNumber(Loc.isValid() ? Loc : CurLoc);
-  uint64_tcopeLine = getLineNumber(ScopeLoc);
+  uint64_t ScopeLine = getLineNumber(ScopeLoc);
   llvm::DISubroutineType *DIFnType = getOrCreateFunctionType(D, FnType, Unit);
   llvm::DISubprogram *Decl = nullptr;
   llvm::DINodeArray Annotations = nullptr;
@@ -5270,7 +5270,7 @@ void CGDebugInfo::EmitGlobalVariable(llvm::GlobalVariable *Var,
   // Create global variable debug descriptor.
   llvm::DIFile *Unit = nullptr;
   llvm::DIScope *DContext = nullptr;
-  unsigned LineNo;
+  uint64_t LineNo;
   StringRef DeclName, LinkageName;
   QualType T;
   llvm::MDTuple *TemplateParameters = nullptr;
