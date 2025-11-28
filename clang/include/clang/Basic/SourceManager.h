@@ -1395,7 +1395,7 @@ public:
                            bool *Invalid = nullptr) const;
   uint64_t getSpellingColumnNumber(SourceLocation Loc,
                                    bool *Invalid = nullptr) const;
-  uint64_t getExpansionColumnNumber(SourceLocation Loc,
+  unsigned getExpansionColumnNumber(SourceLocation Loc,
                                     bool *Invalid = nullptr) const;
   unsigned getPresumedColumnNumber(SourceLocation Loc,
                                    bool *Invalid = nullptr) const;

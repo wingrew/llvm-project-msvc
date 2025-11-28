@@ -31,6 +31,7 @@
 #include <memory>
 #include <system_error>
 #include <utility>
+#include "RewriteBuffer.h"
 
 using namespace clang;
 
@@ -142,7 +143,7 @@ void RewriteBuffer::ReplaceText(uint64_t OrigOffset, uint64_t OrigLength,
 
 /// getRangeSize - Return the size in bytes of the specified range if they
 /// are in the same file.  If not, this returns -1.
-int Rewriter::getRangeSize(const CharSourceRange &Range,
+int64_t Rewriter::getRangeSize(const CharSourceRange &Range,
                            RewriteOptions opts) const {
   if (!isRewritable(Range.getBegin()) ||
       !isRewritable(Range.getEnd())) return -1;
@@ -172,7 +173,7 @@ int Rewriter::getRangeSize(const CharSourceRange &Range,
   return EndOff-StartOff;
 }
 
-int Rewriter::getRangeSize(SourceRange Range, RewriteOptions opts) const {
+int64_t Rewriter::getRangeSize(SourceRange Range, RewriteOptions opts) const {
   return getRangeSize(CharSourceRange::getTokenRange(Range), opts);
 }
 

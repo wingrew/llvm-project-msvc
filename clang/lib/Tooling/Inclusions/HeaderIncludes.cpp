@@ -37,9 +37,9 @@ LangOptions createLangOpts() {
 // GetOffsetAfterSequence, from the start of the code.
 // \p GetOffsetAfterSequence should be a function that matches a sequence of
 // tokens and returns an offset after the sequence.
-unsigned getOffsetAfterTokenSequence(
+uint64_t getOffsetAfterTokenSequence(
     StringRef FileName, StringRef Code, const IncludeStyle &Style,
-    llvm::function_ref<unsigned(const SourceManager &, Lexer &, Token &)>
+    llvm::function_ref<uint64_t(const SourceManager &, Lexer &, Token &)>
         GetOffsetAfterSequence) {
   SourceManagerForFile VirtualSM(FileName, Code);
   SourceManager &SM = VirtualSM.get();
@@ -79,27 +79,27 @@ void skipComments(Lexer &Lex, Token &Tok) {
 // before/after header guards (e.g. #ifndef/#define pair, #pragma once). If no
 // header guard is present in the code, this will return the offset after
 // skipping all comments from the start of the code.
-unsigned getOffsetAfterHeaderGuardsAndComments(StringRef FileName,
+uint64_t getOffsetAfterHeaderGuardsAndComments(StringRef FileName,
                                                StringRef Code,
                                                const IncludeStyle &Style) {
   // \p Consume returns location after header guard or 0 if no header guard is
   // found.
   auto ConsumeHeaderGuardAndComment =
-      [&](std::function<unsigned(const SourceManager &SM, Lexer &Lex,
+      [&](std::function<uint64_t(const SourceManager &SM, Lexer &Lex,
                                  Token Tok)>
               Consume) {
         return getOffsetAfterTokenSequence(
             FileName, Code, Style,
             [&Consume](const SourceManager &SM, Lexer &Lex, Token Tok) {
               skipComments(Lex, Tok);
-              unsigned InitialOffset = SM.getFileOffset(Tok.getLocation());
+              uint64_t InitialOffset = SM.getFileOffset(Tok.getLocation());
               return std::max(InitialOffset, Consume(SM, Lex, Tok));
             });
       };
   return std::max(
       // #ifndef/#define
       ConsumeHeaderGuardAndComment(
-          [](const SourceManager &SM, Lexer &Lex, Token Tok) -> unsigned {
+          [](const SourceManager &SM, Lexer &Lex, Token Tok) -> uint64_t {
             if (checkAndConsumeDirectiveWithName(Lex, "ifndef", Tok)) {
               skipComments(Lex, Tok);
               if (checkAndConsumeDirectiveWithName(Lex, "define", Tok) &&
@@ -110,7 +110,7 @@ unsigned getOffsetAfterHeaderGuardsAndComments(StringRef FileName,
           }),
       // #pragma once
       ConsumeHeaderGuardAndComment(
-          [](const SourceManager &SM, Lexer &Lex, Token Tok) -> unsigned {
+          [](const SourceManager &SM, Lexer &Lex, Token Tok) -> uint64_t {
             if (checkAndConsumeDirectiveWithName(Lex, "pragma", Tok,
                                                  StringRef("once")))
               return SM.getFileOffset(Tok.getLocation());
@@ -156,13 +156,13 @@ bool checkAndConsumeInclusiveDirective(Lexer &Lex, Token &Tok) {
 // offset after skipping all comments from the start of the code.
 // Inserting after an #include is not allowed if it comes after code that is not
 // #include (e.g. pre-processing directive that is not #include, declarations).
-unsigned getMaxHeaderInsertionOffset(StringRef FileName, StringRef Code,
+uint64_t getMaxHeaderInsertionOffset(StringRef FileName, StringRef Code,
                                      const IncludeStyle &Style) {
   return getOffsetAfterTokenSequence(
       FileName, Code, Style,
       [](const SourceManager &SM, Lexer &Lex, Token Tok) {
         skipComments(Lex, Tok);
-        unsigned MaxOffset = SM.getFileOffset(Tok.getLocation());
+        uint64_t MaxOffset = SM.getFileOffset(Tok.getLocation());
         while (checkAndConsumeInclusiveDirective(Lex, Tok))
           MaxOffset = SM.getFileOffset(Tok.getLocation());
         return MaxOffset;
@@ -284,8 +284,8 @@ HeaderIncludes::HeaderIncludes(StringRef FileName, StringRef Code,
   SmallVector<StringRef, 32> Lines;
   Code.drop_front(MinInsertOffset).split(Lines, "\n");
 
-  unsigned Offset = MinInsertOffset;
-  unsigned NextLineOffset;
+  uint64_t Offset = MinInsertOffset;
+  uint64_t NextLineOffset;
   SmallVector<StringRef, 4> Matches;
   for (auto Line : Lines) {
     NextLineOffset = std::min(Code.size(), Offset + Line.size() + 1);
@@ -323,7 +323,7 @@ HeaderIncludes::HeaderIncludes(StringRef FileName, StringRef Code,
 
 // \p Offset: the start of the line following this include directive.
 void HeaderIncludes::addExistingInclude(Include IncludeToAdd,
-                                        unsigned NextLineOffset) {
+                                        uint64_t NextLineOffset) {
   auto Iter =
       ExistingIncludes.try_emplace(trimInclude(IncludeToAdd.Name)).first;
   Iter->second.push_back(std::move(IncludeToAdd));

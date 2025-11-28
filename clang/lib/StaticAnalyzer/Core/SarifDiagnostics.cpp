@@ -154,10 +154,10 @@ static json::Object createArtifactLocation(const FileEntry &FE,
 }
 
 static unsigned int adjustColumnPos(const SourceManager &SM, SourceLocation Loc,
-                                    unsigned int TokenLen = 0) {
+                                    uint64_t TokenLen = 0) {
   assert(!Loc.isInvalid() && "invalid Loc when adjusting column position");
 
-  std::pair<FileID, unsigned> LocInfo = SM.getDecomposedExpansionLoc(Loc);
+  std::pair<FileID, uint64_t> LocInfo = SM.getDecomposedExpansionLoc(Loc);
   assert(LocInfo.second > SM.getExpansionColumnNumber(Loc) &&
          "position in file is before column number?");
 
@@ -168,7 +168,7 @@ static unsigned int adjustColumnPos(const SourceManager &SM, SourceLocation Loc,
 
   // Adjust the offset to be the start of the line, since we'll be counting
   // Unicode characters from there until our column offset.
-  unsigned int Off = LocInfo.second - (SM.getExpansionColumnNumber(Loc) - 1);
+  uint64_t Off = LocInfo.second - (SM.getExpansionColumnNumber(Loc) - 1);
   unsigned int Ret = 1;
   while (Off < (LocInfo.second + TokenLen)) {
     Off += getNumBytesForUTF8(Buf->getBuffer()[Off]);

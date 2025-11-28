@@ -291,8 +291,8 @@ static bool fillRanges(MemoryBuffer *Code,
     } else {
       End = Sources.getLocForEndOfFile(ID);
     }
-    unsigned Offset = Sources.getFileOffset(Start);
-    unsigned Length = Sources.getFileOffset(End) - Offset;
+    uint64_t Offset = Sources.getFileOffset(Start);
+    uint64_t Length = Sources.getFileOffset(End) - Offset;
     Ranges.push_back(tooling::Range(Offset, Length));
   }
   return false;

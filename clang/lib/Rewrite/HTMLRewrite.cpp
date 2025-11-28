@@ -116,7 +116,7 @@ void html::EscapeText(Rewriter &R, FileID FID,
   RewriteBuffer &RB = R.getEditBuffer(FID);
 
   unsigned ColNo = 0;
-  for (unsigned FilePos = 0; C != FileEnd ; ++C, ++FilePos) {
+  for (uint64_t FilePos = 0; C != FileEnd ; ++C, ++FilePos) {
     switch (*C) {
     default: ++ColNo; break;
     case '\n':
@@ -206,8 +206,8 @@ std::string html::EscapeText(StringRef s, bool EscapeSpaces, bool ReplaceTabs) {
   return Str;
 }
 
-static void AddLineNumber(RewriteBuffer &RB, unsigned LineNo,
-                          unsigned B, unsigned E) {
+static void AddLineNumber(RewriteBuffer &RB, uint64_t LineNo,
+                          uint64_t B, uint64_t E) {
   SmallString<256> Str;
   llvm::raw_svector_ostream OS(Str);
 
@@ -234,14 +234,14 @@ void html::AddLineNumbers(Rewriter& R, FileID FID) {
 
   assert (C <= FileEnd);
 
-  unsigned LineNo = 0;
-  unsigned FilePos = 0;
+  uint64_t LineNo = 0;
+  uint64_t FilePos = 0;
 
   while (C != FileEnd) {
 
     ++LineNo;
-    unsigned LineStartPos = FilePos;
-    unsigned LineEndPos = FileEnd - FileBeg;
+    uint64_t LineStartPos = FilePos;
+    uint64_t LineEndPos = FileEnd - FileBeg;
 
     assert (FilePos <= LineEndPos);
     assert (C < FileEnd);

@@ -85,9 +85,9 @@ public:
 
   /// getRangeSize - Return the size in bytes of the specified range if they
   /// are in the same file.  If not, this returns -1.
-  int getRangeSize(SourceRange Range,
+  int64_t getRangeSize(SourceRange Range,
                    RewriteOptions opts = RewriteOptions()) const;
-  int getRangeSize(const CharSourceRange &Range,
+  int64_t getRangeSize(const CharSourceRange &Range,
                    RewriteOptions opts = RewriteOptions()) const;
 
   /// getRewrittenText - Return the rewritten form of the text in the specified
