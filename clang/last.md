@@ -321,3 +321,44 @@ uint64_t getLength() const
 # E:\llvm-msvc\llvm-project-msvc\clang\include\Lex\MacroInfo.h
 uint64_t getDefinitionLength(const SourceManager &SM) 
 uint64_t MacroInfo::getDefinitionLengthSlow(const SourceManager &SM)
+
+# E:\llvm-msvc\llvm-project-msvc\clang\lib\Frontend\FrontendAction.cpp
+static bool loadModuleMapForModuleBuild(CompilerInstance &CI, bool IsSystem,
+                                        bool IsPreprocessed,
+                                        std::string &PresumedModuleMapFile,
+                                        uint64_t &Offset) 
+
+# E:\llvm-msvc\llvm-project-msvc\clang\lib\CodeGen\CodeGenAction.cpp
+const FullSourceLoc BackendConsumer::getBestLocationFromDebugLoc(
+    const llvm::DiagnosticInfoWithLocationBase &D, bool &BadDebugInfo,
+    StringRef &Filename, uint64_t &Line, unsigned &Column)  
+# E:\llvm-msvc\llvm-project-msvc\clang\lib\Frontend\ASTUnit.cpp
+SourceLocation ASTUnit::getLocation(const FileEntry *File,
+                                    uint64_t Line, uint64_t Col)                                     
+
+
+# E:\llvm-msvc\llvm-project-msvc\clang\tools\clang-format\ClangFormat.cpp
+static bool parseLineRange(StringRef Input, uint64_t &FromLine,
+                           uint64_t &ToLine) {
+  std::pair<StringRef, StringRef> LineRange = Input.split(':');
+  return LineRange.first.getAsInteger(0, FromLine) ||
+         LineRange.second.getAsInteger(0, ToLine);
+}
+
+# E:\llvm-msvc\llvm-project-msvc\clang\lib\AST\ASTContext.cpp
+RawComment *ASTContext::getRawCommentForDeclNoCacheImpl(
+    const Decl *D, const SourceLocation RepresentativeLocForDecl,
+    const std::map<uint64_t, RawComment *> &CommentsInTheFile)
+
+# E:\llvm-msvc\llvm-project-msvc\clang\lib\CodeGen\CGDebugInfo.cpp
+void CGDebugInfo::collectVarDeclProps(const VarDecl *VD, llvm::DIFile *&Unit,
+                                      uint64_t &LineNo, QualType &T,
+                                      StringRef &Name, StringRef &LinkageName,
+                                      llvm::MDTuple *&TemplateParameters,
+                                      llvm::DIScope *&VDContext)
+  
+# E:\llvm-msvc\llvm-project-msvc\clang\tools\libclang\CXIndexDataConsumer.cpp
+void CXIndexDataConsumer::translateLoc(SourceLocation Loc,
+                                   CXIdxClientFile *indexFile, CXFile *file,
+                                   uint64_t *line, unsigned *column,
+                                   uint64_t *offset) 

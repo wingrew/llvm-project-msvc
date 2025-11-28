@@ -173,8 +173,8 @@ CXSourceLocation clang_getLocationForOffset(CXTranslationUnit TU,
 // of their origin.
 //===----------------------------------------------------------------------===//
 
-static void createNullLocation(CXFile *file, uint64_t *line,
-                               unsigned *column, uint64_t *offset) {
+static void createNullLocation(CXFile *file, unsigned int *line,
+                               unsigned *column, unsigned int *offset) {
   if (file)
     *file = nullptr;
   if (line)
@@ -185,8 +185,8 @@ static void createNullLocation(CXFile *file, uint64_t *line,
     *offset = 0;
 }
 
-static void createNullLocation(CXString *filename, uint64_t *line,
-                               unsigned *column, uint64_t *offset = nullptr) {
+static void createNullLocation(CXString *filename, unsigned int *line,
+                               unsigned *column, unsigned int *offset = nullptr) {
   if (filename)
     *filename = cxstring::createEmpty();
   if (line)
@@ -230,7 +230,7 @@ void clang_getExpansionLocation(CXSourceLocation location,
   }
 
   SourceLocation Loc = SourceLocation::getFromRawEncoding(location.int_data);
-
+  
   if (!location.ptr_data[0] || Loc.isInvalid()) {
     createNullLocation(file, line, column, offset);
     return;
@@ -302,9 +302,9 @@ void clang_getInstantiationLocation(CXSourceLocation location,
 
 void clang_getSpellingLocation(CXSourceLocation location,
                                CXFile *file,
-                               uint64_t *line,
+                               unsigned int *line,
                                unsigned *column,
-                               uint64_t *offset) {
+                               unsigned int *offset) {
   if (!isASTUnitSourceLocation(location)) {
     CXLoadedDiagnostic::decodeLocation(location, file, line,
                                            column, offset);
@@ -339,9 +339,9 @@ void clang_getSpellingLocation(CXSourceLocation location,
 
 void clang_getFileLocation(CXSourceLocation location,
                            CXFile *file,
-                           uint64_t *line,
+                           unsigned int *line,
                            unsigned *column,
-                           uint64_t *offset) {
+                           unsigned int *offset) {
   if (!isASTUnitSourceLocation(location)) {
     CXLoadedDiagnostic::decodeLocation(location, file, line,
                                            column, offset);

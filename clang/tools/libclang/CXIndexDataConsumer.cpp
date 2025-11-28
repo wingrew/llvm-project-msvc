@@ -1113,8 +1113,8 @@ CXIdxLoc CXIndexDataConsumer::getIndexLoc(SourceLocation Loc) const {
 
 void CXIndexDataConsumer::translateLoc(SourceLocation Loc,
                                    CXIdxClientFile *indexFile, CXFile *file,
-                                   uint64_t *line, unsigned *column,
-                                   uint64_t *offset) {
+                                   unsigned int *line, unsigned *column,
+                                   unsigned int *offset) {
   if (Loc.isInvalid())
     return;
 

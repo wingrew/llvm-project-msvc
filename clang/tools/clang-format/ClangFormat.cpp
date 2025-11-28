@@ -216,8 +216,8 @@ static FileID createInMemoryFile(StringRef FileName, MemoryBufferRef Source,
 
 // Parses <start line>:<end line> input to a pair of line numbers.
 // Returns true on error.
-static bool parseLineRange(StringRef Input, unsigned &FromLine,
-                           unsigned &ToLine) {
+static bool parseLineRange(StringRef Input, uint64_t &FromLine,
+                           uint64_t &ToLine) {
   std::pair<StringRef, StringRef> LineRange = Input.split(':');
   return LineRange.first.getAsInteger(0, FromLine) ||
          LineRange.second.getAsInteger(0, ToLine);
@@ -241,7 +241,7 @@ static bool fillRanges(MemoryBuffer *Code,
     }
 
     for (unsigned i = 0, e = LineRanges.size(); i < e; ++i) {
-      unsigned FromLine, ToLine;
+      uint64_t FromLine, ToLine;
       if (parseLineRange(LineRanges[i], FromLine, ToLine)) {
         errs() << "error: invalid <start line>:<end line> pair\n";
         return true;
@@ -258,8 +258,8 @@ static bool fillRanges(MemoryBuffer *Code,
       SourceLocation End = Sources.translateLineCol(ID, ToLine, UINT_MAX);
       if (Start.isInvalid() || End.isInvalid())
         return true;
-      unsigned Offset = Sources.getFileOffset(Start);
-      unsigned Length = Sources.getFileOffset(End) - Offset;
+      uint64_t Offset = Sources.getFileOffset(Start);
+      uint64_t Length = Sources.getFileOffset(End) - Offset;
       Ranges.push_back(tooling::Range(Offset, Length));
     }
     return false;
