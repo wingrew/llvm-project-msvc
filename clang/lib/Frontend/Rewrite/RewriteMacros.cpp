@@ -167,7 +167,7 @@ void clang::RewriteMacrosInInput(Preprocessor &PP, raw_ostream *OS) {
       // comments.  Add a leading space if RawTok didn't have one.
       bool HasSpace = RawTok.hasLeadingSpace();
       RB.InsertTextAfter(RawOffs, &" /*"[HasSpace]);
-      unsigned EndPos;
+      uint64_t EndPos;
 
       do {
         EndPos = RawOffs+RawTok.getLength();

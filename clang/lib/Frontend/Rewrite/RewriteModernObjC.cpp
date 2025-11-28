@@ -263,7 +263,7 @@ namespace {
         return;
 
       // Measure the old text.
-      int Size = Rewrite.getRangeSize(SrcRange);
+      int64_t Size = Rewrite.getRangeSize(SrcRange);
       if (Size == -1) {
         Diags.Report(Context->getFullLoc(Old->getBeginLoc()), RewriteFailedDiag)
             << Old->getSourceRange();
@@ -296,7 +296,7 @@ namespace {
       Diags.Report(Context->getFullLoc(Loc), RewriteFailedDiag);
     }
 
-    void ReplaceText(SourceLocation Start, unsigned OrigLength,
+    void ReplaceText(SourceLocation Start, uint64_t OrigLength,
                      StringRef Str) {
       // If removal succeeded or warning disabled return with no warning.
       if (!Rewrite.ReplaceText(Start, OrigLength, Str) ||

@@ -33,8 +33,8 @@ struct FileByteRange {
   FileByteRange(const SourceManager &Sources, CharSourceRange Range);
 
   std::string FilePath;
-  unsigned FileOffset;
-  unsigned Length;
+  uint64_t FileOffset;
+  uint64_t Length;
 };
 
 /// Represents the diagnostic message with the error message associated
@@ -53,7 +53,7 @@ struct DiagnosticMessage {
 
   std::string Message;
   std::string FilePath;
-  unsigned FileOffset;
+  uint64_t FileOffset;
 
   /// Fixes for this diagnostic, grouped by file path.
   llvm::StringMap<Replacements> Fix;

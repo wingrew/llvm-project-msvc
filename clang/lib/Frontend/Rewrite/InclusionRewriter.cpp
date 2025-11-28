@@ -84,12 +84,12 @@ private:
                      SrcMgr::CharacteristicKind FileType,
                      StringRef Extra = StringRef());
   void WriteImplicitModuleImport(const Module *Mod);
-  void OutputContentUpTo(const MemoryBufferRef &FromFile, unsigned &WriteFrom,
-                         unsigned WriteTo, StringRef EOL, int &lines,
+  void OutputContentUpTo(const MemoryBufferRef &FromFile, uint64_t &WriteFrom,
+                         uint64_t WriteTo, StringRef EOL, int64_t &lines,
                          bool EnsureNewline);
   void CommentOutDirective(Lexer &DirectivesLex, const Token &StartToken,
                            const MemoryBufferRef &FromFile, StringRef EOL,
-                           unsigned &NextToWrite, int &Lines);
+                           uint64_t &NextToWrite, int64_t &Lines);
   const IncludedFile *FindIncludeAtLocation(SourceLocation Loc) const;
   const Module *FindModuleAtLocation(SourceLocation Loc) const;
   const Module *FindEnteredModule(SourceLocation Loc) const;
@@ -262,8 +262,8 @@ void InclusionRewriter::detectMainFileEOL() {
 /// Writes out bytes from \p FromFile, starting at \p NextToWrite and ending at
 /// \p WriteTo - 1.
 void InclusionRewriter::OutputContentUpTo(const MemoryBufferRef &FromFile,
-                                          unsigned &WriteFrom, unsigned WriteTo,
-                                          StringRef LocalEOL, int &Line,
+                                          uint64_t &WriteFrom, uint64_t WriteTo,
+                                          StringRef LocalEOL, int64_t &Line,
                                           bool EnsureNewline) {
   if (WriteTo <= WriteFrom)
     return;
@@ -316,7 +316,7 @@ void InclusionRewriter::CommentOutDirective(Lexer &DirectiveLex,
                                             const Token &StartToken,
                                             const MemoryBufferRef &FromFile,
                                             StringRef LocalEOL,
-                                            unsigned &NextToWrite, int &Line) {
+                                            uint64_t &NextToWrite, int64_t &Line) {
   OutputContentUpTo(FromFile, NextToWrite,
                     SM.getFileOffset(StartToken.getLocation()), LocalEOL, Line,
                     false);
@@ -375,9 +375,9 @@ void InclusionRewriter::Process(FileID FileId,
 
   // The next byte to be copied from the source file, which may be non-zero if
   // the lexer handled a BOM.
-  unsigned NextToWrite = SM.getFileOffset(RawLex.getSourceLocation());
+  uint64_t NextToWrite = SM.getFileOffset(RawLex.getSourceLocation());
   assert(SM.getLineNumber(FileId, NextToWrite) == 1);
-  int Line = 1; // The current input file line number.
+  int64_t Line = 1; // The current input file line number.
 
   Token RawToken;
   RawLex.LexFromRawLexer(RawToken);

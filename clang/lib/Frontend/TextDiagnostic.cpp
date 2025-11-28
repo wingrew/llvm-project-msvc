@@ -975,7 +975,7 @@ maybeAddRange(std::pair<unsigned, unsigned> A, std::pair<unsigned, unsigned> B,
 
 /// Highlight a SourceRange (with ~'s) for any characters on LineNo.
 static void highlightRange(const CharSourceRange &R,
-                           unsigned LineNo, FileID FID,
+                           uint64_t LineNo, FileID FID,
                            const SourceColumnMap &map,
                            std::string &CaretLine,
                            const SourceManager &SM,
@@ -1166,14 +1166,14 @@ void TextDiagnostic::emitSnippetAndCaret(
 
   // Find the set of lines to include.
   const unsigned MaxLines = DiagOpts->SnippetLineLimit;
-  std::pair<unsigned, unsigned> Lines = {CaretLineNo, CaretLineNo};
+  std::pair<uint64_t, uint64_t> Lines = {CaretLineNo, CaretLineNo};
   for (SmallVectorImpl<CharSourceRange>::iterator I = Ranges.begin(),
                                                   E = Ranges.end();
        I != E; ++I)
     if (auto OptionalRange = findLinesForRange(*I, FID, SM))
       Lines = maybeAddRange(Lines, *OptionalRange, MaxLines);
 
-  for (unsigned LineNo = Lines.first; LineNo != Lines.second + 1; ++LineNo) {
+  for (uint64_t LineNo = Lines.first; LineNo != Lines.second + 1; ++LineNo) {
     const char *BufStart = BufData.data();
     const char *BufEnd = BufStart + BufData.size();
 

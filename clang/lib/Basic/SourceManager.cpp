@@ -1237,7 +1237,7 @@ uint64_t SourceManager::getSpellingColumnNumber(SourceLocation Loc,
   return getColumnNumber(LocInfo.first, LocInfo.second, Invalid);
 }
 
-uint64_t SourceManager::getExpansionColumnNumber(SourceLocation Loc,
+unsigned SourceManager::getExpansionColumnNumber(SourceLocation Loc,
                                                  bool *Invalid) const {
   if (isInvalid(Loc, Invalid)) return 0;
   std::pair<FileID, uint64_t> LocInfo = getDecomposedExpansionLoc(Loc);

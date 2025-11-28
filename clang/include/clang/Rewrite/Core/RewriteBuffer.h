@@ -71,7 +71,7 @@ public:
   /// offset in the buffer is specified relative to the original
   /// SourceBuffer. The text is inserted before the specified location.  This is
   /// method is the same as InsertText with "InsertAfter == false".
-  void InsertTextBefore(unsigned OrigOffset, StringRef Str) {
+  void InsertTextBefore(uint64_t OrigOffset, StringRef Str) {
     InsertText(OrigOffset, Str, false);
   }
 
@@ -85,8 +85,7 @@ public:
   /// ReplaceText - This method replaces a range of characters in the input
   /// buffer with a new string.  This is effectively a combined "remove/insert"
   /// operation.
-  void ReplaceText(unsigned OrigOffset, unsigned OrigLength,
-                   StringRef NewStr);
+  void ReplaceText(uint64_t OrigOffset, uint64_t OrigLength, StringRef NewStr);
 
 private:
   /// getMappedOffset - Given an offset into the original SourceBuffer that this
