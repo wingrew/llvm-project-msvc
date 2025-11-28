@@ -62,7 +62,7 @@ struct FileRange {
   /// Start is a start offset (inclusive) in the corresponding file.
   uint64_t beginOffset() const { return Begin; }
   /// End offset (exclusive) in the corresponding file.
-  uint64_tndOffset() const { return End; }
+  uint64_t endOffset() const { return End; }
 
   unsigned length() const { return End - Begin; }
 
@@ -71,7 +71,7 @@ struct FileRange {
     return Begin <= Offset && Offset < End;
   }
   /// Check \p Offset is inside the range or equal to its endpoint.
-  bool touches(uint64_tOffset) const {
+  bool touches(uint64_t Offset) const {
     return Begin <= Offset && Offset <= End;
   }
 

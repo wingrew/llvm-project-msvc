@@ -465,7 +465,7 @@ std::string CGDebugInfo::remapDIPath(StringRef Path) const {
   return P.str().str();
 }
 
-unsigned CGDebugInfo::getLineNumber(SourceLocation Loc) {
+uint64_t CGDebugInfo::getLineNumber(SourceLocation Loc) {
   if (Loc.isInvalid())
     return 0;
   SourceManager &SM = CGM.getContext().getSourceManager();
@@ -1093,7 +1093,7 @@ CGDebugInfo::getOrCreateRecordFwdDecl(const RecordType *Ty,
   if (llvm::DIType *T = getTypeOrNull(CGM.getContext().getRecordType(RD)))
     return cast<llvm::DICompositeType>(T);
   llvm::DIFile *DefUnit = getOrCreateFile(RD->getLocation());
-  const unsigned Line =
+  const uint64_t Line =
       getLineNumber(RD->getLocation().isValid() ? RD->getLocation() : CurLoc);
   StringRef RDName = getClassName(RD);
 
@@ -1435,7 +1435,7 @@ llvm::DIType *CGDebugInfo::createBitFieldType(const FieldDecl *BitFieldDecl,
 
   // Get the location for the field.
   llvm::DIFile *File = getOrCreateFile(Loc);
-  unsigned Line = getLineNumber(Loc);
+  uint64_t Line = getLineNumber(Loc);
 
   const CGBitFieldInfo &BitFieldInfo =
       CGM.getTypes().getCGRecordLayout(RD).getBitFieldInfo(BitFieldDecl);
@@ -1465,7 +1465,7 @@ llvm::DIType *CGDebugInfo::createFieldType(
 
   // Get the location for the field.
   llvm::DIFile *file = getOrCreateFile(loc);
-  const unsigned line = getLineNumber(loc.isValid() ? loc : CurLoc);
+  const uint64_t line = getLineNumber(loc.isValid() ? loc : CurLoc);
 
   uint64_t SizeInBits = 0;
   auto Align = AlignInBits;
@@ -1531,7 +1531,7 @@ CGDebugInfo::CreateRecordStaticField(const VarDecl *Var, llvm::DIType *RecordTy,
   llvm::DIFile *VUnit = getOrCreateFile(Var->getLocation());
   llvm::DIType *VTy = getOrCreateType(Var->getType(), VUnit);
 
-  unsigned LineNumber = getLineNumber(Var->getLocation());
+  uint64_t LineNumber = getLineNumber(Var->getLocation());
   StringRef VName = Var->getName();
   llvm::Constant *C = nullptr;
   if (Var->getInit()) {
@@ -1762,7 +1762,7 @@ llvm::DISubprogram *CGDebugInfo::CreateCXXMemberFunction(
 
   // Get the location for the method.
   llvm::DIFile *MethodDefUnit = nullptr;
-  unsigned MethodLine = 0;
+  uint64_t MethodLine = 0;
   if (!Method->isImplicit()) {
     MethodDefUnit = getOrCreateFile(Method->getLocation());
     MethodLine = getLineNumber(Method->getLocation());
@@ -2677,7 +2677,7 @@ llvm::DIType *CGDebugInfo::CreateType(const ObjCInterfaceType *Ty,
 
   // Get overall information about the record type for the debug info.
   llvm::DIFile *DefUnit = getOrCreateFile(ID->getLocation());
-  unsigned Line = getLineNumber(ID->getLocation());
+  uint64_t Line = getLineNumber(ID->getLocation());
   auto RuntimeLang =
       static_cast<llvm::dwarf::SourceLanguage>(TheCU->getSourceLanguage());
 
@@ -2794,7 +2794,7 @@ llvm::DIType *CGDebugInfo::CreateTypeDefinition(const ObjCInterfaceType *Ty,
                                                 llvm::DIFile *Unit) {
   ObjCInterfaceDecl *ID = Ty->getDecl();
   llvm::DIFile *DefUnit = getOrCreateFile(ID->getLocation());
-  unsigned Line = getLineNumber(ID->getLocation());
+  uint64_t Line = getLineNumber(ID->getLocation());
   unsigned RuntimeLang = TheCU->getSourceLanguage();
 
   // Bit size, align and offset of the type.
@@ -2836,7 +2836,7 @@ llvm::DIType *CGDebugInfo::CreateTypeDefinition(const ObjCInterfaceType *Ty,
   auto AddProperty = [&](const ObjCPropertyDecl *PD) {
     SourceLocation Loc = PD->getLocation();
     llvm::DIFile *PUnit = getOrCreateFile(Loc);
-    unsigned PLine = getLineNumber(Loc);
+    uint64_t PLine = getLineNumber(Loc);
     ObjCMethodDecl *Getter = PD->getGetterMethodDecl();
     ObjCMethodDecl *Setter = PD->getSetterMethodDecl();
     llvm::MDNode *PropertyNode = DBuilder.createObjCProperty(
@@ -2890,7 +2890,7 @@ llvm::DIType *CGDebugInfo::CreateTypeDefinition(const ObjCInterfaceType *Ty,
 
     // Get the location for the field.
     llvm::DIFile *FieldDefUnit = getOrCreateFile(Field->getLocation());
-    unsigned FieldLine = getLineNumber(Field->getLocation());
+    uint64_t FieldLine = getLineNumber(Field->getLocation());
     QualType FType = Field->getType();
     uint64_t FieldSize = 0;
     uint32_t FieldAlign = 0;
@@ -2935,7 +2935,7 @@ llvm::DIType *CGDebugInfo::CreateTypeDefinition(const ObjCInterfaceType *Ty,
         if (ObjCPropertyDecl *PD = PImpD->getPropertyDecl()) {
           SourceLocation Loc = PD->getLocation();
           llvm::DIFile *PUnit = getOrCreateFile(Loc);
-          unsigned PLine = getLineNumber(Loc);
+          uint64_t PLine = getLineNumber(Loc);
           ObjCMethodDecl *Getter = PImpD->getGetterMethodDecl();
           ObjCMethodDecl *Setter = PImpD->getSetterMethodDecl();
           PropertyNode = DBuilder.createObjCProperty(
@@ -3202,7 +3202,7 @@ llvm::DIType *CGDebugInfo::CreateEnumType(const EnumType *Ty) {
     llvm::TempDIScope TmpContext(DBuilder.createReplaceableCompositeType(
         llvm::dwarf::DW_TAG_enumeration_type, "", TheCU, DefUnit, 0));
 
-    unsigned Line = getLineNumber(ED->getLocation());
+    uint64_t Line = getLineNumber(ED->getLocation());
     StringRef EDName = ED->getName();
     llvm::DIType *RetTy = DBuilder.createReplaceableCompositeType(
         llvm::dwarf::DW_TAG_enumeration_type, EDName, EDContext, DefUnit, Line,
@@ -3239,7 +3239,7 @@ llvm::DIType *CGDebugInfo::CreateTypeDefinition(const EnumType *Ty) {
   llvm::DINodeArray EltArray = DBuilder.getOrCreateArray(Enumerators);
 
   llvm::DIFile *DefUnit = getOrCreateFile(ED->getLocation());
-  unsigned Line = getLineNumber(ED->getLocation());
+  uint64_t Line = getLineNumber(ED->getLocation());
   llvm::DIScope *EnumContext = getDeclContextDescriptor(ED);
   llvm::DIType *ClassTy = getOrCreateType(ED->getIntegerType(), DefUnit);
   return DBuilder.createEnumerationType(EnumContext, ED->getName(), DefUnit,
@@ -3250,7 +3250,7 @@ llvm::DIType *CGDebugInfo::CreateTypeDefinition(const EnumType *Ty) {
 llvm::DIMacro *CGDebugInfo::CreateMacro(llvm::DIMacroFile *Parent,
                                         unsigned MType, SourceLocation LineLoc,
                                         StringRef Name, StringRef Value) {
-  unsigned Line = LineLoc.isInvalid() ? 0 : getLineNumber(LineLoc);
+  uint64_t Line = LineLoc.isInvalid() ? 0 : getLineNumber(LineLoc);
   return DBuilder.createMacro(Parent, Line, MType, Name, Value);
 }
 
@@ -3258,7 +3258,7 @@ llvm::DIMacroFile *CGDebugInfo::CreateTempMacroFile(llvm::DIMacroFile *Parent,
                                                     SourceLocation LineLoc,
                                                     SourceLocation FileLoc) {
   llvm::DIFile *FName = getOrCreateFile(FileLoc);
-  unsigned Line = LineLoc.isInvalid() ? 0 : getLineNumber(LineLoc);
+  uint64_t Line = LineLoc.isInvalid() ? 0 : getLineNumber(LineLoc);
   return DBuilder.createTempMacroFile(Parent, Line, FName);
 }
 
@@ -3543,7 +3543,7 @@ llvm::DICompositeType *CGDebugInfo::CreateLimitedType(const RecordType *Ty) {
   StringRef RDName = getClassName(RD);
   const SourceLocation Loc = RD->getLocation();
   llvm::DIFile *DefUnit = nullptr;
-  unsigned Line = 0;
+  uint64_t Line = 0;
   if (Loc.isValid()) {
     DefUnit = getOrCreateFile(Loc);
     Line = getLineNumber(Loc);
@@ -3716,7 +3716,7 @@ void CGDebugInfo::collectFunctionDeclProps(GlobalDecl GD, llvm::DIFile *Unit,
 }
 
 void CGDebugInfo::collectVarDeclProps(const VarDecl *VD, llvm::DIFile *&Unit,
-                                      unsigned &LineNo, QualType &T,
+                                      uint64_t &LineNo, QualType &T,
                                       StringRef &Name, StringRef &LinkageName,
                                       llvm::MDTuple *&TemplateParameters,
                                       llvm::DIScope *&VDContext) {
@@ -3779,7 +3779,7 @@ llvm::DISubprogram *CGDebugInfo::getFunctionFwdDeclOrStub(GlobalDecl GD,
   SourceLocation Loc = GD.getDecl()->getLocation();
   llvm::DIFile *Unit = getOrCreateFile(Loc);
   llvm::DIScope *DContext = Unit;
-  unsigned Line = getLineNumber(Loc);
+  uint64_t Line = getLineNumber(Loc);
   collectFunctionDeclProps(GD, Unit, Name, LinkageName, DContext, TParamsArray,
                            Flags);
   auto *FD = cast<FunctionDecl>(GD.getDecl());
@@ -3832,7 +3832,7 @@ CGDebugInfo::getGlobalVariableForwardDeclaration(const VarDecl *VD) {
   SourceLocation Loc = VD->getLocation();
   llvm::DIFile *Unit = getOrCreateFile(Loc);
   llvm::DIScope *DContext = Unit;
-  unsigned Line = getLineNumber(Loc);
+  uint64_t Line = getLineNumber(Loc);
   llvm::MDTuple *TemplateParameters = nullptr;
 
   collectVarDeclProps(VD, Unit, Line, T, Name, LinkageName, TemplateParameters,
@@ -4116,8 +4116,8 @@ void CGDebugInfo::emitFunctionStart(GlobalDecl GD, SourceLocation Loc,
   llvm::DISubprogram::DISPFlags SPFlagsForDef =
       SPFlags | llvm::DISubprogram::SPFlagDefinition;
 
-  const unsigned LineNo = getLineNumber(Loc.isValid() ? Loc : CurLoc);
-  unsigned ScopeLine = getLineNumber(ScopeLoc);
+  const uint64_t LineNo = getLineNumber(Loc.isValid() ? Loc : CurLoc);
+  uint64_t ScopeLine = getLineNumber(ScopeLoc);
   llvm::DISubroutineType *DIFnType = getOrCreateFunctionType(D, FnType, Unit);
   llvm::DISubprogram *Decl = nullptr;
   llvm::DINodeArray Annotations = nullptr;
@@ -4189,7 +4189,7 @@ void CGDebugInfo::EmitFunctionDecl(GlobalDecl GD, SourceLocation Loc,
     if (Loc.isInvalid())
       CurLoc = SourceLocation();
   }
-  unsigned LineNo = getLineNumber(Loc);
+  uint64_t LineNo = getLineNumber(Loc);
   unsigned ScopeLine = 0;
   llvm::DISubprogram::DISPFlags SPFlags = llvm::DISubprogram::SPFlagZero;
   if (CGM.getLangOpts().Optimize)
@@ -4440,7 +4440,7 @@ llvm::DILocalVariable *CGDebugInfo::EmitDeclare(const VarDecl *VD,
     return nullptr;
 
   // Get location information.
-  unsigned Line = 0;
+  uint64_t Line = 0;
   unsigned Column = 0;
   if (!Unwritten) {
     Line = getLineNumber(VD->getLocation());
@@ -4628,7 +4628,7 @@ llvm::DILocalVariable *CGDebugInfo::EmitDeclare(const BindingDecl *BD,
     Expr.push_back(llvm::dwarf::DW_OP_deref);
   }
 
-  unsigned Line = getLineNumber(BD->getLocation());
+  uint64_t Line = getLineNumber(BD->getLocation());
   unsigned Column = getColumnNumber(BD->getLocation());
   StringRef Name = BD->getName();
   auto *Scope = cast<llvm::DIScope>(LexicalBlockStack.back());
@@ -4702,7 +4702,7 @@ void CGDebugInfo::EmitLabel(const LabelDecl *D, CGBuilderTy &Builder) {
   llvm::DIFile *Unit = getOrCreateFile(D->getLocation());
 
   // Get location information.
-  unsigned Line = getLineNumber(D->getLocation());
+  uint64_t Line = getLineNumber(D->getLocation());
   unsigned Column = getColumnNumber(D->getLocation());
 
   StringRef Name = D->getName();
@@ -4754,7 +4754,7 @@ void CGDebugInfo::EmitDeclareOfBlockDeclRefVariable(
       Ty = CreateSelfType(VD->getType(), Ty);
 
   // Get location information.
-  const unsigned Line =
+  const uint64_t Line =
       getLineNumber(VD->getLocation().isValid() ? VD->getLocation() : CurLoc);
   unsigned Column = getColumnNumber(VD->getLocation());
 
@@ -4865,7 +4865,7 @@ void CGDebugInfo::EmitDeclareOfBlockLiteralArgVariable(const CGBlockInfo &block,
   // Collect some general information about the block's location.
   SourceLocation loc = blockDecl->getCaretLocation();
   llvm::DIFile *tunit = getOrCreateFile(loc);
-  unsigned line = getLineNumber(loc);
+  uint64_t line = getLineNumber(loc);
   unsigned column = getColumnNumber(loc);
 
   // Build the debug-info type for the block literal.
@@ -5270,7 +5270,7 @@ void CGDebugInfo::EmitGlobalVariable(llvm::GlobalVariable *Var,
   // Create global variable debug descriptor.
   llvm::DIFile *Unit = nullptr;
   llvm::DIScope *DContext = nullptr;
-  unsigned LineNo;
+  uint64_t LineNo;
   StringRef DeclName, LinkageName;
   QualType T;
   llvm::MDTuple *TemplateParameters = nullptr;

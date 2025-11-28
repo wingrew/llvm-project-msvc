@@ -420,7 +420,7 @@ namespace clang {
     const FullSourceLoc
     getBestLocationFromDebugLoc(const llvm::DiagnosticInfoWithLocationBase &D,
                                 bool &BadDebugInfo, StringRef &Filename,
-                                unsigned &Line, unsigned &Column) const;
+                                uint64_t &Line, unsigned &Column) const;
 
     Optional<FullSourceLoc> getFunctionSourceLocation(const Function &F) const;
 
@@ -633,13 +633,13 @@ BackendConsumer::StackSizeDiagHandler(const llvm::DiagnosticInfoStackSize &D) {
 
 const FullSourceLoc BackendConsumer::getBestLocationFromDebugLoc(
     const llvm::DiagnosticInfoWithLocationBase &D, bool &BadDebugInfo,
-    StringRef &Filename, unsigned &Line, unsigned &Column) const {
+    StringRef &Filename, uint64_t &Line, unsigned &Column) const {
   SourceManager &SourceMgr = Context->getSourceManager();
   FileManager &FileMgr = SourceMgr.getFileManager();
   SourceLocation DILoc;
 
   if (D.isLocationAvailable()) {
-    D.getLocation(Filename, Line, Column);
+    D.getLocation(Filename, (unsigned &) Line, Column);
     if (Line > 0) {
       auto FE = FileMgr.getFile(Filename);
       if (!FE)
@@ -690,7 +690,8 @@ void BackendConsumer::UnsupportedDiagHandler(
          D.getSeverity() == llvm::DS_Warning);
 
   StringRef Filename;
-  unsigned Line, Column;
+  uint64_t Line;
+  unsigned Column;
   bool BadDebugInfo = false;
   FullSourceLoc Loc;
   std::string Msg;
@@ -727,7 +728,8 @@ void BackendConsumer::EmitOptimizationMessage(
          D.getSeverity() == llvm::DS_Warning);
 
   StringRef Filename;
-  unsigned Line, Column;
+  uint64_t Line;
+  unsigned Column;
   bool BadDebugInfo = false;
   FullSourceLoc Loc;
   std::string Msg;
@@ -838,7 +840,8 @@ void BackendConsumer::DontCallDiagHandler(const DiagnosticInfoDontCall &D) {
 void BackendConsumer::MisExpectDiagHandler(
     const llvm::DiagnosticInfoMisExpect &D) {
   StringRef Filename;
-  unsigned Line, Column;
+  uint64_t Line;
+  unsigned Column;
   bool BadDebugInfo = false;
   FullSourceLoc Loc =
       getBestLocationFromDebugLoc(D, BadDebugInfo, Filename, Line, Column);

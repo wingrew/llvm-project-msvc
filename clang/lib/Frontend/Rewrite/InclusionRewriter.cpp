@@ -80,7 +80,7 @@ private:
           ConditionValueKind ConditionValue) override;
   void Elif(SourceLocation Loc, SourceRange ConditionRange,
             ConditionValueKind ConditionValue, SourceLocation IfLoc) override;
-  void WriteLineInfo(StringRef Filename, int Line,
+  void WriteLineInfo(StringRef Filename, int64_t Line,
                      SrcMgr::CharacteristicKind FileType,
                      StringRef Extra = StringRef());
   void WriteImplicitModuleImport(const Module *Mod);
@@ -111,7 +111,7 @@ InclusionRewriter::InclusionRewriter(Preprocessor &PP, raw_ostream &OS,
 /// markers depending on what mode we're in, including the \p Filename and
 /// \p Line we are located at, using the specified \p EOL line separator, and
 /// any \p Extra context specifiers in GNU line directives.
-void InclusionRewriter::WriteLineInfo(StringRef Filename, int Line,
+void InclusionRewriter::WriteLineInfo(StringRef Filename, int64_t Line,
                                       SrcMgr::CharacteristicKind FileType,
                                       StringRef Extra) {
   if (!ShowLineMarkers)

@@ -16752,13 +16752,13 @@ static bool ShouldDiagnoseEmptyStmtBody(const SourceManager &SourceMgr,
 
   // Get line numbers of statement and body.
   bool StmtLineInvalid;
-  unsigned StmtLine = SourceMgr.getPresumedLineNumber(StmtLoc,
+  uint64_t StmtLine = SourceMgr.getPresumedLineNumber(StmtLoc,
                                                       &StmtLineInvalid);
   if (StmtLineInvalid)
     return false;
 
   bool BodyLineInvalid;
-  unsigned BodyLine = SourceMgr.getSpellingLineNumber(Body->getSemiLoc(),
+  uint64_t BodyLine = SourceMgr.getSpellingLineNumber(Body->getSemiLoc(),
                                                       &BodyLineInvalid);
   if (BodyLineInvalid)
     return false;

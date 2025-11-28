@@ -1113,17 +1113,17 @@ CXIdxLoc CXIndexDataConsumer::getIndexLoc(SourceLocation Loc) const {
 
 void CXIndexDataConsumer::translateLoc(SourceLocation Loc,
                                    CXIdxClientFile *indexFile, CXFile *file,
-                                   unsigned *line, unsigned *column,
-                                   unsigned *offset) {
+                                   uint64_t *line, unsigned *column,
+                                   uint64_t *offset) {
   if (Loc.isInvalid())
     return;
 
   SourceManager &SM = Ctx->getSourceManager();
   Loc = SM.getFileLoc(Loc);
 
-  std::pair<FileID, unsigned> LocInfo = SM.getDecomposedLoc(Loc);
+  std::pair<FileID, uint64_t> LocInfo = SM.getDecomposedLoc(Loc);
   FileID FID = LocInfo.first;
-  unsigned FileOffset = LocInfo.second;
+  uint64_t FileOffset = LocInfo.second;
 
   if (FID.isInvalid())
     return;

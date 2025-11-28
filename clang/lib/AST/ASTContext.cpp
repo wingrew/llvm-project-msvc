@@ -205,7 +205,7 @@ static SourceLocation getDeclLocForCommentSearch(const Decl *D,
 
 RawComment *ASTContext::getRawCommentForDeclNoCacheImpl(
     const Decl *D, const SourceLocation RepresentativeLocForDecl,
-    const std::map<unsigned, RawComment *> &CommentsInTheFile) const {
+    const std::map<uint64_t, RawComment *> &CommentsInTheFile) const {
   // If the declaration doesn't map directly to a location in a file, we
   // can't find the comment.
   if (RepresentativeLocForDecl.isInvalid() ||
@@ -218,7 +218,7 @@ RawComment *ASTContext::getRawCommentForDeclNoCacheImpl(
 
   // Decompose the location for the declaration and find the beginning of the
   // file buffer.
-  const std::pair<FileID, unsigned> DeclLocDecomp =
+  const std::pair<FileID, uint64_t> DeclLocDecomp =
       SourceMgr.getDecomposedLoc(RepresentativeLocForDecl);
 
   // Slow path.

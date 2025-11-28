@@ -130,7 +130,7 @@ private:
   /// \param R a half-open source range retrieved from the abstract syntax tree.
   RangeComparisonResult CompareRegionOfInterest(SourceRange R);
 
-  bool visitDeclsFromFileRegion(FileID File, unsigned Offset, unsigned Length);
+  bool visitDeclsFromFileRegion(FileID File, uint64_t Offset, uint64_t Length);
 
   class SetParentRAII {
     CXCursor &Parent;

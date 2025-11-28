@@ -110,7 +110,7 @@ public:
     Loc = SM.getFileLoc(Loc);
     FileID FID = SM.getFileID(Loc);
     uint64_t Line = SM.getLineNumber(FID, SM.getFileOffset(Loc));
-    uint64_t Col = SM.getColumnNumber(FID, SM.getFileOffset(Loc));
+    unsigned Col = SM.getColumnNumber(FID, SM.getFileOffset(Loc));
     OS << Line << ':' << Col << " | ";
 
     printSymbolInfo(getSymbolInfo(D), OS);
@@ -148,7 +148,7 @@ public:
     Loc = SM.getFileLoc(Loc);
     FileID FID = SM.getFileID(Loc);
     uint64_t Line = SM.getLineNumber(FID, SM.getFileOffset(Loc));
-    uint64_t Col = SM.getColumnNumber(FID, SM.getFileOffset(Loc));
+    unsigned Col = SM.getColumnNumber(FID, SM.getFileOffset(Loc));
     OS << Line << ':' << Col << " | ";
 
     printSymbolInfo(getSymbolInfo(ImportD), OS);
@@ -171,7 +171,7 @@ public:
     Loc = SM.getFileLoc(Loc);
     FileID FID = SM.getFileID(Loc);
     uint64_t Line = SM.getLineNumber(FID, SM.getFileOffset(Loc));
-    uint64_t Col = SM.getColumnNumber(FID, SM.getFileOffset(Loc));
+    unsigned Col = SM.getColumnNumber(FID, SM.getFileOffset(Loc));
     OS << Line << ':' << Col << " | ";
 
     printSymbolInfo(getSymbolInfoForMacro(*MI), OS);

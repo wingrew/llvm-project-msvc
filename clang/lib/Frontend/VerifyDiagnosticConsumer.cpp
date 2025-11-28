@@ -141,8 +141,8 @@ public:
 
   // Return true if number is next.
   // Output N only if number is next.
-  bool Next(unsigned &N) {
-    unsigned TMP = 0;
+  bool Next(uint64_t &N) {
+    uint64_t TMP = 0;
     P = C;
     PEnd = P;
     for (; PEnd < End && *PEnd >= '0' && *PEnd <= '9'; ++PEnd) {
@@ -288,7 +288,7 @@ struct UnattachedDirective {
   bool RegexKind = false;
   SourceLocation DirectivePos, ContentBegin;
   std::string Text;
-  unsigned Min = 1, Max = 1;
+  uint64_t Min = 1, Max = 1;
 };
 
 // Attach the specified directive to the line of code indicated by
@@ -506,13 +506,13 @@ static bool ParseDirective(StringRef S, ExpectedData *ED, SourceManager &SM,
       ExpectedLoc = Pos;
     } else {
       PH.Advance();
-      unsigned Line = 0;
+      uint64_t Line = 0;
       bool FoundPlus = PH.Next("+");
       if (FoundPlus || PH.Next("-")) {
         // Relative to current line.
         PH.Advance();
         bool Invalid = false;
-        unsigned ExpectedLine = SM.getSpellingLineNumber(Pos, &Invalid);
+        uint64_t ExpectedLine = SM.getSpellingLineNumber(Pos, &Invalid);
         if (!Invalid && PH.Next(Line) && (FoundPlus || Line < ExpectedLine)) {
           if (FoundPlus) ExpectedLine += Line;
           else ExpectedLine -= Line;
@@ -941,13 +941,13 @@ static unsigned CheckLists(DiagnosticsEngine &Diags, SourceManager &SourceMgr,
 
   for (auto &Owner : Left) {
     Directive &D = *Owner;
-    unsigned LineNo1 = SourceMgr.getPresumedLineNumber(D.DiagnosticLoc);
+    uint64_t LineNo1 = SourceMgr.getPresumedLineNumber(D.DiagnosticLoc);
 
     for (unsigned i = 0; i < D.Max; ++i) {
       DiagList::iterator II, IE;
       for (II = Right.begin(), IE = Right.end(); II != IE; ++II) {
         if (!D.MatchAnyLine) {
-          unsigned LineNo2 = SourceMgr.getPresumedLineNumber(II->first);
+          uint64_t LineNo2 = SourceMgr.getPresumedLineNumber(II->first);
           if (LineNo1 != LineNo2)
             continue;
         }

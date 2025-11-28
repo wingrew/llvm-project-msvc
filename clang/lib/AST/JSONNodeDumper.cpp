@@ -241,7 +241,7 @@ void JSONNodeDumper::writeIncludeStack(PresumedLoc Loc, bool JustFirst) {
 void JSONNodeDumper::writeBareSourceLocation(SourceLocation Loc,
                                              bool IsSpelling) {
   PresumedLoc Presumed = SM.getPresumedLoc(Loc);
-  unsigned ActualLine = IsSpelling ? SM.getSpellingLineNumber(Loc)
+  uint64_t ActualLine = IsSpelling ? SM.getSpellingLineNumber(Loc)
                                    : SM.getExpansionLineNumber(Loc);
   StringRef ActualFile = SM.getBufferName(Loc);
 

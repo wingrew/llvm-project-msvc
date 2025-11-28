@@ -264,7 +264,7 @@ static SourceLocation ReadOriginalFileName(CompilerInstance &CI,
       T.getKind() != tok::numeric_constant)
     return SourceLocation();
 
-  unsigned LineNo;
+  uint64_t LineNo;
   SourceLocation LineNoLoc = T.getLocation();
   if (IsModuleMap) {
     llvm::SmallString<16> Buffer;
@@ -436,7 +436,7 @@ static std::error_code collectModuleHeaderIncludes(
 static bool loadModuleMapForModuleBuild(CompilerInstance &CI, bool IsSystem,
                                         bool IsPreprocessed,
                                         std::string &PresumedModuleMapFile,
-                                        unsigned &Offset) {
+                                        uint64_t &Offset) {
   auto &SrcMgr = CI.getSourceManager();
   HeaderSearch &HS = CI.getPreprocessor().getHeaderSearchInfo();
 
@@ -862,7 +862,7 @@ bool FrontendAction::BeginSourceFile(CompilerInstance &CI,
     CI.getLangOpts().setCompilingModule(LangOptions::CMK_ModuleMap);
 
     std::string PresumedModuleMapFile;
-    unsigned OffsetToContents;
+    uint64_t OffsetToContents;
     if (loadModuleMapForModuleBuild(CI, Input.isSystem(),
                                     Input.isPreprocessed(),
                                     PresumedModuleMapFile, OffsetToContents))

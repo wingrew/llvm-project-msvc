@@ -233,7 +233,7 @@ public:
 
 private:
   bool FindSymbol(ASTContext &Context, const SourceManager &SourceMgr,
-                  unsigned SymbolOffset, const std::string &QualifiedName) {
+                  uint64_t SymbolOffset, const std::string &QualifiedName) {
     DiagnosticsEngine &Engine = Context.getDiagnostics();
     const FileID MainFileID = SourceMgr.getMainFileID();
 

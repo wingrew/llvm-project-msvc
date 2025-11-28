@@ -161,13 +161,13 @@ public:
 /// Spelling locations for the start and end of a source region.
 struct SpellingRegion {
   /// The line where the region starts.
-  unsigned LineStart;
+  uint64_t LineStart;
 
   /// The column where the region starts.
   unsigned ColumnStart;
 
   /// The line where the region ends.
-  unsigned LineEnd;
+  uint64_t LineEnd;
 
   /// The column where the region ends.
   unsigned ColumnEnd;

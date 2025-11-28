@@ -399,8 +399,8 @@ void Preprocessor::recomputeCurLexerKind() {
 }
 
 bool Preprocessor::SetCodeCompletionPoint(const FileEntry *File,
-                                          unsigned CompleteLine,
-                                          unsigned CompleteColumn) {
+                                          uint64_t CompleteLine,
+                                          uint64_t CompleteColumn) {
   assert(File);
   assert(CompleteLine && CompleteColumn && "Starts from 1:1");
   assert(!CodeCompletionFile && "Already set");
@@ -413,7 +413,7 @@ bool Preprocessor::SetCodeCompletionPoint(const FileEntry *File,
 
   // Find the byte position of the truncation point.
   const char *Position = Buffer->getBufferStart();
-  for (unsigned Line = 1; Line < CompleteLine; ++Line) {
+  for (uint64_t Line = 1; Line < CompleteLine; ++Line) {
     for (; *Position; ++Position) {
       if (*Position != '\r' && *Position != '\n')
         continue;
@@ -515,7 +515,7 @@ void Preprocessor::CreateString(StringRef Str, Token &Tok,
 SourceLocation Preprocessor::SplitToken(SourceLocation Loc, unsigned Length) {
   auto &SM = getSourceManager();
   SourceLocation SpellingLoc = SM.getSpellingLoc(Loc);
-  std::pair<FileID, unsigned> LocInfo = SM.getDecomposedLoc(SpellingLoc);
+  std::pair<FileID, uint64_t> LocInfo = SM.getDecomposedLoc(SpellingLoc);
   bool Invalid = false;
   StringRef Buffer = SM.getBufferData(LocInfo.first, &Invalid);
   if (Invalid)

@@ -2327,7 +2327,7 @@ bool ASTUnit::serialize(raw_ostream &OS) {
   return serializeUnit(Writer, Buffer, getSema(), hasErrors, OS);
 }
 
-using SLocRemap = ContinuousRangeMap<unsigned, int, 2>;
+using SLocRemap = ContinuousRangeMap<uint64_t, int, 2>;
 
 void ASTUnit::TranslateStoredDiagnostics(
                           FileManager &FileMgr,
@@ -2407,7 +2407,7 @@ void ASTUnit::addFileLevelDecl(Decl *D) {
   SourceLocation FileLoc = SM.getFileLoc(Loc);
   assert(SM.isLocalSourceLocation(FileLoc));
   FileID FID;
-  unsigned Offset;
+  uint64_t Offset;
   std::tie(FID, Offset) = SM.getDecomposedLoc(FileLoc);
   if (FID.isInvalid())
     return;
@@ -2416,7 +2416,7 @@ void ASTUnit::addFileLevelDecl(Decl *D) {
   if (!Decls)
     Decls = std::make_unique<LocDeclsTy>();
 
-  std::pair<unsigned, Decl *> LocDecl(Offset, D);
+  std::pair<uint64_t, Decl *> LocDecl(Offset, D);
 
   if (Decls->empty() || Decls->back().first <= Offset) {
     Decls->push_back(LocDecl);
@@ -2449,7 +2449,7 @@ void ASTUnit::findFileRegionDecls(FileID File, uint64_t Offset, uint64_t Length,
     return;
 
   LocDeclsTy::iterator BeginIt =
-      llvm::partition_point(LocDecls, [=](std::pair<unsigned, Decl *> LD) {
+      llvm::partition_point(LocDecls, [=](std::pair<uint64_t, Decl *> LD) {
         return LD.first < Offset;
       });
   if (BeginIt != LocDecls.begin())

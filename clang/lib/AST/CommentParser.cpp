@@ -507,11 +507,11 @@ HTMLStartTagComment *Parser::parseHTMLStartTag() {
                                 SourceLocation(),
                                 /* IsSelfClosing = */ false);
       bool StartLineInvalid;
-      const unsigned StartLine = SourceMgr.getPresumedLineNumber(
+      const uint64_t StartLine = SourceMgr.getPresumedLineNumber(
                                                   HST->getLocation(),
                                                   &StartLineInvalid);
       bool EndLineInvalid;
-      const unsigned EndLine = SourceMgr.getPresumedLineNumber(
+      const uint64_t EndLine = SourceMgr.getPresumedLineNumber(
                                                   Tok.getLocation(),
                                                   &EndLineInvalid);
       if (StartLineInvalid || EndLineInvalid || StartLine == EndLine)

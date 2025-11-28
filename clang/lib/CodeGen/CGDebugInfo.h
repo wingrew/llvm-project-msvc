@@ -758,7 +758,7 @@ private:
 
   /// Get line number for the location. If location is invalid
   /// then use current location.
-  unsigned getLineNumber(SourceLocation Loc);
+  uint64_t getLineNumber(SourceLocation Loc);
 
   /// Get column number for the location. If location is
   /// invalid then use current location.
@@ -775,7 +775,7 @@ private:
 
   /// Collect various properties of a VarDecl.
   void collectVarDeclProps(const VarDecl *VD, llvm::DIFile *&Unit,
-                           unsigned &LineNo, QualType &T, StringRef &Name,
+                           uint64_t &LineNo, QualType &T, StringRef &Name,
                            StringRef &LinkageName,
                            llvm::MDTuple *&TemplateParameters,
                            llvm::DIScope *&VDContext);

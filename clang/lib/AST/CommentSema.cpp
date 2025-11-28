@@ -489,11 +489,11 @@ HTMLEndTagComment *Sema::actOnHTMLEndTag(SourceLocation LocBegin,
       continue;
 
     bool OpenLineInvalid;
-    const unsigned OpenLine = SourceMgr.getPresumedLineNumber(
+    const uint64_t OpenLine = SourceMgr.getPresumedLineNumber(
                                                 HST->getLocation(),
                                                 &OpenLineInvalid);
     bool CloseLineInvalid;
-    const unsigned CloseLine = SourceMgr.getPresumedLineNumber(
+    const uint64_t CloseLine = SourceMgr.getPresumedLineNumber(
                                                 HET->getLocation(),
                                                 &CloseLineInvalid);
 

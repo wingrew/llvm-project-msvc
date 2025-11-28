@@ -4147,7 +4147,7 @@ struct FormattingAttemptStatus {
   /// If ``FormatComplete`` is false, ``Line`` records a one-based
   /// original line number at which a syntax error might have occurred. This is
   /// based on a best-effort analysis and could be imprecise.
-  unsigned Line = 0;
+  uint64_t Line = 0;
 };
 
 /// Reformats the given \p Ranges in \p Code.

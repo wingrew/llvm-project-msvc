@@ -140,50 +140,51 @@ E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Edit\Commit.h
 ----
 E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Edit\EditedSource.h
 
-----
-E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Edit\EditsReceiver.h
+----------------------------------------
+
+E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Edit\EditsReceiver.h    1
 
 ----
-E:\llvm-msvc\llvm-project-msvc\clang\include\clang\ExtractAPI\API.h
+E:\llvm-msvc\llvm-project-msvc\clang\include\clang\ExtractAPI\API.h       1
 
 ----
-E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Frontend\DiagnosticRenderer.h
+E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Frontend\DiagnosticRenderer.h        1
 
 ----
-E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Frontend\TextDiagnosticBuffer.h
+E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Frontend\TextDiagnosticBuffer.h         1
 
 ----
-E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Frontend\VerifyDiagnosticConsumer.h
+E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Frontend\VerifyDiagnosticConsumer.h      1
 
 ----
-E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Lex\MacroInfo.h
+E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Lex\MacroInfo.h        1
 
 ----
-E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Lex\ModuleLoader.h
+E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Lex\ModuleLoader.h      1
 
 ----
-E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Lex\MultipleIncludeOpt.h
+E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Lex\MultipleIncludeOpt.h    1
 
 ----
-E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Lex\PPCallbacks.h
+E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Lex\PPCallbacks.h    1
 
 ----
-E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Lex\PPConditionalDirectiveRecord.h
+E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Lex\PPConditionalDirectiveRecord.h    1
 
 ----
-E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Lex\Pragma.h
+E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Lex\Pragma.h      1
 
 ----
-E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Lex\PreprocessingRecord.h
+E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Lex\PreprocessingRecord.h  1
 
 ----
-E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Lex\PreprocessorLexer.h
+E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Lex\PreprocessorLexer.h    1
 
 -----
-E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Lex\ScratchBuffer.h
+E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Lex\ScratchBuffer.h      1
 
 ----
-E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Lex\Token.h
+E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Lex\Token.h   
 
 ----
 E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Parse\LoopHint.h
@@ -305,16 +306,16 @@ E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Lex\DependencyDirectivesScann
 E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Lex\HeaderSearch.h
 
 ----
-E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Lex\Lexer.h
+E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Lex\Lexer.h    1
 
 ----
-E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Lex\ModuleMap.h
+E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Lex\ModuleMap.h    1
 
 ----
-E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Lex\Preprocessor.h
+E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Lex\Preprocessor.h   1
 
 ----
-E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Lex\TokenLexer.h
+E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Lex\TokenLexer.h  1
 
 ----
 E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Serialization\ASTReader.h
@@ -323,20 +324,20 @@ E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Serialization\ASTReader.h
 E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Serialization\ASTWriter.h
 
 ----
-E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Serialization\ModuleFile.h
+E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Serialization\ModuleFile.h    1 
 
 ----
-E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Serialization\ModuleManager.h
+E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Serialization\ModuleManager.h    1
 
 ----
-E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Tooling\Core\Replacement.h
+E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Tooling\Core\Replacement.h    1
 
 ----
 E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Tooling\Syntax\Tokens.h
   31,1: #include "clang/Basic/SourceLocation.h"
   
 ### 
-E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Rewrite\Core\Rewriter.h
+E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Rewrite\Core\Rewriter.h   
 
 private:
   unsigned getLocationOffsetAndFileID(SourceLocation Loc, FileID &FID) const;
@@ -344,3 +345,4 @@ private:
 
 
 
+E:\llvm-msvc\llvm-project-msvc\clang\include\clang\Edit\EditedSource.h

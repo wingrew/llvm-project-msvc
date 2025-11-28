@@ -9,7 +9,6 @@ struct S {
 };
 
 bool bar(S);
-
 // no-crash during diagnostic construction.
 void foo() {
   int x;

@@ -36,7 +36,7 @@ public:
 
   iterator begin() const { return Buffer.begin(); }
   iterator end() const { return Buffer.end(); }
-  unsigned size() const { return Buffer.size(); }
+  uint64_t size() const { return Buffer.size(); }
 
   /// Initialize - Start this rewrite buffer out with a copy of the unmodified
   /// input buffer.
@@ -85,7 +85,8 @@ public:
   /// ReplaceText - This method replaces a range of characters in the input
   /// buffer with a new string.  This is effectively a combined "remove/insert"
   /// operation.
-  void ReplaceText(uint64_t OrigOffset, uint64_t OrigLength, StringRef NewStr);
+  void ReplaceText(uint64_t OrigOffset, uint64_t OrigLength,
+                   StringRef NewStr);
 
 private:
   /// getMappedOffset - Given an offset into the original SourceBuffer that this
