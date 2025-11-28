@@ -90,7 +90,7 @@ private:
     tooling::Range R;
   };
 
-  void addExistingInclude(Include IncludeToAdd, unsigned NextLineOffset);
+  void addExistingInclude(Include IncludeToAdd, uint64_t NextLineOffset);
 
   std::string FileName;
   std::string Code;
@@ -110,14 +110,14 @@ private:
   std::unordered_map<int, llvm::SmallVector<const Include *, 8>>
       IncludesByPriority;
 
-  int FirstIncludeOffset;
+  int64_t FirstIncludeOffset;
   // All new headers should be inserted after this offset (e.g. after header
   // guards, file comment).
-  unsigned MinInsertOffset;
+  uint64_t MinInsertOffset;
   // Max insertion offset in the original code. For example, we want to avoid
   // inserting new #includes into the actual code section (e.g. after a
   // declaration).
-  unsigned MaxInsertOffset;
+  uint64_t MaxInsertOffset;
   IncludeCategoryManager Categories;
   // Record the offset of the end of the last include in each category.
   std::unordered_map<int, int> CategoryEndOffsets;
