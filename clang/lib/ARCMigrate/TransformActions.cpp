@@ -423,7 +423,7 @@ bool TransformActionsImpl::canReplaceText(SourceLocation loc, StringRef text) {
   loc = SM.getExpansionLoc(loc);
 
   // Break down the source location.
-  std::pair<FileID, unsigned> locInfo = SM.getDecomposedLoc(loc);
+  std::pair<FileID, uint64_t> locInfo = SM.getDecomposedLoc(loc);
 
   // Try to load the file buffer.
   bool invalidTemp = false;

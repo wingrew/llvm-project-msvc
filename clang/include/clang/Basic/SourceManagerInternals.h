@@ -109,7 +109,7 @@ public:
 
   void AddLineNote(FileID FID, uint64_t Offset,
                    uint64_t LineNo, int FilenameID,
-                   unsigned EntryExit, SrcMgr::CharacteristicKind FileKind);
+                   unsigned int EntryExit, SrcMgr::CharacteristicKind FileKind);
 
 
   /// Find the line entry nearest to FID that is before it.
