@@ -731,7 +731,7 @@ RopePieceBTree::~RopePieceBTree() {
   getRoot(Root)->Destroy();
 }
 
-unsigned RopePieceBTree::size() const {
+uint64_t RopePieceBTree::size() const {
   return getRoot(Root)->size();
 }
 
@@ -744,7 +744,7 @@ void RopePieceBTree::clear() {
   }
 }
 
-void RopePieceBTree::insert(unsigned Offset, const RopePiece &R) {
+void RopePieceBTree::insert(uint64_t Offset, const RopePiece &R) {
   // #1. Split at Offset.
   if (RopePieceBTreeNode *RHS = getRoot(Root)->split(Offset))
     Root = new RopePieceBTreeInterior(getRoot(Root), RHS);
@@ -754,7 +754,7 @@ void RopePieceBTree::insert(unsigned Offset, const RopePiece &R) {
     Root = new RopePieceBTreeInterior(getRoot(Root), RHS);
 }
 
-void RopePieceBTree::erase(unsigned Offset, unsigned NumBytes) {
+void RopePieceBTree::erase(uint64_t Offset, uint64_t NumBytes) {
   // #1. Split at Offset.
   if (RopePieceBTreeNode *RHS = getRoot(Root)->split(Offset))
     Root = new RopePieceBTreeInterior(getRoot(Root), RHS);

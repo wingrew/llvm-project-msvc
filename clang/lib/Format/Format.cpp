@@ -2664,7 +2664,7 @@ static void sortCppIncludes(const FormatStyle &Style,
                             const SmallVectorImpl<IncludeDirective> &Includes,
                             ArrayRef<tooling::Range> Ranges, StringRef FileName,
                             StringRef Code, tooling::Replacements &Replaces,
-                            uint64_t *Cursor) {
+                            unsigned int *Cursor) {
   tooling::IncludeCategoryManager Categories(Style.IncludeStyle, FileName);
   const uint64_t IncludesBeginOffset = Includes.front().Offset;
   const uint64_t IncludesEndOffset =
@@ -2769,7 +2769,7 @@ tooling::Replacements sortCppIncludes(const FormatStyle &Style, StringRef Code,
                                       ArrayRef<tooling::Range> Ranges,
                                       StringRef FileName,
                                       tooling::Replacements &Replaces,
-                                      uint64_t *Cursor) {
+                                      unsigned int *Cursor) {
   uint64_t Prev = llvm::StringSwitch<size_t>(Code)
                       .StartsWith("\xEF\xBB\xBF", 3) // UTF-8 BOM
                       .Default(0);
@@ -3042,7 +3042,7 @@ bool isLikelyXml(StringRef Code) { return Code.ltrim().startswith("<"); }
 
 tooling::Replacements sortIncludes(const FormatStyle &Style, StringRef Code,
                                    ArrayRef<tooling::Range> Ranges,
-                                   StringRef FileName, uint64_t *Cursor) {
+                                   StringRef FileName, unsigned int *Cursor) {
   tooling::Replacements Replaces;
   if (!Style.SortIncludes || Style.DisableFormat)
     return Replaces;

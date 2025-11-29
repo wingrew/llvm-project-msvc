@@ -147,9 +147,9 @@ CXString CXLoadedDiagnostic::getFixIt(unsigned FixIt,
 
 void CXLoadedDiagnostic::decodeLocation(CXSourceLocation location,
                                         CXFile *file,
-                                        uint64_t int *line,
-                                        unsigned int *column,
-                                        uint64_t *offset) {
+                                        unsigned *line,
+                                        unsigned *column,
+                                        unsigned *offset) {
   
   
   // CXSourceLocation consists of the following fields:

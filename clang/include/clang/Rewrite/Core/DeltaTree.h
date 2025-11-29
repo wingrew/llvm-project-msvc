@@ -12,6 +12,7 @@
 
 #ifndef LLVM_CLANG_REWRITE_CORE_DELTATREE_H
 #define LLVM_CLANG_REWRITE_CORE_DELTATREE_H
+#include <cstdint>
 
 namespace clang {
 

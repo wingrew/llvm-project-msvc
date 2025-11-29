@@ -1626,7 +1626,7 @@ static const FileEntry *getPrivateModuleMap(const FileEntry *File,
 }
 
 bool HeaderSearch::loadModuleMapFile(const FileEntry *File, bool IsSystem,
-                                     FileID ID, unsigned *Offset,
+                                     FileID ID, uint64_t *Offset,
                                      StringRef OriginalModuleMapFile) {
   // Find the directory for the module. For frameworks, that may require going
   // up from the 'Modules' directory.
@@ -1677,7 +1677,7 @@ bool HeaderSearch::loadModuleMapFile(const FileEntry *File, bool IsSystem,
 HeaderSearch::LoadModuleMapResult
 HeaderSearch::loadModuleMapFileImpl(const FileEntry *File, bool IsSystem,
                                     DirectoryEntryRef Dir, FileID ID,
-                                    unsigned *Offset) {
+                                    uint64_t *Offset) {
   assert(File && "expected FileEntry");
 
   // Check whether we've already loaded this module map, and mark it as being

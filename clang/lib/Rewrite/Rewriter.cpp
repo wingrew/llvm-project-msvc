@@ -31,7 +31,7 @@
 #include <memory>
 #include <system_error>
 #include <utility>
-#include "RewriteBuffer.h"
+// #include "RewriteBuffer.h"
 
 using namespace clang;
 

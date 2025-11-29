@@ -65,7 +65,7 @@ using IdentifierID = uint64_t;
 /// discovery), with values below NUM_PREDEF_DECL_IDS being reserved.
 /// At the start of a chain of precompiled headers, declaration ID 1 is
 /// used for the translation unit declaration.
-using DeclID = uint64_t;
+using DeclID = uint32_t;
 
 // FIXME: Turn these into classes so we can have some type safety when
 // we go from local ID to global and vice-versa.

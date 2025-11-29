@@ -6928,8 +6928,8 @@ CXCursor clang_getOverloadedDecl(CXCursor cursor, unsigned index) {
 }
 
 void clang_getDefinitionSpellingAndExtent(
-    CXCursor C, const char **startBuf, const char **endBuf, uint64_t *startLine,
-    unsigned *startColumn, uint64_t *endLine, unsigned *endColumn) {
+    CXCursor C, const char **startBuf, const char **endBuf, unsigned *startLine,
+    unsigned *startColumn, unsigned *endLine, unsigned *endColumn) {
   assert(getCursorDecl(C) && "CXCursor has null decl");
   const auto *FD = cast<FunctionDecl>(getCursorDecl(C));
   const auto *Body = cast<CompoundStmt>(FD->getBody());
