@@ -259,7 +259,7 @@ RawComment *ASTContext::getRawCommentForDeclNoCacheImpl(
     return nullptr;
 
   // Decompose the end of the comment.
-  const unsigned CommentEndOffset =
+  const uint64_t CommentEndOffset =
       Comments.getCommentEndOffset(CommentBeforeDecl);
 
   // Get the corresponding buffer.
