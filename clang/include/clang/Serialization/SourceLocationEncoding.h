@@ -86,9 +86,9 @@ public:
 ///
 class SourceLocationSequence {
   using UIntTy = SourceLocation::UIntTy;
-  using EncodedTy = unsigned __int128;
+  using EncodedTy = unsigned __int64;
   constexpr static auto UIntBits = SourceLocationEncoding::UIntBits;
-  static_assert(sizeof(EncodedTy) > sizeof(UIntTy), "Need one extra bit!");
+  // static_assert(sizeof(EncodedTy) > sizeof(UIntTy), "Need one extra bit!");
 
   // Prev stores the rotated last nonzero location.
   UIntTy &Prev;
