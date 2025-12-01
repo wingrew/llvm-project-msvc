@@ -9325,7 +9325,7 @@ Expected<SourceLocation> ASTImporter::Import(SourceLocation FromLoc) {
   SourceManager &FromSM = FromContext.getSourceManager();
   bool IsBuiltin = FromSM.isWrittenInBuiltinFile(FromLoc);
 
-  std::pair<FileID, unsigned> Decomposed = FromSM.getDecomposedLoc(FromLoc);
+  std::pair<FileID, uint64_t> Decomposed = FromSM.getDecomposedLoc(FromLoc);
   Expected<FileID> ToFileIDOrErr = Import(Decomposed.first, IsBuiltin);
   if (!ToFileIDOrErr)
     return ToFileIDOrErr.takeError();

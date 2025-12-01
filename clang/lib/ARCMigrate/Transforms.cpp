@@ -136,7 +136,7 @@ SourceLocation trans::findSemiAfterLocation(SourceLocation loc,
   loc = Lexer::getLocForEndOfToken(loc, /*Offset=*/0, SM, Ctx.getLangOpts());
 
   // Break down the source location.
-  std::pair<FileID, unsigned> locInfo = SM.getDecomposedLoc(loc);
+  std::pair<FileID, uint64_t> locInfo = SM.getDecomposedLoc(loc);
 
   // Try to load the file buffer.
   bool invalidTemp = false;
@@ -384,7 +384,7 @@ bool MigrationContext::rewritePropertyAttribute(StringRef fromAttr,
   SourceManager &SM = Pass.Ctx.getSourceManager();
 
   // Break down the source location.
-  std::pair<FileID, unsigned> locInfo = SM.getDecomposedLoc(atLoc);
+  std::pair<FileID, uint64_t> locInfo = SM.getDecomposedLoc(atLoc);
 
   // Try to load the file buffer.
   bool invalidTemp = false;
@@ -465,7 +465,7 @@ bool MigrationContext::addPropertyAttribute(StringRef attr,
   SourceManager &SM = Pass.Ctx.getSourceManager();
 
   // Break down the source location.
-  std::pair<FileID, unsigned> locInfo = SM.getDecomposedLoc(atLoc);
+  std::pair<FileID, uint64_t> locInfo = SM.getDecomposedLoc(atLoc);
 
   // Try to load the file buffer.
   bool invalidTemp = false;

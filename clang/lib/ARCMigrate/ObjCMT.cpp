@@ -1785,7 +1785,7 @@ private:
 
     void writeLoc(SourceLocation Loc) {
       FileID FID;
-      unsigned Offset;
+      uint64_t Offset;
       std::tie(FID, Offset) = SourceMgr.getDecomposedLoc(Loc);
       assert(FID.isValid());
       SmallString<200> Path =
@@ -1798,13 +1798,13 @@ private:
 
     void writeRemove(CharSourceRange Range) {
       assert(Range.isCharRange());
-      std::pair<FileID, unsigned> Begin =
+      std::pair<FileID, uint64_t> Begin =
           SourceMgr.getDecomposedLoc(Range.getBegin());
-      std::pair<FileID, unsigned> End =
+      std::pair<FileID, uint64_t> End =
           SourceMgr.getDecomposedLoc(Range.getEnd());
       assert(Begin.first == End.first);
       assert(Begin.second <= End.second);
-      unsigned Length = End.second - Begin.second;
+      uint64_t Length = End.second - Begin.second;
 
       OS << "  \"remove\": " << Length << ",\n";
     }

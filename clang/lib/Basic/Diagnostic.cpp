@@ -189,8 +189,8 @@ void DiagnosticsEngine::DiagStateMap::append(SourceManager &SrcMgr,
   CurDiagState = State;
   CurDiagStateLoc = Loc;
 
-  std::pair<FileID, unsigned> Decomp = SrcMgr.getDecomposedLoc(Loc);
-  unsigned Offset = Decomp.second;
+  std::pair<FileID, uint64_t> Decomp = SrcMgr.getDecomposedLoc(Loc);
+  uint64_t Offset = Decomp.second;
   for (File *F = getFile(SrcMgr, Decomp.first); F;
        Offset = F->ParentOffset, F = F->Parent) {
     F->HasLocalTransitions = true;

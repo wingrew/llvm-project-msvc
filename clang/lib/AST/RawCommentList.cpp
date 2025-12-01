@@ -88,7 +88,7 @@ bool commentsStartOnSameColumn(const SourceManager &SM, const RawComment &R1,
 /// \return true if all of the characters in `Buffer` ranging from the closest
 /// line-ending character before `P` (or the beginning of `Buffer`) to `P - 1`
 /// are whitespace.
-static bool onlyWhitespaceOnLineBefore(const char *Buffer, unsigned P) {
+static bool onlyWhitespaceOnLineBefore(const char *Buffer, uint64_t P) {
   // Search backwards until we see linefeed or carriage return.
   for (unsigned I = P; I != 0; --I) {
     char C = Buffer[I - 1];
@@ -125,7 +125,7 @@ RawComment::RawComment(const SourceManager &SourceMgr, SourceRange SR,
   // Guess whether an ordinary comment is trailing.
   if (CommentOpts.ParseAllComments && isOrdinaryKind(K.first)) {
     FileID BeginFileID;
-    unsigned BeginOffset;
+    uint64_t BeginOffset;
     std::tie(BeginFileID, BeginOffset) =
         SourceMgr.getDecomposedLoc(Range.getBegin());
     if (BeginOffset != 0) {
@@ -153,14 +153,14 @@ RawComment::RawComment(const SourceManager &SourceMgr, SourceRange SR,
 StringRef RawComment::getRawTextSlow(const SourceManager &SourceMgr) const {
   FileID BeginFileID;
   FileID EndFileID;
-  unsigned BeginOffset;
-  unsigned EndOffset;
+  uint64_t BeginOffset;
+  uint64_t EndOffset;
 
   std::tie(BeginFileID, BeginOffset) =
       SourceMgr.getDecomposedLoc(Range.getBegin());
   std::tie(EndFileID, EndOffset) = SourceMgr.getDecomposedLoc(Range.getEnd());
 
-  const unsigned Length = EndOffset - BeginOffset;
+  const uint64_t Length = EndOffset - BeginOffset;
   if (Length < 2)
     return StringRef();
 
@@ -226,8 +226,8 @@ comments::FullComment *RawComment::parse(const ASTContext &Context,
 static bool onlyWhitespaceBetween(SourceManager &SM,
                                   SourceLocation Loc1, SourceLocation Loc2,
                                   unsigned MaxNewlinesAllowed) {
-  std::pair<FileID, unsigned> Loc1Info = SM.getDecomposedLoc(Loc1);
-  std::pair<FileID, unsigned> Loc2Info = SM.getDecomposedLoc(Loc2);
+  std::pair<FileID, uint64_t> Loc1Info = SM.getDecomposedLoc(Loc1);
+  std::pair<FileID, uint64_t> Loc2Info = SM.getDecomposedLoc(Loc2);
 
   // Question does not make sense if locations are in different files.
   if (Loc1Info.first != Loc2Info.first)
@@ -241,7 +241,7 @@ static bool onlyWhitespaceBetween(SourceManager &SM,
   unsigned NumNewlines = 0;
   assert(Loc1Info.second <= Loc2Info.second && "Loc1 after Loc2!");
   // Look for non-whitespace characters and remember any newlines seen.
-  for (unsigned I = Loc1Info.second; I != Loc2Info.second; ++I) {
+  for (uint64_t I = Loc1Info.second; I != Loc2Info.second; ++I) {
     switch (Buffer[I]) {
     default:
       return false;
@@ -281,11 +281,11 @@ void RawCommentList::addComment(const RawComment &RC,
   if (RC.isOrdinary() && !CommentOpts.ParseAllComments)
     return;
 
-  std::pair<FileID, unsigned> Loc =
+  std::pair<FileID, uint64_t> Loc =
       SourceMgr.getDecomposedLoc(RC.getBeginLoc());
 
   const FileID CommentFile = Loc.first;
-  const unsigned CommentOffset = Loc.second;
+  const uint64_t CommentOffset = Loc.second;
 
   // If this is the first Doxygen comment, save it (because there isn't
   // anything to merge it with).

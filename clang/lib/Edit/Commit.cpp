@@ -65,7 +65,7 @@ bool Commit::insertFromRange(SourceLocation loc,
                              CharSourceRange range,
                              bool afterToken, bool beforePreviousInsertions) {
   FileOffset RangeOffs;
-  unsigned RangeLen;
+  uint64_t RangeLen;
   if (!canRemoveRange(range, RangeOffs, RangeLen)) {
     IsCommitable = false;
     return false;
@@ -90,7 +90,7 @@ bool Commit::insertFromRange(SourceLocation loc,
 
 bool Commit::remove(CharSourceRange range) {
   FileOffset Offs;
-  unsigned Len;
+  uint64_t Len;
   if (!canRemoveRange(range, Offs, Len)) {
     IsCommitable = false;
     return false;
@@ -118,7 +118,7 @@ bool Commit::replace(CharSourceRange range, StringRef text) {
     return remove(range);
 
   FileOffset Offs;
-  unsigned Len;
+  uint64_t Len;
   if (!canInsert(range.getBegin(), Offs) || !canRemoveRange(range, Offs, Len)) {
     IsCommitable = false;
     return false;
@@ -132,14 +132,14 @@ bool Commit::replace(CharSourceRange range, StringRef text) {
 bool Commit::replaceWithInner(CharSourceRange range,
                               CharSourceRange replacementRange) {
   FileOffset OuterBegin;
-  unsigned OuterLen;
+  uint64_t OuterLen;
   if (!canRemoveRange(range, OuterBegin, OuterLen)) {
     IsCommitable = false;
     return false;
   }
 
   FileOffset InnerBegin;
-  unsigned InnerLen;
+  uint64_t InnerLen;
   if (!canRemoveRange(replacementRange, InnerBegin, InnerLen)) {
     IsCommitable = false;
     return false;
@@ -168,7 +168,7 @@ bool Commit::replaceText(SourceLocation loc, StringRef text,
     return true;
 
   FileOffset Offs;
-  unsigned Len;
+  uint64_t Len;
   if (!canReplaceText(loc, replacementText, Offs, Len)) {
     IsCommitable = false;
     return false;
@@ -210,7 +210,7 @@ void Commit::addInsertFromRange(SourceLocation OrigLoc, FileOffset Offs,
 }
 
 void Commit::addRemove(SourceLocation OrigLoc,
-                       FileOffset Offs, unsigned Len) {
+                       FileOffset Offs, uint64_t Len) {
   if (Len == 0)
     return;
 
@@ -239,7 +239,7 @@ bool Commit::canInsert(SourceLocation loc, FileOffset &offs) {
   if (SM.isInSystemHeader(loc))
     return false;
 
-  std::pair<FileID, unsigned> locInfo = SM.getDecomposedLoc(loc);
+  std::pair<FileID, uint64_t> locInfo = SM.getDecomposedLoc(loc);
   if (locInfo.first.isInvalid())
     return false;
   offs = FileOffset(locInfo.first, locInfo.second);
@@ -273,7 +273,7 @@ bool Commit::canInsertAfterToken(SourceLocation loc, FileOffset &offs,
   if (loc.isInvalid())
     return false;
 
-  std::pair<FileID, unsigned> locInfo = SM.getDecomposedLoc(loc);
+  std::pair<FileID, uint64_t> locInfo = SM.getDecomposedLoc(loc);
   if (locInfo.first.isInvalid())
     return false;
   offs = FileOffset(locInfo.first, locInfo.second);
@@ -294,7 +294,7 @@ bool Commit::canInsertInOffset(SourceLocation OrigLoc, FileOffset Offs) {
 }
 
 bool Commit::canRemoveRange(CharSourceRange range,
-                            FileOffset &Offs, unsigned &Len) {
+                            FileOffset &Offs, uint64_t &Len) {
   const SourceManager &SM = SourceMgr;
   range = Lexer::makeFileCharRange(range, SM, LangOpts);
   if (range.isInvalid())
@@ -309,8 +309,8 @@ bool Commit::canRemoveRange(CharSourceRange range,
   if (PPRec && PPRec->rangeIntersectsConditionalDirective(range.getAsRange()))
     return false;
 
-  std::pair<FileID, unsigned> beginInfo = SM.getDecomposedLoc(range.getBegin());
-  std::pair<FileID, unsigned> endInfo = SM.getDecomposedLoc(range.getEnd());
+  std::pair<FileID, uint64_t> beginInfo = SM.getDecomposedLoc(range.getBegin());
+  std::pair<FileID, uint64_t> endInfo = SM.getDecomposedLoc(range.getEnd());
   if (beginInfo.first != endInfo.first ||
       beginInfo.second > endInfo.second)
     return false;
@@ -321,7 +321,7 @@ bool Commit::canRemoveRange(CharSourceRange range,
 }
 
 bool Commit::canReplaceText(SourceLocation loc, StringRef text,
-                            FileOffset &Offs, unsigned &Len) {
+                            FileOffset &Offs, uint64_t &Len) {
   assert(!text.empty());
 
   if (!canInsert(loc, Offs))

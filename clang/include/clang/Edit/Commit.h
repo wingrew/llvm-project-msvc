@@ -127,15 +127,15 @@ private:
   void addInsertFromRange(SourceLocation OrigLoc, FileOffset Offs,
                           FileOffset RangeOffs, unsigned RangeLen,
                           bool beforePreviousInsertions);
-  void addRemove(SourceLocation OrigLoc, FileOffset Offs, unsigned Len);
+  void addRemove(SourceLocation OrigLoc, FileOffset Offs, uint64_t Len);
 
   bool canInsert(SourceLocation loc, FileOffset &Offset);
   bool canInsertAfterToken(SourceLocation loc, FileOffset &Offset,
                            SourceLocation &AfterLoc);
   bool canInsertInOffset(SourceLocation OrigLoc, FileOffset Offs);
-  bool canRemoveRange(CharSourceRange range, FileOffset &Offs, unsigned &Len);
+  bool canRemoveRange(CharSourceRange range, FileOffset &Offs, uint64_t &Len);
   bool canReplaceText(SourceLocation loc, StringRef text,
-                      FileOffset &Offs, unsigned &Len);
+                      FileOffset &Offs, uint64_t &Len);
 
   void commitInsert(FileOffset offset, StringRef text,
                     bool beforePreviousInsertions);
