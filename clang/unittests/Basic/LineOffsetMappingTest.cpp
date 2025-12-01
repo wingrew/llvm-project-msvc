@@ -26,7 +26,7 @@ TEST(LineOffsetMappingTest, empty) {
 
 TEST(LineOffsetMappingTest, construct) {
   BumpPtrAllocator Alloc;
-  unsigned Offsets[] = {0, 10, 20};
+  uint64_t Offsets[] = {0, 10, 20};
   LineOffsetMapping Mapping(Offsets, Alloc);
   EXPECT_EQ(3u, Mapping.size());
   EXPECT_EQ(0u, Mapping[0]);
@@ -41,8 +41,8 @@ TEST(LineOffsetMappingTest, construct) {
 TEST(LineOffsetMappingTest, constructTwo) {
   // Confirm allocation size is big enough, convering an off-by-one bug.
   BumpPtrAllocator Alloc;
-  unsigned Offsets1[] = {0, 10};
-  unsigned Offsets2[] = {0, 20};
+  uint64_t Offsets1[] = {0, 10};
+  uint64_t Offsets2[] = {0, 20};
   LineOffsetMapping Mapping1(Offsets1, Alloc);
   LineOffsetMapping Mapping2(Offsets2, Alloc);
 

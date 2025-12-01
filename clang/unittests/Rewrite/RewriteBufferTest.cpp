@@ -43,7 +43,7 @@ TEST(RewriteBuffer, TagRanges) {
   Buf.Initialize(Input);
   StringRef RemoveStr = "world";
   size_t Pos = Input.find(RemoveStr);
-  Buf.RemoveText(Pos, RemoveStr.size());
+  Buf.RemoveText(Pos, RemoveStr.size(),false);
 
   StringRef TagStr = "hello";
   Pos = Input.find(TagStr);
@@ -105,7 +105,7 @@ TEST(RewriteBuffer, DISABLED_RemoveLineIfEmpty_XFAIL) {
   // To show that removeLineIfEmpty=true is the culprit, change true to false
   // and append a newline to RemoveStr0 above.  The test then passes.
   StringRef RemoveStr1 = "ghi\n";
-  Buf.RemoveText(Input.find(RemoveStr1), RemoveStr1.size());
+  Buf.RemoveText(Input.find(RemoveStr1), RemoveStr1.size(),true);
   EXPECT_OUTPUT(Buf, "abc\n"
                      "jkl\n");
 }
