@@ -1535,7 +1535,7 @@ PresumedLoc SourceManager::getPresumedLoc(SourceLocation Loc,
     Filename = C->OrigEntry->getName();
   else if (auto Buffer = C->getBufferOrNone(Diag, getFileManager()))
     Filename = Buffer->getBufferIdentifier();
-  llvm::errs() << LocInfo.second << "\n";
+  // llvm::errs() << LocInfo.second << "\n";
   uint64_t LineNo = getLineNumber(LocInfo.first, LocInfo.second, &Invalid);
   
   if (Invalid)
