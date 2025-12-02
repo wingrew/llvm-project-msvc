@@ -5479,7 +5479,7 @@ void ASTWriter::associateDeclWithFile(const Decl *D, DeclID ID) {
   SourceLocation FileLoc = SM.getFileLoc(Loc);
   assert(SM.isLocalSourceLocation(FileLoc));
   FileID FID;
-  unsigned Offset;
+  uint64_t Offset;
   std::tie(FID, Offset) = SM.getDecomposedLoc(FileLoc);
   if (FID.isInvalid())
     return;

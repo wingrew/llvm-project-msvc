@@ -868,8 +868,8 @@ void TextDiagnostic::emitDiagnosticLoc(FullSourceLoc Loc, PresumedLoc PLoc,
       SourceLocation E = ERange.getEnd();
       bool IsTokenRange = ERange.isTokenRange();
 
-      std::pair<FileID, unsigned> BInfo = SM.getDecomposedLoc(B);
-      std::pair<FileID, unsigned> EInfo = SM.getDecomposedLoc(E);
+      std::pair<FileID, uint64_t> BInfo = SM.getDecomposedLoc(B);
+      std::pair<FileID, uint64_t> EInfo = SM.getDecomposedLoc(E);
 
       // If the start or end of the range is in another file, just discard
       // it.
@@ -878,7 +878,7 @@ void TextDiagnostic::emitDiagnosticLoc(FullSourceLoc Loc, PresumedLoc PLoc,
 
       // Add in the length of the token, so that we cover multi-char
       // tokens.
-      unsigned TokSize = 0;
+      uint64_t TokSize = 0;
       if (IsTokenRange)
         TokSize = Lexer::MeasureTokenLength(E, SM, LangOpts);
 
@@ -985,11 +985,11 @@ static void highlightRange(const CharSourceRange &R,
   SourceLocation Begin = R.getBegin();
   SourceLocation End = R.getEnd();
 
-  unsigned StartLineNo = SM.getExpansionLineNumber(Begin);
+  uint64_t StartLineNo = SM.getExpansionLineNumber(Begin);
   if (StartLineNo > LineNo || SM.getFileID(Begin) != FID)
     return;  // No intersection.
 
-  unsigned EndLineNo = SM.getExpansionLineNumber(End);
+  uint64_t EndLineNo = SM.getExpansionLineNumber(End);
   if (EndLineNo < LineNo || SM.getFileID(End) != FID)
     return;  // No intersection.
 
@@ -1146,7 +1146,7 @@ void TextDiagnostic::emitSnippetAndCaret(
     return;
 
   // Decompose the location into a FID/Offset pair.
-  std::pair<FileID, unsigned> LocInfo = Loc.getDecomposedLoc();
+  std::pair<FileID, uint64_t> LocInfo = Loc.getDecomposedLoc();
   FileID FID = LocInfo.first;
   const SourceManager &SM = Loc.getManager();
 

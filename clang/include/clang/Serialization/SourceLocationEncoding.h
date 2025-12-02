@@ -86,7 +86,7 @@ public:
 ///
 class SourceLocationSequence {
   using UIntTy = SourceLocation::UIntTy;
-  using EncodedTy = unsigned __int64;
+  using EncodedTy = uint64_t;
   constexpr static auto UIntBits = SourceLocationEncoding::UIntBits;
   // static_assert(sizeof(EncodedTy) > sizeof(UIntTy), "Need one extra bit!");
 

@@ -1342,7 +1342,7 @@ struct MisleadingIndentationChecker {
     if (ColNo == 0 || TabStop == 1)
       return ColNo;
 
-    std::pair<FileID, unsigned> FIDAndOffset = SM.getDecomposedLoc(Loc);
+    std::pair<FileID, uint64_t> FIDAndOffset = SM.getDecomposedLoc(Loc);
 
     bool Invalid;
     StringRef BufData = SM.getBufferData(FIDAndOffset.first, &Invalid);

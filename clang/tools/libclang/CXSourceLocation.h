@@ -32,7 +32,7 @@ translateSourceLocation(const SourceManager &SM, const LangOptions &LangOpts,
     return clang_getNullLocation();
 
   CXSourceLocation Result = { { &SM, &LangOpts, },
-                              (unsigned) Loc.getRawEncoding() };
+                              (uint64_t) Loc.getRawEncoding() };
   return Result;
 }
   

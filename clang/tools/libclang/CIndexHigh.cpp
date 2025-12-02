@@ -192,7 +192,7 @@ static enum CXChildVisitResult findFileIdRefVisit(CXCursor cursor,
     }
 
     // We are looking for identifiers in a specific file.
-    std::pair<FileID, unsigned> LocInfo = SM.getDecomposedLoc(Loc);
+    std::pair<FileID, uint64_t> LocInfo = SM.getDecomposedLoc(Loc);
     if (LocInfo.first != data->FID)
       return CXChildVisit_Recurse;
 
@@ -287,7 +287,7 @@ static enum CXChildVisitResult findFileMacroRefVisit(CXCursor cursor,
   }
 
   // We are looking for identifiers in a specific file.
-  std::pair<FileID, unsigned> LocInfo = SM.getDecomposedLoc(Loc);
+  std::pair<FileID, uint64_t> LocInfo = SM.getDecomposedLoc(Loc);
   if (SM.getFileEntryForID(LocInfo.first) != data->File)
     return CXChildVisit_Continue;
 
@@ -359,7 +359,7 @@ struct FindFileIncludesVisitor {
     SourceManager &SM = Ctx.getSourceManager();
 
     // We are looking for includes in a specific file.
-    std::pair<FileID, unsigned> LocInfo = SM.getDecomposedLoc(Loc);
+    std::pair<FileID, uint64_t> LocInfo = SM.getDecomposedLoc(Loc);
     if (SM.getFileEntryForID(LocInfo.first) != File)
       return CXChildVisit_Continue;
 

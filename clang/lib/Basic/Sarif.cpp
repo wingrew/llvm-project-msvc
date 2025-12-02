@@ -115,10 +115,10 @@ static std::string fileNameToURI(StringRef Filename) {
 /// \return The column number as a UTF-8 aware byte offset from column start to
 /// the effective source location.
 static unsigned int adjustColumnPos(FullSourceLoc Loc,
-                                    unsigned int TokenLen = 0) {
+                                    uint64_t TokenLen = 0) {
   assert(!Loc.isInvalid() && "invalid Loc when adjusting column position");
 
-  std::pair<FileID, unsigned> LocInfo = Loc.getDecomposedLoc();
+  std::pair<FileID, uint64_t> LocInfo = Loc.getDecomposedLoc();
   Optional<MemoryBufferRef> Buf =
       Loc.getManager().getBufferOrNone(LocInfo.first);
   assert(Buf && "got an invalid buffer for the location's file");
@@ -127,7 +127,7 @@ static unsigned int adjustColumnPos(FullSourceLoc Loc,
 
   // Adjust the offset to be the start of the line, since we'll be counting
   // Unicode characters from there until our column offset.
-  unsigned int Off = LocInfo.second - (Loc.getExpansionColumnNumber() - 1);
+  uint64_t Off = LocInfo.second - (Loc.getExpansionColumnNumber() - 1);
   unsigned int Ret = 1;
   while (Off < (LocInfo.second + TokenLen)) {
     Off += getNumBytesForUTF8(Buf->getBuffer()[Off]);
