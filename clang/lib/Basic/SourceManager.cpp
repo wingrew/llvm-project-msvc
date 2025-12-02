@@ -1278,7 +1278,7 @@ LineOffsetMapping LineOffsetMapping::get(llvm::MemoryBufferRef Buffer,
   const unsigned char *End = (const unsigned char *)Buffer.getBufferEnd();
   const std::size_t BufLen = End - Buf;
 
-  unsigned I = 0;
+  uint64_t I = 0;
   uint64_t Word;
 
   // scan sizeof(Word) bytes at a time for new lines.
@@ -1535,8 +1535,9 @@ PresumedLoc SourceManager::getPresumedLoc(SourceLocation Loc,
     Filename = C->OrigEntry->getName();
   else if (auto Buffer = C->getBufferOrNone(Diag, getFileManager()))
     Filename = Buffer->getBufferIdentifier();
-
+  llvm::errs() << LocInfo.second << "\n";
   uint64_t LineNo = getLineNumber(LocInfo.first, LocInfo.second, &Invalid);
+  
   if (Invalid)
     return PresumedLoc();
   unsigned ColNo  = getColumnNumber(LocInfo.first, LocInfo.second, &Invalid);
