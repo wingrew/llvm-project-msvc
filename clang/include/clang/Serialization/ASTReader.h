@@ -790,7 +790,7 @@ private:
   /// end of the TU. It consists of a pair of values for every pending
   /// instantiation where the first value is the ID of the decl and the second
   /// is the instantiation location.
-  SmallVector<serialization::DeclID, 64> PendingInstantiations;
+  SmallVector<uint64_t, 64> PendingInstantiations;
 
   //@}
 
@@ -901,7 +901,7 @@ private:
 
   /// A list of undefined decls with internal linkage followed by the
   /// SourceLocation of a matching ODR-use.
-  SmallVector<serialization::DeclID, 8> UndefinedButUsed;
+  SmallVector<uint64_t, 8> UndefinedButUsed;
 
   /// Delete expressions to analyze at the end of translation unit.
   SmallVector<uint64_t, 8> DelayedDeleteExprs;

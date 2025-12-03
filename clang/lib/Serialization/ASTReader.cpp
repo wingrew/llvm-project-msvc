@@ -3904,7 +3904,7 @@ void ASTReader::ReadModuleOffsetMap(ModuleFile &F) const {
     }
 
     SourceLocation::UIntTy SLocOffset =
-        endian::readNext<uint32_t, little, unaligned>(Data);
+        endian::readNext<SourceLocation::UIntTy, little, unaligned>(Data);
     uint32_t IdentifierIDOffset =
         endian::readNext<uint32_t, little, unaligned>(Data);
     uint32_t MacroIDOffset =
@@ -8469,7 +8469,7 @@ void ASTReader::ReadUsedVTables(SmallVectorImpl<ExternalVTableUse> &VTables) {
 
 void ASTReader::ReadPendingInstantiations(
        SmallVectorImpl<std::pair<ValueDecl *, SourceLocation>> &Pending) {
-  for (unsigned Idx = 0, N = PendingInstantiations.size(); Idx < N;) {
+  for (uint64_t Idx = 0, N = PendingInstantiations.size(); Idx < N;) {
     ValueDecl *D = cast<ValueDecl>(GetDecl(PendingInstantiations[Idx++]));
     SourceLocation Loc
       = SourceLocation::getFromRawEncoding(PendingInstantiations[Idx++]);

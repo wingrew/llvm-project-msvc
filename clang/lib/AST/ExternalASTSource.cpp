@@ -72,7 +72,7 @@ Decl *ExternalASTSource::GetExternalDecl(uint32_t ID) {
   return nullptr;
 }
 
-Selector ExternalASTSource::GetExternalSelector(uint64_t ID) {
+Selector ExternalASTSource::GetExternalSelector(uint32_t ID) {
   return Selector();
 }
 
