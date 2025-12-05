@@ -775,7 +775,7 @@ class SourceManager : public RefCountedBase<SourceManager> {
 
   /// Lazily computed map of macro argument chunks to their expanded
   /// source location.
-  using MacroArgsMap = std::map<unsigned, SourceLocation>;
+  using MacroArgsMap = std::map<uint64_t, SourceLocation>;
 
   mutable llvm::DenseMap<FileID, std::unique_ptr<MacroArgsMap>>
       MacroArgsCacheMap;

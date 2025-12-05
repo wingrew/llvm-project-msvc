@@ -3829,7 +3829,7 @@ llvm::Error ASTReader::ReadASTBlock(ModuleFile &F,
                                        "invalid pragma float control record");
       FpPragmaCurrentValue = FPOptionsOverride::getFromOpaqueInt(Record[0]);
       FpPragmaCurrentLocation = ReadSourceLocation(F, Record[1]);
-      unsigned NumStackEntries = Record[2];
+      uint64_t NumStackEntries = Record[2];
       unsigned Idx = 3;
       // Reset the stack when importing a new module.
       FpPragmaStack.clear();

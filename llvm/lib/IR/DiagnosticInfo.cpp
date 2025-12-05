@@ -137,7 +137,7 @@ std::string DiagnosticInfoWithLocationBase::getAbsolutePath() const {
 }
 
 void DiagnosticInfoWithLocationBase::getLocation(StringRef &RelativePath,
-                                                 unsigned &Line,
+                                                 uint64_t &Line,
                                                  unsigned &Column) const {
   RelativePath = Loc.getRelativePath();
   Line = Loc.getLine();
@@ -146,7 +146,7 @@ void DiagnosticInfoWithLocationBase::getLocation(StringRef &RelativePath,
 
 std::string DiagnosticInfoWithLocationBase::getLocationStr() const {
   StringRef Filename("<unknown>");
-  unsigned Line = 0;
+  uint64_t Line = 0;
   unsigned Column = 0;
   if (isLocationAvailable())
     getLocation(Filename, Line, Column);

@@ -5233,7 +5233,7 @@ void ASTWriter::WriteDeclUpdatesBlocks(RecordDataImpl &OffsetsRecord) {
 
 void ASTWriter::AddAlignPackInfo(const Sema::AlignPackInfo &Info,
                                  RecordDataImpl &Record) {
-  uint32_t Raw = Sema::AlignPackInfo::getRawEncoding(Info);
+  uint64_t Raw = Sema::AlignPackInfo::getRawEncoding(Info);
   Record.push_back(Raw);
 }
 

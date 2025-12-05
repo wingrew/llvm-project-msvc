@@ -782,7 +782,7 @@ private:
   ///
   /// CodeGen has to emit VTables for these records, so they have to be eagerly
   /// deserialized.
-  SmallVector<serialization::DeclID, 64> VTableUses;
+  SmallVector<uint64_t, 64> VTableUses;
 
   /// A snapshot of the pending instantiations in the chain.
   ///
@@ -808,11 +808,11 @@ private:
 
   /// Method selectors used in a @selector expression. Used for
   /// implementation of -Wselector.
-  SmallVector<serialization::SelectorID, 64> ReferencedSelectorsData;
+  SmallVector<uint64_t, 64> ReferencedSelectorsData;
 
   /// A snapshot of Sema's weak undeclared identifier tracking, for
   /// generating warnings.
-  SmallVector<serialization::IdentifierID, 64> WeakUndeclaredIdentifiers;
+  SmallVector<uint64_t, 64> WeakUndeclaredIdentifiers;
 
   /// The IDs of type aliases for ext_vectors that exist in the chain.
   ///
