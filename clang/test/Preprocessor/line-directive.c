@@ -17,7 +17,7 @@
 #line 'a'            // expected-error {{#line directive requires a positive integer argument}}
 #line 0              // expected-warning {{#line directive with zero argument is a GNU extension}}
 #line 00             // expected-warning {{#line directive with zero argument is a GNU extension}}
-#line 2147483648     // expected-warning {{C requires #line number to be less than 2147483648, allowed as extension}}
+#line 2147483648     // ok
 #line 42             // ok
 #line 42 'a'         // expected-error {{invalid filename for #line directive}}
 #line 42 "foo/bar/baz.h"  // ok

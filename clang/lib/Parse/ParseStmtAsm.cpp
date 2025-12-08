@@ -175,8 +175,26 @@ ClangAsmParserCallback::translateLocation(const llvm::SourceMgr &LSM,
 
   // Figure out which token that offset points into.
   const unsigned *TokOffsetPtr = llvm::lower_bound(AsmTokOffsets, Offset);
-  unsigned TokIndex = TokOffsetPtr - AsmTokOffsets.begin();
-  unsigned TokOffset = *TokOffsetPtr;
+
+  unsigned TokIndex = 0;
+  unsigned TokOffset = 0;
+
+  if (TokOffsetPtr == AsmTokOffsets.end()) {
+    // 错误位置在最后一个 token 之后，映射到最后一个 token
+    TokIndex = AsmTokOffsets.empty() ? 0 : (AsmTokOffsets.size() - 1);
+    TokOffset = AsmTokOffsets.empty() ? 0 : AsmTokOffsets.back();
+  } else {
+    TokIndex = TokOffsetPtr - AsmTokOffsets.begin();
+    TokOffset = *TokOffsetPtr;
+
+    // lower_bound 返回的是“第一个 >= Offset 的 offset”。
+    // 如果这个 token 起始位置在 Offset 之后，而前面还有 token，
+    // 我们其实应该用前一个 token（保证 TokOffset <= Offset）。
+    if (TokOffset > Offset && TokIndex > 0) {
+      --TokIndex;
+      TokOffset = AsmTokOffsets[TokIndex];
+    }
+  }
 
   // If we come up with an answer which seems sane, use it; otherwise,
   // just point at the __asm keyword.
