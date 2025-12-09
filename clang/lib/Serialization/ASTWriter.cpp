@@ -4843,11 +4843,19 @@ ASTFileSignature ASTWriter::WriteASTCore(Sema &SemaRef, StringRef isysroot,
         uint32_t None = std::numeric_limits<uint32_t>::max();
 
         auto writeBaseIDOrNone = [&](auto BaseID, bool ShouldWrite) {
-          assert(BaseID < std::numeric_limits<uint32_t>::max() && "base id too high");
-          if (ShouldWrite)
-            LE.write<uint32_t>(BaseID);
-          else
-            LE.write<uint32_t>(None);
+          using T = decltype(BaseID);
+          static_assert(std::is_same<T, uint32_t>::value ||
+                        std::is_same<T, SourceLocation::UIntTy>::value,
+                        "Invalid BaseID type");
+
+          if (ShouldWrite) {
+            // make sure
+            assert(BaseID <= std::numeric_limits<T>::max() && "base id too high");
+            LE.write<T>(BaseID);
+          } else {
+            constexpr T None = std::numeric_limits<T>::max();
+            LE.write<T>(None);
+          }
         };
 
         // These values should be unique within a chain, since they will be read
@@ -4858,7 +4866,7 @@ ASTFileSignature ASTWriter::WriteASTCore(Sema &SemaRef, StringRef isysroot,
         writeBaseIDOrNone(M.BasePreprocessedEntityID,
                           M.NumPreprocessedEntities);
         writeBaseIDOrNone(M.BaseSubmoduleID, M.LocalNumSubmodules);
-        writeBaseIDOrNone(M.BaseSelectorID, M.LocalNumSelectors);
+        writeBaseIDOrNone(static_cast<uint32_t>(M.BaseSelectorID), M.LocalNumSelectors);
         writeBaseIDOrNone(M.BaseDeclID, M.LocalNumDecls);
         writeBaseIDOrNone(M.BaseTypeIndex, M.LocalNumTypes);
       }
@@ -5225,7 +5233,7 @@ void ASTWriter::WriteDeclUpdatesBlocks(RecordDataImpl &OffsetsRecord) {
 
 void ASTWriter::AddAlignPackInfo(const Sema::AlignPackInfo &Info,
                                  RecordDataImpl &Record) {
-  uint32_t Raw = Sema::AlignPackInfo::getRawEncoding(Info);
+  uint64_t Raw = Sema::AlignPackInfo::getRawEncoding(Info);
   Record.push_back(Raw);
 }
 
@@ -5479,7 +5487,7 @@ void ASTWriter::associateDeclWithFile(const Decl *D, DeclID ID) {
   SourceLocation FileLoc = SM.getFileLoc(Loc);
   assert(SM.isLocalSourceLocation(FileLoc));
   FileID FID;
-  unsigned Offset;
+  uint64_t Offset;
   std::tie(FID, Offset) = SM.getDecomposedLoc(FileLoc);
   if (FID.isInvalid())
     return;

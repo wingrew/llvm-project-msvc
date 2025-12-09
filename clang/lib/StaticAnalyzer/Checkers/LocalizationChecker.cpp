@@ -1128,7 +1128,7 @@ void EmptyLocalizationContextChecker::MethodCrawler::VisitObjCMessageExpr(
   // source, so SL should point to the NSLocalizedString macro.
   SourceLocation SL =
       Mgr.getSourceManager().getImmediateMacroCallerLoc(R.getBegin());
-  std::pair<FileID, unsigned> SLInfo =
+  std::pair<FileID, uint64_t> SLInfo =
       Mgr.getSourceManager().getDecomposedLoc(SL);
 
   SrcMgr::SLocEntry SE = Mgr.getSourceManager().getSLocEntry(SLInfo.first);

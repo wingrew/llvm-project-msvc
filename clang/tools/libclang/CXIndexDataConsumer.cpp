@@ -1026,7 +1026,7 @@ bool CXIndexDataConsumer::markEntityOccurrenceInFile(const NamedDecl *D,
   SourceManager &SM = Ctx->getSourceManager();
   D = getEntityDecl(D);
   
-  std::pair<FileID, unsigned> LocInfo = SM.getDecomposedLoc(SM.getFileLoc(Loc));
+  std::pair<FileID, uint64_t> LocInfo = SM.getDecomposedLoc(SM.getFileLoc(Loc));
   FileID FID = LocInfo.first;
   if (FID.isInvalid())
     return true;

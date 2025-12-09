@@ -65,8 +65,8 @@ llvm::Error clang::tooling::validateEditRange(const CharSourceRange &Range,
     return llvm::make_error<StringError>(errc::invalid_argument,
                                          "Range is in system header");
 
-  std::pair<FileID, unsigned> BeginInfo = SM.getDecomposedLoc(Range.getBegin());
-  std::pair<FileID, unsigned> EndInfo = SM.getDecomposedLoc(Range.getEnd());
+  std::pair<FileID, uint64_t> BeginInfo = SM.getDecomposedLoc(Range.getBegin());
+  std::pair<FileID, uint64_t> EndInfo = SM.getDecomposedLoc(Range.getEnd());
   if (BeginInfo.first != EndInfo.first)
     return llvm::make_error<StringError>(
         errc::invalid_argument, "Range begins and ends in different files");

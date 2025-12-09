@@ -52,7 +52,7 @@ struct FileRange {
   /// EXPECTS: File.isValid() && Begin <= End.
   FileRange(FileID File, uint64_t BeginOffset, uint64_t EndOffset);
   /// EXPECTS: BeginLoc.isValid() && BeginLoc.isFileID().
-  FileRange(const SourceManager &SM, SourceLocation BeginLoc, unsigned Length);
+  FileRange(const SourceManager &SM, SourceLocation BeginLoc, uint64_t Length);
   /// EXPECTS: BeginLoc.isValid() && BeginLoc.isFileID(), Begin <= End and files
   ///          are the same.
   FileRange(const SourceManager &SM, SourceLocation BeginLoc,

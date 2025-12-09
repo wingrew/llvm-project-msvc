@@ -639,7 +639,7 @@ const FullSourceLoc BackendConsumer::getBestLocationFromDebugLoc(
   SourceLocation DILoc;
 
   if (D.isLocationAvailable()) {
-    D.getLocation(Filename, (unsigned &) Line, Column);
+    D.getLocation(Filename, (uint64_t &) Line, Column);
     if (Line > 0) {
       auto FE = FileMgr.getFile(Filename);
       if (!FE)

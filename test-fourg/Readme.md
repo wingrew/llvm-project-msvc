@@ -11,7 +11,7 @@
 编译运行：
 - ../build/bin/clang++ generate_large_file.cpp -o generate_large_file
 - ./generate_large_file
-- ../build/bin/clang++ too_large.cpp.cpp -o too_large.cpp
+- ../build/bin/clang++ too_large.cpp -o too_large
 - ./too_large
 
 结果：

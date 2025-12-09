@@ -10,7 +10,8 @@
 // warning in C++98 mode.
 
 #line 32767 // ok
-#line 32768 // expected-warning {{#line number greater than 32767 is incompatible with C++98}}
+// 现在不再对 #line 大于 32767 发 C++98-compat 警告
+#line 32768 // ok
 
 #define VA_MACRO(x, ...) x // expected-warning {{variadic macros are incompatible with C++98}}
 VA_MACRO(,x) // expected-warning {{empty macro arguments are incompatible with C++98}}

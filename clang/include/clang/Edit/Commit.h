@@ -40,7 +40,7 @@ public:
     SourceLocation OrigLoc;
     FileOffset Offset;
     FileOffset InsertFromRangeOffs;
-    unsigned Length;
+    uint64_t Length;
     bool BeforePrev;
 
     SourceLocation getFileLocation(SourceManager &SM) const;

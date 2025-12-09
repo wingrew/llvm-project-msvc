@@ -392,7 +392,7 @@ public:
 
   /// Return location information for this diagnostic in three parts:
   /// the relative source file path, line number and column.
-  void getLocation(StringRef &RelativePath, unsigned &Line,
+  void getLocation(StringRef &RelativePath, uint64_t &Line,
                    unsigned &Column) const;
 
   /// Return the absolute path tot the file.

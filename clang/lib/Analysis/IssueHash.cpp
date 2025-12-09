@@ -122,7 +122,7 @@ static std::string GetEnclosingDeclContextSignature(const Decl *D) {
 }
 
 static StringRef GetNthLineOfFile(llvm::Optional<llvm::MemoryBufferRef> Buffer,
-                                  int Line) {
+                                  int64_t Line) {
   if (!Buffer)
     return "";
 

@@ -32,6 +32,7 @@
 #include <utility>
 #include <vector>
 
+
 using namespace clang;
 using namespace clang::syntax;
 
@@ -214,7 +215,7 @@ llvm::StringRef syntax::Token::text(const SourceManager &SM) const {
 FileRange syntax::Token::range(const SourceManager &SM) const {
   assert(location().isFileID() && "must be a spelled token");
   FileID File;
-  unsigned StartOffset;
+  uint64_t StartOffset;
   std::tie(File, StartOffset) = SM.getDecomposedLoc(location());
   return FileRange(File, StartOffset, StartOffset + length());
 }
@@ -241,7 +242,7 @@ FileRange::FileRange(FileID File, uint64_t BeginOffset, uint64_t EndOffset)
 }
 
 FileRange::FileRange(const SourceManager &SM, SourceLocation BeginLoc,
-                     unsigned Length) {
+                     uint64_t Length) {
   assert(BeginLoc.isValid());
   assert(BeginLoc.isFileID());
 

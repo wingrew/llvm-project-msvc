@@ -455,7 +455,7 @@ CINDEX_LINKAGE CXString clang_File_tryGetRealPathName(CXFile file);
  */
 typedef struct {
   const void *ptr_data[2];
-  unsigned int_data;
+  __uint64_t int_data;
 } CXSourceLocation;
 
 /**
@@ -466,8 +466,8 @@ typedef struct {
  */
 typedef struct {
   const void *ptr_data[2];
-  unsigned begin_int_data;
-  unsigned end_int_data;
+  __uint64_t begin_int_data;
+  __uint64_t end_int_data;
 } CXSourceRange;
 
 /**
@@ -644,9 +644,9 @@ CINDEX_LINKAGE void clang_getInstantiationLocation(CXSourceLocation location,
  * buffer to which the given source location points.
  */
 CINDEX_LINKAGE void clang_getSpellingLocation(CXSourceLocation location,
-                                              CXFile *file, unsigned *line,
+                                              CXFile *file, unsigned int *line,
                                               unsigned *column,
-                                              unsigned *offset);
+                                              unsigned int *offset);
 
 /**
  * Retrieve the file, line, column, and offset represented by
@@ -5056,7 +5056,7 @@ typedef enum CXTokenKind {
  * Describes a single preprocessing token.
  */
 typedef struct {
-  unsigned int_data[4];
+  __uint64_t int_data[4];
   void *ptr_data;
 } CXToken;
 
@@ -6271,7 +6271,7 @@ typedef void *CXIdxClientASTFile;
  */
 typedef struct {
   void *ptr_data[2];
-  unsigned int_data;
+  __uint64_t int_data;
 } CXIdxLoc;
 
 /**

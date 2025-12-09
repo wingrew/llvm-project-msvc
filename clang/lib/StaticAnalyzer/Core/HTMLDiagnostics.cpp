@@ -285,7 +285,7 @@ void HTMLDiagnostics::ReportDiag(const PathDiagnostic& D,
 
   // Get the function/method name
   SmallString<128> declName("unknown");
-  int offsetDecl = 0;
+  int64_t offsetDecl = 0;
   if (const Decl *DeclWithIssue = D.getDeclWithIssue()) {
       if (const auto *ND = dyn_cast<NamedDecl>(DeclWithIssue))
           declName = ND->getDeclName().getAsString();
@@ -551,7 +551,7 @@ void HTMLDiagnostics::FinalizeHTML(const PathDiagnostic& D, Rewriter &R,
     DirName += '/';
   }
 
-  int LineNumber = path.back()->getLocation().asLocation().getExpansionLineNumber();
+  int64_t LineNumber = path.back()->getLocation().asLocation().getExpansionLineNumber();
   int ColumnNumber = path.back()->getLocation().asLocation().getExpansionColumnNumber();
 
   R.InsertTextBefore(SMgr.getLocForStartOfFile(FID), showHelpJavascript());
@@ -588,7 +588,7 @@ void HTMLDiagnostics::FinalizeHTML(const PathDiagnostic& D, Rewriter &R,
     unsigned NumExtraPieces = 0;
     for (const auto &Piece : path) {
       if (const auto *P = dyn_cast<PathDiagnosticNotePiece>(Piece.get())) {
-        int LineNumber =
+        int64_t LineNumber =
             P->getLocation().asLocation().getExpansionLineNumber();
         int ColumnNumber =
             P->getLocation().asLocation().getExpansionColumnNumber();
@@ -1025,7 +1025,7 @@ void HTMLDiagnostics::HandlePiece(Rewriter &R, FileID BugFileID,
       FullSourceLoc L = MP->getLocation().asLocation().getExpansionLoc();
       assert(L.isFileID());
       StringRef BufferInfo = L.getBufferData();
-      std::pair<FileID, unsigned> LocInfo = L.getDecomposedLoc();
+      std::pair<FileID, uint64_t> LocInfo = L.getDecomposedLoc();
       const char* MacroName = LocInfo.second + BufferInfo.data();
       Lexer rawLexer(SM.getLocForStartOfFile(LocInfo.first), PP.getLangOpts(),
                      BufferInfo.begin(), MacroName, BufferInfo.end());
@@ -1237,10 +1237,10 @@ void HTMLDiagnostics::HighlightRange(Rewriter& R, FileID BugFileID,
   const LangOptions &LangOpts = R.getLangOpts();
 
   SourceLocation InstantiationStart = SM.getExpansionLoc(Range.getBegin());
-  unsigned StartLineNo = SM.getExpansionLineNumber(InstantiationStart);
+  uint64_t StartLineNo = SM.getExpansionLineNumber(InstantiationStart);
 
   SourceLocation InstantiationEnd = SM.getExpansionLoc(Range.getEnd());
-  unsigned EndLineNo = SM.getExpansionLineNumber(InstantiationEnd);
+  uint64_t EndLineNo = SM.getExpansionLineNumber(InstantiationEnd);
 
   if (EndLineNo < StartLineNo)
     return;
