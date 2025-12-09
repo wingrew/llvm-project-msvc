@@ -1505,7 +1505,7 @@ TEST_F(ApplyAtomicChangesTest, BailsOutOnConflictingChanges) {
   EXPECT_EQ("", rewrite(/*FailureExpected=*/true));
 }
 
-TEST_F(ApplyAtomicChangesTest, DISABLED_InsertsNewIncludesInRightOrder) {
+TEST_F(ApplyAtomicChangesTest, InsertsNewIncludesInRightOrder) {
   setInput("int a;");
   Changes.emplace_back(FilePath, "key1");
   Changes.back().addHeader("b");
@@ -1533,7 +1533,7 @@ TEST_F(ApplyAtomicChangesTest, RemoveAndSortIncludes) {
             "int a;",
             rewrite());
 }
-TEST_F(ApplyAtomicChangesTest, DISABLED_InsertsSystemIncludes) {
+TEST_F(ApplyAtomicChangesTest, InsertsSystemIncludes) {
   setInput("#include <asys>\n"
            "#include <csys>\n"
            "\n"
