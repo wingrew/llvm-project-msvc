@@ -277,7 +277,7 @@ llvm::Error AtomicChange::insert(const SourceManager &SM, SourceLocation Loc,
         std::move(Err), [&](const ReplacementError &RE) -> llvm::Error {
           if (RE.get() != replacement_error::insert_conflict)
             return llvm::make_error<ReplacementError>(RE);
-          unsigned NewOffset = Replaces.getShiftedCodePosition(R.getOffset());
+          uint64_t NewOffset = Replaces.getShiftedCodePosition(R.getOffset());
           if (!InsertAfter)
             NewOffset -=
                 RE.getExistingReplacement()->getReplacementText().size();

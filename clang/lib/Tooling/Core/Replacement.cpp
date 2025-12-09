@@ -249,7 +249,7 @@ llvm::Error Replacements::add(const Replacement &R) {
         replacement_error::wrong_file_path, R, *Replaces.begin());
 
   // Special-case header insertions.
-  if (R.getOffset() == std::numeric_limits<uint64_t>::max()) {
+  if (R.getOffset() == std::numeric_limits<unsigned>::max()) {
     Replaces.insert(R);
     return llvm::Error::success();
   }
