@@ -3177,7 +3177,7 @@ fixCppIncludeInsertions(StringRef Code, const tooling::Replacements &Replaces,
       auto Err = Result.add(*Replace);
       if (Err) {
         llvm::consumeError(std::move(Err));
-        unsigned NewOffset =
+        uint64_t NewOffset =
             Result.getShiftedCodePosition(Replace->getOffset());
         auto Shifted = tooling::Replacement(FileName, NewOffset, 0,
                                             Replace->getReplacementText());

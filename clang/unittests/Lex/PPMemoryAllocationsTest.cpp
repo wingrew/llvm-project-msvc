@@ -91,7 +91,8 @@ TEST_F(PPMemoryAllocationsTest, PPMacroDefinesAllocations) {
   // Assume a reasonable upper bound based on that number that we don't want
   // to exceed when storing information about a macro #define with 1 or 3
   // tokens.
-  EXPECT_LT(BytesPerDefine, 130.0f);
+  // now modified for 64-bit extension
+  EXPECT_LT(BytesPerDefine, 200.0f);
 }
 
 } // anonymous namespace

@@ -249,7 +249,7 @@ llvm::Error Replacements::add(const Replacement &R) {
         replacement_error::wrong_file_path, R, *Replaces.begin());
 
   // Special-case header insertions.
-  if (R.getOffset() == std::numeric_limits<uint64_t>::max()) {
+  if (R.getOffset() == std::numeric_limits<unsigned>::max()) {
     Replaces.insert(R);
     return llvm::Error::success();
   }
@@ -536,7 +536,7 @@ std::vector<Range> Replacements::getAffectedRanges() const {
   int Shift = 0;
   for (const auto &R : Replaces) {
     uint64_t Offset = R.getOffset() + Shift;
-    unsigned Length = R.getReplacementText().size();
+    uint64_t Length = R.getReplacementText().size();
     Shift += Length - R.getLength();
     ChangedRanges.push_back(Range(Offset, Length));
   }
