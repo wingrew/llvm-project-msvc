@@ -536,7 +536,7 @@ std::vector<Range> Replacements::getAffectedRanges() const {
   int Shift = 0;
   for (const auto &R : Replaces) {
     uint64_t Offset = R.getOffset() + Shift;
-    unsigned Length = R.getReplacementText().size();
+    uint64_t Length = R.getReplacementText().size();
     Shift += Length - R.getLength();
     ChangedRanges.push_back(Range(Offset, Length));
   }

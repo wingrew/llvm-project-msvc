@@ -910,7 +910,7 @@ FormatToken *FormatTokenLexer::getNextToken() {
   FormatTok = new (Allocator.Allocate()) FormatToken;
   readRawToken(*FormatTok);
   SourceLocation WhitespaceStart =
-      FormatTok->Tok.getLocation().getLocWithOffset(-TrailingWhitespace);
+      FormatTok->Tok.getLocation().getLocWithOffset(-static_cast<clang::SourceLocation::IntTy>(TrailingWhitespace));
   FormatTok->IsFirst = IsFirstToken;
   IsFirstToken = false;
 
