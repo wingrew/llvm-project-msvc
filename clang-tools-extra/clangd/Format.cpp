@@ -288,9 +288,9 @@ formatIncremental(llvm::StringRef OriginalCode, unsigned OriginalCursor,
   // 1) Start with code after the pre-formatting edits.
   std::string CodeToFormat = cantFail(
       tooling::applyAllReplacements(OriginalCode, Incremental.Changes));
-  unsigned Cursor = Incremental.Changes.getShiftedCodePosition(OriginalCursor);
+  uint64_t Cursor = Incremental.Changes.getShiftedCodePosition(OriginalCursor);
   // 2) Truncate code after the last interesting range.
-  unsigned FormatLimit = Cursor;
+  uint64_t FormatLimit = Cursor;
   for (tooling::Range &R : Incremental.FormatRanges)
     FormatLimit = std::max(FormatLimit, R.getOffset() + R.getLength());
   CodeToFormat.resize(FormatLimit);
